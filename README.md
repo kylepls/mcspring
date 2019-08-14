@@ -158,3 +158,7 @@ class IntResolver implements Resolver {
 
 ###### Dependencies
 Do not forget to add the `dependencies` tag to your plugin.yml if you require any dependencies.
+
+###### Final Notes
+Thanks to https://github.com/Alan-Gomes/mcspring-boot/ for the inspiration/direction of this 
+project!
