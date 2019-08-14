@@ -1,0 +1,5 @@
+name: TestPloogin
+main: com.joshb.testploogin.TestPloogin
+description: Fuck
+version: 0.0.1
+api-version: "1.13"
