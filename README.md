@@ -1,4 +1,4 @@
-#### mc-spring
+### mc-spring
 ```java
 public class TestPloogin extends SpringPlugin {
     
@@ -21,7 +21,7 @@ public class TestPloogin extends SpringPlugin {
 
 ---
 
-##### Features
+#### Features
 _(Spring beans only)_
 
 * Cross-plugin injection
@@ -36,9 +36,9 @@ _(Spring beans only)_
 * Optional vault support via (`com.joshb.mcspringboot.economy.EconomyService`)
 
 ---
-##### Setup
+#### Setup
 
-###### Maven
+##### Maven
 
 ```xml
 <repositories>
@@ -67,7 +67,7 @@ _(Spring beans only)_
 </dependencies>
 ```
 
-###### Shading
+##### Shading
 Make sure to shade in the dependency
 ```xml
 <build>
@@ -89,7 +89,7 @@ Make sure to shade in the dependency
 </build>
 ```
 
-###### Main class
+##### Main class
 On your main `Plugin` class extend `SpringPlugin` instead of `JavaPlugin` and use the `enable` 
 and `disable` methods instead of the `onEnable` and `onDisable` methods.
 
@@ -103,9 +103,9 @@ cyclic dependency issues.
 
 --- 
 
-##### Other Notes
+#### Other Notes
 
-###### Do not duplicate commands. For example:
+##### Do not duplicate commands. For example:
 ```java
 @Command("test")
 public String test(CommandSender sender) {
@@ -131,7 +131,7 @@ public String test(CommandSender sender) {
 }
 ```
 
-###### Injected Command Method Parameters
+##### Injected Command Method Parameters
 `@Command` methods will have its' parameters automatically injected.
 The types of parameters that can be injected are:
 * CommandSender (or more specific type) - The sender of the command
@@ -156,9 +156,9 @@ class IntResolver implements Resolver {
 }
 ```
 
-###### Dependencies
+##### Dependencies
 Do not forget to add the `dependencies` tag to your plugin.yml if you require any dependencies.
 
-###### Final Notes
+##### Final Notes
 Thanks to https://github.com/Alan-Gomes/mcspring-boot/ for the inspiration/direction of this 
 project!
