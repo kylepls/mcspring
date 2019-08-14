@@ -28,37 +28,37 @@ class SpringSpigotSupport {
         return Bukkit.getPluginManager().getPlugin(pluginName);
     }
     
-    @Bean(destroyMethod = "")
+    @Bean
     Server server(Plugin plugin) {
         return plugin.getServer();
     }
     
-    @Bean(destroyMethod = "")
+    @Bean
     PluginManager pluginManager(Server server) {
         return server.getPluginManager();
     }
     
-    @Bean(destroyMethod = "")
+    @Bean
     ScoreboardManager scoreboardManager(Server server) {
         return server.getScoreboardManager();
     }
     
-    @Bean(destroyMethod = "")
+    @Bean
     Messenger messenger(Server server) {
         return server.getMessenger();
     }
     
-    @Bean(destroyMethod = "")
+    @Bean
     FileConfiguration configuration(Plugin plugin) {
         return plugin.getConfig();
     }
     
-    @Bean(destroyMethod = "")
+    @Bean
     PluginDescriptionFile description(Plugin plugin) {
         return plugin.getDescription();
     }
     
-    @Bean(destroyMethod = "")
+    @Bean
     BukkitScheduler scheduler(Server server) {
         return server.getScheduler();
     }
