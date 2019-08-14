@@ -18,7 +18,7 @@ public class TestPloogin extends SpringPlugin {
     
     @Scheduled(fixedDelay = 10000)
     public void interval() {
-        Bukkit.broadcastMessage("REMEMBER TO DONATE");
+//        Bukkit.broadcastMessage("REMEMBER TO DONATE");
     }
     
     @EventHandler

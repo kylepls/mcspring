@@ -22,6 +22,6 @@ public class ApiUsage {
     
     @Scheduled(fixedRate = 1000)
     public void interval() {
-        Bukkit.broadcastMessage(api.getValue());
+//        Bukkit.broadcastMessage(api.getValue());
     }
 }

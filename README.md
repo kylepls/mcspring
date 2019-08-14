@@ -59,6 +59,11 @@ _(Spring beans only)_
         <artifactId>api-vault</artifactId>
         <version>0.0.1</version>
     </dependency>
+    <dependency>
+        <groupId>com.joshb.mcspringboot</groupId>
+        <artifactId>api-holograms</artifactId>
+        <version>0.0.1</version>
+    </dependency>
 </dependencies>
 ```
 
