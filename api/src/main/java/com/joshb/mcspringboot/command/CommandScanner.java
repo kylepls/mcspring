@@ -7,12 +7,14 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.util.Map;
 
 import lombok.AllArgsConstructor;
 
+@Component
 @Configuration
 @AllArgsConstructor
 class CommandScanner implements ApplicationContextAware {

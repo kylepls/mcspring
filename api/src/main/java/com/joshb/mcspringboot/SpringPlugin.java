@@ -37,11 +37,9 @@ public abstract class SpringPlugin extends JavaPlugin {
     }
     
     public void enable() {
-        
     }
     
     public void disable() {
-        
     }
     
     private void load() {
@@ -50,24 +48,26 @@ public abstract class SpringPlugin extends JavaPlugin {
         }
         ResourceLoader loader = new DefaultResourceLoader(getClassLoader());
         
-        
         String mainPackage = getDescription().getMain();
         mainPackage = mainPackage.substring(0, mainPackage.lastIndexOf("."));
-        context = new SpringApplicationBuilder().sources(Config.class,
-                                                         SpringSpigotSupport.class)
+        SpringApplicationBuilder builder = new SpringApplicationBuilder();
+        if (StaticSpring.hasParent()) {
+            builder.parent(StaticSpring.getParentContainer());
+        }
+        context = builder.sources(Config.class, SpringSpigotSupport.class)
                 .resourceLoader(loader)
                 .bannerMode(Banner.Mode.OFF)
                 .properties("spigot.plugin=" + getName())
                 .properties("main=" + mainPackage)
                 .logStartupInfo(false)
                 .run();
+        
+        StaticSpring.setParent(context);
     }
     
     @SuppressWarnings("SpringComponentScan")
     @Configuration
     @ComponentScan(basePackages = "${main}")
-    @EnableScheduling
-    @EnableAspectJAutoProxy
     static class Config {
     }
 }

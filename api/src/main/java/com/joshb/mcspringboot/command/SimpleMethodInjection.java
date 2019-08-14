@@ -49,7 +49,7 @@ public class SimpleMethodInjection {
             Parameter parameter = parameters[i];
             params[i] = methodResolvers.stream()
                     .map(r -> r.resolve(parameter))
-                    .flatMap(Optional::stream)
+                    .flatMap(Stream::of)
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException(
                             "No such parameter " + parameter.getType() + " for " +
