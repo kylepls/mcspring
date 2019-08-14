@@ -19,7 +19,6 @@ public abstract class SpringPlugin extends JavaPlugin {
         defaultClassLoader = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(getClassLoader());
         load();
-        enable();
     }
     
     @Override
@@ -30,14 +29,7 @@ public abstract class SpringPlugin extends JavaPlugin {
         if (context != null) {
             context.close();
             context = null;
-            disable();
         }
-    }
-    
-    public void enable() {
-    }
-    
-    public void disable() {
     }
     
     private void load() {

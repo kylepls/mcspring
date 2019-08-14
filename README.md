@@ -90,8 +90,9 @@ Make sure to shade in the dependency
 ```
 
 ##### Main class
-On your main `Plugin` class extend `SpringPlugin` instead of `JavaPlugin` and use the `enable` 
-and `disable` methods instead of the `onEnable` and `onDisable` methods.
+On your main `Plugin` class extend `SpringPlugin` instead of `JavaPlugin` 
+and use the `@PostConstract` and `@PreDestroy` annotations instead of 
+the `onEnable` and `onDisable` methods.
 
 This will ensure that Spring is able to be properly initialized.
 
