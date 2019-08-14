@@ -72,12 +72,6 @@ public class PluginCommandTabCompletable extends PluginCommand {
             tabCompletionOptions.addAll(options.keySet());
         }
     }
-
-    @Override
-    protected void callOn(String command, Executors executors, int argSize) {
-        tabCompletionOptions.add(command);
-        super.callOn(command, executors, argSize);
-    }
     
     @Override
     public void otherwise(Supplier<String> supplier) {
