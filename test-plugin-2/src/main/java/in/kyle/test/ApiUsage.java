@@ -11,13 +11,13 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class ApiUseage {
+public class ApiUsage {
     
     private final TestApi api;
     
     @Command("get")
     public String get() {
-        return api.getValue();
+        return String.format("The value is %s", api.getValue());
     }
     
     @Scheduled(fixedRate = 1000)

@@ -24,6 +24,13 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
 
+    <distributionManagement>
+        <repository>
+            <id>myMvnWrite</id>
+            <url>https://mymavenrepo.com/repo/Xt7MpjtqcwI5lyMqRYBM/</url>
+        </repository>
+    </distributionManagement>
+    
     <dependencyManagement>
         <dependencies>
             <dependency>
