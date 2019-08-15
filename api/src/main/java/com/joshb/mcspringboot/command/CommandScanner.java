@@ -29,25 +29,29 @@ class CommandScanner implements ApplicationContextAware {
         for (Map.Entry<Method, Object> e : scan.entrySet()) {
             Command command = e.getKey().getAnnotation(Command.class);
             String name = command.value();
-            controller.registerCommand(new org.bukkit.command.Command(name) {
-                @Override
-                public boolean execute(CommandSender commandSender, String label, String[] args) {
-                    try {
-                        Object result = methodInjection.invoke(e.getKey(),
-                                                               e.getValue(),
-                                                               commandSender,
-                                                               args,
-                                                               label);
-                        if (result != null) {
-                            commandSender.sendMessage(result.toString());
-                        }
-                    } catch (RuntimeException exception) {
-                        throw new RuntimeException(
-                                "Could not invoke method " + e.getKey().getName(), exception);
-                    }
-                    return false;
-                }
-            });
+            controller.registerCommand(makeCommand(e, name));
         }
+    }
+    
+    private org.bukkit.command.Command makeCommand(Map.Entry<Method, Object> e, String name) {
+        return new org.bukkit.command.Command(name) {
+            @Override
+            public boolean execute(CommandSender commandSender, String label, String[] args) {
+                try {
+                    Object result = methodInjection.invoke(e.getKey(),
+                                                           e.getValue(),
+                                                           commandSender,
+                                                           args,
+                                                           label);
+                    if (result != null) {
+                        commandSender.sendMessage(result.toString());
+                    }
+                } catch (RuntimeException exception) {
+                    throw new RuntimeException("Could not invoke method " + e.getKey().getName(),
+                                               exception);
+                }
+                return false;
+            }
+        };
     }
 }

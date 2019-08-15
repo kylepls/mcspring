@@ -31,6 +31,13 @@
             <url>https://mymavenrepo.com/repo/Xt7MpjtqcwI5lyMqRYBM/</url>
         </repository>
     </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
     
     <dependencyManagement>
         <dependencies>
@@ -54,7 +61,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.13.2-R0.1-SNAPSHOT</version>
+            <version>1.14.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

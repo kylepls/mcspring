@@ -22,10 +22,7 @@ public class SpringScanner {
         for (String beanName : context.getBeanDefinitionNames()) {
             Object object = context.getBean(beanName);
             
-            Class<?> clazz = object.getClass();
-            if (AopUtils.isAopProxy(clazz)) {
-                clazz = AopUtils.getTargetClass(object);
-            }
+            Class<?> clazz = getRealClass(object);
             
             for (Method method : clazz.getDeclaredMethods()) {
                 if (method.isAnnotationPresent(annotation)) {
@@ -34,5 +31,13 @@ public class SpringScanner {
             }
         }
         return methods;
+    }
+    
+    private Class<?> getRealClass(Object object) {
+        Class<?> clazz = object.getClass();
+        if (AopUtils.isAopProxy(clazz)) {
+            clazz = AopUtils.getTargetClass(object);
+        }
+        return clazz;
     }
 }

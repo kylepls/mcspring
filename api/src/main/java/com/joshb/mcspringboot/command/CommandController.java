@@ -12,10 +12,10 @@ import lombok.SneakyThrows;
 @Controller
 public class CommandController {
     
-    private CommandMap commandMap;
+    private final CommandMap commandMap = getCommandMap();
     
-    public CommandController() {
-        this.commandMap = getCommandMap();
+    public void registerCommand(Command command) {
+        commandMap.register(command.getLabel(), command);
     }
     
     @SneakyThrows
@@ -23,9 +23,5 @@ public class CommandController {
         Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
         bukkitCommandMap.setAccessible(true);
         return (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
-    }
-    
-    public void registerCommand(Command command) {
-        commandMap.register(command.getLabel(), command);
     }
 }

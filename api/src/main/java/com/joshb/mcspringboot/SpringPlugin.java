@@ -12,38 +12,31 @@ import org.springframework.core.io.ResourceLoader;
 public abstract class SpringPlugin extends JavaPlugin {
     
     private ConfigurableApplicationContext context;
-    private ClassLoader defaultClassLoader;
     
     @Override
     public final void onEnable() {
-        defaultClassLoader = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(getClassLoader());
-        load();
+        initSpring();
     }
     
     @Override
     public final void onDisable() {
-        if (defaultClassLoader != null) {
-            Thread.currentThread().setContextClassLoader(defaultClassLoader);
-        }
         if (context != null) {
             context.close();
             context = null;
         }
     }
     
-    private void load() {
-        if (context != null) {
-            context.close();
-        }
+    private void initSpring() {
         ResourceLoader loader = new DefaultResourceLoader(getClassLoader());
         
-        String mainPackage = getDescription().getMain();
-        mainPackage = mainPackage.substring(0, mainPackage.lastIndexOf("."));
+        StaticSpring.setupLogger();
+        
+        String mainPackage = getMainPackage();
         SpringApplicationBuilder builder = new SpringApplicationBuilder();
         if (StaticSpring.hasParent()) {
             builder.parent(StaticSpring.getParentContainer());
         }
+        
         context = builder.sources(Config.class, SpringSpigotSupport.class)
                 .resourceLoader(loader)
                 .bannerMode(Banner.Mode.OFF)
@@ -51,8 +44,12 @@ public abstract class SpringPlugin extends JavaPlugin {
                 .properties("main=" + mainPackage)
                 .logStartupInfo(false)
                 .run();
-        
         StaticSpring.setParent(context);
+    }
+    
+    private String getMainPackage() {
+        String mainPackage = getDescription().getMain();
+        return mainPackage.substring(0, mainPackage.lastIndexOf("."));
     }
     
     @SuppressWarnings("SpringComponentScan")

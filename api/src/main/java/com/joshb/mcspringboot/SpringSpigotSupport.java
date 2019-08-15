@@ -23,12 +23,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAspectJAutoProxy
 class SpringSpigotSupport {
     
-    @Bean(destroyMethod = "")
+    @Bean
     Plugin plugin(@Value("${spigot.plugin}") String pluginName) {
         return Bukkit.getPluginManager().getPlugin(pluginName);
     }
     
-    @Bean
+    @Bean(destroyMethod = "")
     Server server(Plugin plugin) {
         return plugin.getServer();
     }

@@ -24,11 +24,11 @@ import lombok.SneakyThrows;
  */
 @Component
 @RequiredArgsConstructor
-public class SimpleMethodInjection {
+class SimpleMethodInjection {
     
     private final List<Resolver> resolvers;
     
-    public Object invoke(Method method, Object object, Object... contextObjects) {
+    Object invoke(Method method, Object object, Object... contextObjects) {
         Set<Resolver> resolvers = Stream.of(contextObjects)
                 .map(o -> (Resolver) parameter -> parameter.getType().isAssignableFrom(o.getClass())
                         ? Optional.of(o)
@@ -38,7 +38,7 @@ public class SimpleMethodInjection {
     }
     
     @SneakyThrows
-    public Object invoke(Method method, Object object, Collection<Resolver> contextResolvers) {
+    private Object invoke(Method method, Object object, Collection<Resolver> contextResolvers) {
         Parameter[] parameters = method.getParameters();
         Object[] params = new Object[parameters.length];
         
@@ -57,10 +57,6 @@ public class SimpleMethodInjection {
         }
         
         return method.invoke(object, params);
-    }
-    
-    public interface Resolver {
-        Optional<Object> resolve(Parameter parameter);
     }
     
     @Component
