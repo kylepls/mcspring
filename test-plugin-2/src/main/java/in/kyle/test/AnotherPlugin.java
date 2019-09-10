@@ -1,6 +1,6 @@
 package in.kyle.test;
 
-import com.joshb.mcspringboot.SpringPlugin;
+import in.kyle.mcspring.SpringPlugin;
 
 public class AnotherPlugin extends SpringPlugin {
     

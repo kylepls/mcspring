@@ -8,13 +8,12 @@
     <modules>
         <module>api</module>
         <module>api-vault</module>
-        <module>api-holograms</module>
         <module>test-plugin</module>
         <module>test-plugin-2</module>
     </modules>
 
-    <groupId>com.joshb.mcspringboot</groupId>
-    <artifactId>spring-spigot</artifactId>
+    <groupId>in.kyle.mcspring</groupId>
+    <artifactId>mcspring-parent</artifactId>
     <packaging>pom</packaging>
     <version>0.0.1</version>
 
@@ -27,9 +26,13 @@
 
     <distributionManagement>
         <repository>
-            <id>myMvnWrite</id>
-            <url>https://mymavenrepo.com/repo/Xt7MpjtqcwI5lyMqRYBM/</url>
+            <id>myMavenRepoWrite</id>
+            <url>${myMavenRepoWriteUrl}</url>
         </repository>
+        <snapshotRepository>
+            <id>myMavenRepoWrite</id>
+            <url>${myMavenRepoWriteUrl}</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <repositories>
@@ -38,7 +41,7 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
     </repositories>
-    
+
     <dependencyManagement>
         <dependencies>
             <dependency>

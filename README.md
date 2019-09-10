@@ -33,7 +33,7 @@ _(Spring beans only)_
   * Server
   * PluginManager
   * ...
-* Optional vault support via (`com.joshb.mcspringboot.economy.EconomyService`)
+* Optional vault support via (`in.kyle.mcspring.economy.EconomyService`)
 
 ---
 #### Setup
@@ -43,25 +43,20 @@ _(Spring beans only)_
 ```xml
 <repositories>
     <repository>
-        <id>spigotSpring</id>
+        <id>mcspring</id>
         <url>https://mymavenrepo.com/repo/xY4KhscvfmzoYCoqhY4L/</url>
     </repository>
 </repositories>
 
 <dependencies>
     <dependency>
-        <groupId>com.joshb.mcspringboot</groupId>
-        <artifactId>api</artifactId>
+        <groupId>in.kyle.mcspring</groupId>
+        <artifactId>mcspring</artifactId>
         <version>0.0.1</version>
     </dependency>
     <dependency>
-        <groupId>com.joshb.mcspringboot</groupId>
-        <artifactId>api-vault</artifactId>
-        <version>0.0.1</version>
-    </dependency>
-    <dependency>
-        <groupId>com.joshb.mcspringboot</groupId>
-        <artifactId>api-holograms</artifactId>
+        <groupId>in.kyle.mcspring</groupId>
+        <artifactId>mcspring-vault</artifactId>
         <version>0.0.1</version>
     </dependency>
 </dependencies>

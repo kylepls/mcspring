@@ -3,8 +3,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>spring-spigot</artifactId>
-        <groupId>com.joshb.mcspringboot</groupId>
+        <artifactId>mcspring-parent</artifactId>
+        <groupId>in.kyle.mcspring</groupId>
         <version>0.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -14,9 +14,8 @@
     <dependencies>
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>api</artifactId>
+            <artifactId>mcspring</artifactId>
             <version>${project.parent.version}</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 

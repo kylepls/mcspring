@@ -1,9 +1,8 @@
 package in.kyle.test;
 
-import com.joshb.mcspringboot.command.Command;
-import com.joshb.testploogin.TestApi;
+import in.kyle.mcspring.command.Command;
+import in.kyle.mcspring.testplugin.TestApi;
 
-import org.bukkit.Bukkit;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
