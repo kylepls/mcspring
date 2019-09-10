@@ -44,7 +44,7 @@ _(Spring beans only)_
 <repositories>
     <repository>
         <id>mcspring</id>
-        <url>https://mymavenrepo.com/repo/xY4KhscvfmzoYCoqhY4L/</url>
+        <url>https://kyle.in/maven</url>
     </repository>
 </repositories>
 
