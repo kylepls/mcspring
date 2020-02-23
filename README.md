@@ -24,7 +24,8 @@ public class TestPloogin { // We don't have to extend JavaPlugin
 #### Features
 _(Spring beans only)_
 
-* No main plugin class required
+* No main plugin class needed, ever.
+* No plugin.yml needed, ever.
 * Cross-plugin injection
 * Automatic command registration
 * Automatic scheduler registration
