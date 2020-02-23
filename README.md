@@ -38,54 +38,30 @@ _(Spring beans only)_
 * Optional vault support via (`in.kyle.mcspring.economy.EconomyService`)
 
 ---
-#### Setup
+#### Maven Setup
 
-##### Maven
+I tried to make this as easy as possible. If you're using Intellij just do the following.
 
-```xml
-<repositories>
-    <repository>
-        <id>mcspring</id>
-        <url>https://kyle.in/maven</url>
-    </repository>
-</repositories>
+1. Create a new project
+2. In the create dialog select `Maven -> create from archetype`
+3. Click `Add archetype` on the right-hand side
+4. Type in the following:
 
-<dependencies>
-    <!--If you're using Lombok, make sure to put that first-->
-    <dependency>
-        <groupId>in.kyle.mcspring</groupId>
-        <artifactId>mcspring</artifactId>
-        <version>0.0.1</version>
-    </dependency>
-    <dependency>
-        <groupId>in.kyle.mcspring</groupId>
-        <artifactId>mcspring-vault</artifactId>
-        <version>0.0.1</version>
-    </dependency>
-</dependencies>
-```
+    1. group: `in.kyle.mcspring` 
+    2. artifact: `archetype` 
+    3. version: `0.0.2` 
+    4. url: `https://mymavenrepo.com/repo/SmnHSudeBfo1zzCti47R/` 
 
-##### Shading
-Make sure to shade in the dependency
-```xml
-<build>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-shade-plugin</artifactId>
-            <version>3.2.1</version>
-            <executions>
-                <execution>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>shade</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-    </plugins>
-</build>
-```
+Then a project will be created for you with a project-specific Spigot folder already setup for you.
+
+Next:
+
+1. Run a Maven install to create the required files
+2. Create a new JAR run configuration
+3. Select the downloaded spigot.jar as the target
+4. Change the run environment to the spigot folder
+5. Add the following VM flag `-DIReallyKnowWhatIAmDoingISwear`
+6. To update the plugin on the server, just run a maven install and restart the server.
 
 ##### Main class
 

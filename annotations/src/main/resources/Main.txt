@@ -1,4 +1,17 @@
 import in.kyle.mcspring.SpringPlugin;
 
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
 public class {name} extends SpringPlugin {
+
+    Class<?> getConfiguration() {
+        return MainPluginConfig.class;
+    }
+
+    @Configuration
+    {scans}
+    static class MainPluginConfig {
+
+    }
 }

@@ -1,11 +1,13 @@
 package in.kyle.mcspring.processor;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,7 +21,6 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
@@ -35,7 +36,7 @@ import in.kyle.mcspring.processor.util.MainClassCreator;
 public class AnnotationProcessor extends AbstractProcessor {
     
     private Writer yml;
-    private String mainClass = "main.Plugin";
+    private String mainClass = "PluginMain";
     private boolean created = false;
     
     @Override
@@ -56,37 +57,44 @@ public class AnnotationProcessor extends AbstractProcessor {
         return true;
     }
     
+    private Set<String> findPackage(RoundEnvironment env) {
+        Set<? extends Element> elements = env.getElementsAnnotatedWith(Component.class);
+        Set<String> packages = new HashSet<>();
+        for (Element element : elements) {
+            if (element instanceof TypeElement) {
+                TypeElement te = (TypeElement) element;
+                String packageName = getPackageFromFqn(te.getQualifiedName().toString());
+                packages.add(packageName);
+            }
+        }
+        return packages;
+    }
+    
+    private String getRootPackage(Set<String> packages) {
+        return packages.stream().min(Comparator.comparingInt(String::length)).orElse("ignore");
+    }
+    
+    private String getPackageFromFqn(String fqn) {
+        if (fqn.contains(".")) {
+            return fqn.substring(0, fqn.lastIndexOf("."));
+        } else {
+            return fqn;
+        }
+    }
+    
     private void process(RoundEnvironment env) throws Exception {
         FileObject ymlFile = processingEnv.getFiler()
                 .createResource(StandardLocation.CLASS_OUTPUT, "", "plugin.yml");
         yml = ymlFile.openWriter();
-        if (isGenerateMain(env)) {
-            FileObject main = this.processingEnv.getFiler().createSourceFile(mainClass);
-            this.processingEnv.getMessager()
-                    .printMessage(Diagnostic.Kind.NOTE, "Main class: " + mainClass);
-            MainClassCreator.generateMain(main, mainClass);
-        }
+        Set<String> packages = findPackage(env);
+        String rootPackage = getRootPackage(packages);
+        mainClass = rootPackage + "." + mainClass;
+        FileObject main = processingEnv.getFiler().createSourceFile(mainClass);
+        MainClassCreator.generateMain(main, mainClass, rootPackage, packages);
         addRequired(env);
         addDependencies(env);
         yml.flush();
         yml.close();
-    }
-    
-    private boolean isGenerateMain(RoundEnvironment env) {
-        Set<? extends Element> plugins = env.getElementsAnnotatedWith(SpringPlugin.class);
-        if (!plugins.isEmpty()) {
-            Element pluginElement = plugins.iterator().next();
-            if (pluginElement instanceof TypeElement) {
-                TypeElement te = (TypeElement) pluginElement;
-                TypeMirror springPluginType = processingEnv.getElementUtils()
-                        .getTypeElement(SpringPlugin.class.getName())
-                        .asType();
-                if (processingEnv.getTypeUtils().isSubtype(te.asType(), springPluginType)) {
-                    mainClass = "main." + te.getQualifiedName().toString().replace("-", "");
-                }
-            }
-        }
-        return true;
     }
     
     private void addRequired(RoundEnvironment env) throws IOException {

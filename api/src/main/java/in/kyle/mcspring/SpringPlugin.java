@@ -26,22 +26,25 @@ public abstract class SpringPlugin extends JavaPlugin {
         }
     }
     
+    Class<?> getConfiguration() {
+        return Config.class;
+    }
+    
     private void initSpring() {
         ResourceLoader loader = new DefaultResourceLoader(getClassLoader());
         
         StaticSpring.setupLogger();
         
-        String mainPackage = getMainPackage();
         SpringApplicationBuilder builder = new SpringApplicationBuilder();
         if (StaticSpring.hasParent()) {
             builder.parent(StaticSpring.getParentContainer());
         }
         
-        context = builder.sources(Config.class, SpringSpigotSupport.class)
+        context = builder.sources(getConfiguration(), SpringSpigotSupport.class)
                 .resourceLoader(loader)
                 .bannerMode(Banner.Mode.OFF)
                 .properties("spigot.plugin=" + getName())
-                .properties("main=" + mainPackage)
+                .properties("main=" + getMainPackage())
                 .logStartupInfo(false)
                 .run();
         StaticSpring.setParent(context);
