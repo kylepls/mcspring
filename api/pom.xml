@@ -5,7 +5,7 @@
     <parent>
         <artifactId>mcspring-parent</artifactId>
         <groupId>in.kyle.mcspring</groupId>
-        <version>0.0.1</version>
+        <version>0.0.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -19,6 +19,18 @@
     </repositories>
 
     <dependencies>
+        <!-- Duplicated so Lombok runs before the annotation processor -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.12</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>in.kyle.mcspring</groupId>
+            <artifactId>annotations</artifactId>
+            <version>0.0.2</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -39,5 +51,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
 </project>

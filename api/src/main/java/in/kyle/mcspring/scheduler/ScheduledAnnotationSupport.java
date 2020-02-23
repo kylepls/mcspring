@@ -80,13 +80,13 @@ class ScheduledAnnotationSupport extends ThreadPoolTaskScheduler {
     
     @AllArgsConstructor
     @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-    class WrappedRunnable implements Runnable {
+    static class WrappedRunnable implements Runnable {
         
         private final SchedulerService scheduler;
         
         @EqualsAndHashCode.Include
         private final Runnable runnable;
-        
+    
         @Override
         public void run() {
             scheduler.syncTask(runnable);

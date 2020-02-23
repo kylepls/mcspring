@@ -16,6 +16,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import java.util.logging.Logger;
+
 @SpringBootApplication(scanBasePackageClasses = SpringPlugin.class)
 @Configuration
 @EnableScheduling
@@ -30,6 +32,11 @@ class SpringSpigotSupport {
     @Bean(destroyMethod = "")
     Server server(Plugin plugin) {
         return plugin.getServer();
+    }
+    
+    @Bean
+    Logger logger(Plugin plugin) {
+        return plugin.getLogger();
     }
     
     @Bean

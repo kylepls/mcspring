@@ -50,13 +50,19 @@ class SimpleMethodInjection {
             params[i] = methodResolvers.stream()
                     .map(r -> r.resolve(parameter))
                     .flatMap(Stream::of)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException(
                             "No such parameter " + parameter.getType() + " for " +
                             method.getName()));
         }
-        
-        return method.invoke(object, params);
+    
+        if (params.length != 0) {
+            return method.invoke(object, params);
+        } else {
+            return method.invoke(object);
+        }
     }
     
     @Component

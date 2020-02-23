@@ -1,0 +1,4 @@
+import in.kyle.mcspring.SpringPlugin;
+
+public class {name} extends SpringPlugin {
+}

@@ -1,5 +1,0 @@
-name: TestPlugin
-main: in.kyle.mcspring.testplugin
-description: A test plugin
-version: 0.0.1
-api-version: "1.13"
