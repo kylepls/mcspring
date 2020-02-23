@@ -58,6 +58,7 @@ class SimpleMethodInjection {
                             method.getName()));
         }
     
+        method.setAccessible(true);
         if (params.length != 0) {
             return method.invoke(object, params);
         } else {
