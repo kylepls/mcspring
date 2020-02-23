@@ -1,6 +1,6 @@
 ### mc-spring
 ```java
-public class TestPloogin extends SpringPlugin {
+public class TestPloogin { // We don't have to extend JavaPlugin
     
     @Command("test")
     public String playerSender(Player sender, String command) {
@@ -24,6 +24,7 @@ public class TestPloogin extends SpringPlugin {
 #### Features
 _(Spring beans only)_
 
+* No main plugin class required
 * Cross-plugin injection
 * Automatic command registration
 * Automatic scheduler registration
@@ -49,6 +50,7 @@ _(Spring beans only)_
 </repositories>
 
 <dependencies>
+    <!--If you're using Lombok, make sure to put that first-->
     <dependency>
         <groupId>in.kyle.mcspring</groupId>
         <artifactId>mcspring</artifactId>
@@ -85,15 +87,21 @@ Make sure to shade in the dependency
 ```
 
 ##### Main class
-On your main `Plugin` class extend `SpringPlugin` instead of `JavaPlugin` 
-and use the `@PostConstract` and `@PreDestroy` annotations instead of 
-the `onEnable` and `onDisable` methods.
+
+You don't need a main class. 
+Don't bother with the `plugin.yml` either, mcspring will take care of that. 
+Instead of using the `onEnable` and `onDisable` methods use the `@PostConstract` and `@PreDestroy` annotations.
 
 This will ensure that Spring is able to be properly initialized.
 
+If you need to add a dependency to the `plugin.yml` just use the `@PluginDepends` annotation
+ somewhere in your project. If you care about versions, plugin names, or descriptions check out
+the `@SpringPlugin` annotation. Finally, there is the `@PluginAuthor` annotation.
+
+The `plugin.yml` is generated for you. Don't worry about it.
+
 **Do Not**: 
-* Use `@Autowired`, especially in the main plugin class. This can lead to 
-cyclic dependency issues.
+* Use `@Autowired`. It's gross. Save it for your tests.
 * Create a constructor in the main plugin class. Bukkit still loads that.
 * Create cyclic dependencies between plugins. I promise you there will be errors.
 
