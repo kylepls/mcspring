@@ -4,7 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Spring Boot Spigot Starter</name>
     <modules>
         <module>api</module>
         <module>api-vault</module>
@@ -19,6 +18,37 @@
     <artifactId>mcspring-parent</artifactId>
     <packaging>pom</packaging>
     <version>0.0.2</version>
+    <name>mcspring</name>
+
+    <description>Adds Spring support to Bukkit plugins</description>
+    <url>https://github.com/kylepls/mc-spring</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/kylepls/mcspring/issues</url>
+    </issueManagement>
+
+    <scm>
+        <url>https://github.com/kylepls/mcspring</url>
+        <connection>scm:git:git://github.com/kylepls/mcspring.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:kylepls/mcspring.git</developerConnection>
+    </scm>
+
+    <developers>
+        <developer>
+            <name>Kyle</name>
+            <email>mail@kyle.in</email>
+            <id>kylepls</id>
+        </developer>
+    </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -82,6 +112,30 @@
                     <configuration>
                         <fork>true</fork>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
