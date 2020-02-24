@@ -16,7 +16,6 @@ import lombok.val;
 
 @Service
 @AllArgsConstructor
-@Profile("!test")
 class EventService {
     
     private final Server server;

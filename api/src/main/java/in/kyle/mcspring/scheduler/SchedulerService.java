@@ -14,7 +14,6 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 @Service
 @Scope(SCOPE_SINGLETON)
 @RequiredArgsConstructor
-@Profile("!test")
 public class SchedulerService {
     
     private final BukkitScheduler scheduler;

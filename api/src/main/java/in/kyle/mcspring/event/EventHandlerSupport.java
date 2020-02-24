@@ -19,7 +19,6 @@ import lombok.SneakyThrows;
 
 @Configuration
 @AllArgsConstructor
-@Profile("!test")
 class EventHandlerSupport implements ApplicationContextAware {
     
     private final EventService eventService;

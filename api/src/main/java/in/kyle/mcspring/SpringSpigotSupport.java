@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 @Configuration
 @EnableScheduling
 @EnableAspectJAutoProxy
-@Profile("!test")
 class SpringSpigotSupport {
     
     @Bean

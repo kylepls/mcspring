@@ -20,7 +20,6 @@ import lombok.AllArgsConstructor;
 @Component
 @Configuration
 @AllArgsConstructor
-@Profile("!test")
 class CommandScanner implements ApplicationContextAware {
     
     private final CommandController controller;

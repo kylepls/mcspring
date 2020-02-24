@@ -11,7 +11,6 @@ import java.lang.reflect.Field;
 import lombok.SneakyThrows;
 
 @Controller
-@Profile("!test")
 public class CommandController {
     
     private final CommandMap commandMap = getCommandMap();

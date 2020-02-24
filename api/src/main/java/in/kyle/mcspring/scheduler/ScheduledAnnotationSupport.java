@@ -16,7 +16,6 @@ import java.util.concurrent.ScheduledFuture;
 
 @Component
 @AllArgsConstructor
-@Profile("!test")
 class ScheduledAnnotationSupport extends ThreadPoolTaskScheduler {
 
     private final SchedulerService scheduler;

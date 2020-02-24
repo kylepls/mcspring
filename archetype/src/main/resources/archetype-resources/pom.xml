@@ -159,6 +159,21 @@
                             </relocations>
                         </configuration>
                     </execution>
+                <executions>
+                    <execution>
+                        <id>init</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <sourceFile>
+                                ${project.build.directory}/${project.build.finalName}-big.jar
+                            </sourceFile>
+                            <destinationFile>${project.basedir}/spigot/plugins/plugin.jar
+                            </destinationFile>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>copy-plugin</id>
                         <phase>package</phase>
@@ -173,7 +188,6 @@
                             </destinationFile>
                         </configuration>
                     </execution>
-
                 </executions>
             </plugin>
             <plugin>
