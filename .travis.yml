@@ -6,23 +6,7 @@ before_deploy:
   - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
   - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
 deploy:
-  provider: releases
-  api_key:
-    secure: YmhqsH9dxH3uK5JC+PLr15Fim/8vNhl93GBDSoLbsYmNmyAbybdXsn/JOmY6uIeveZLvWD8TUoi3fmycTTiSkw7hkYAhC6ZbzUp1cDtGxR+mSqqMqgud7mL5K+WQgGJYZkQgiyK95gLk0lmdQB3k2PwfQcutLdU6eIH/DQDjvDyhUB6qyhxpIN/fntismo2hWkDjXjGGJALcxAg/MmTro4Bli9gBbWwufyOdMPsWB/WnjkHyyZ0eTGbOf6YNtFC2m/fDcGfHj1cGzrj/5mJ88p/QqRb/Qii654iOIQsR7Ehpe0TwOB6hOw2eR/j0IFXBq9RkUwwEIzXxQS7HC7RE7Pg2OE/oNkk4jtEPHsMEN3MN2ZG/b40BUgjfP90RoNlVwDfNMS71Ge8w6hk38es8/Pv9GNyf0XN+x1x5LCD4rYHjtjXtBrp5PKU6yeyndD1UPQpFu6vlzan7KEYz58XRGTPEu1ivAAlDM0Sy9RWC155zUNybFKz7NA0Z5EAsGBTEpVv1ecJdu38WAfg3LdWp/dmM9BVoOqf3adjHggUibs9s+ZOxjP2sLzkdlsfzpVZvxMbNABj5cqUgyOKo4rxd0mh6rIX6myHptziFKxnw/wwyYH3DBRyuHD+syvwCoSehMK68cC5l03yKxw8nh4zuho2VjOBfe3RnKLDUHtsBNEY=
-  file:
-    - annotations/target/annotations-$project_version.jar
-    - annotations/target/annotations-$project_version-javadoc.jar
-    - annotations/target/annotations-$project_version-sources.jar
-    - api/target/mcspring-$project_version.jar
-    - api/target/mcspring-$project_version-javadoc.jar
-    - api/target/mcspring-$project_version-sources.jar
-    - api-vault/target/mcspring-vault-$project_version.jar
-    - api-vault/target/mcspring-vault-$project_version-javadoc.jar
-    - api-vault/target/mcspring-vault-$project_version-sources.jar
-    - archetype/target/archetype-$project_version.jar
-    - subcommands/target/subcommands-$project_version.jar
-    - subcommands/target/subcommands-$project_version-javadoc.jar
-    - subcommands/target/subcommands-$project_version-sources.jar
+  provider: script
   skip_cleanup: true
   ## Build and release to maven central on tagged version
   script: mvn clean deploy --settings .maven.xml -DskipTests=true -B -U -Prelease
