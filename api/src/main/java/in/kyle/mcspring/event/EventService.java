@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Method;

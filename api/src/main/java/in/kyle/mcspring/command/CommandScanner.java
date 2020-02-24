@@ -1,17 +1,20 @@
 package in.kyle.mcspring.command;
 
-import in.kyle.mcspring.util.SpringScanner;
-
 import org.bukkit.command.CommandSender;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import in.kyle.mcspring.util.SpringScanner;
 import lombok.AllArgsConstructor;
 
 @Component
@@ -22,6 +25,7 @@ class CommandScanner implements ApplicationContextAware {
     private final CommandController controller;
     private final SpringScanner scanner;
     private final SimpleMethodInjection methodInjection;
+    private final Set<CommandResolver> commandResolvers;
     
     @Override
     public void setApplicationContext(ApplicationContext ctx) throws BeansException {
@@ -38,8 +42,14 @@ class CommandScanner implements ApplicationContextAware {
             @Override
             public boolean execute(CommandSender commandSender, String label, String[] args) {
                 try {
+                    CommandResolver.Command command =
+                            new CommandResolver.Command(commandSender, args, label);
+                    List<Resolver> contextResolvers = commandResolvers.stream()
+                            .map(r -> r.makeResolver(command))
+                            .collect(Collectors.toList());
                     Object result = methodInjection.invoke(e.getKey(),
                                                            e.getValue(),
+                                                           contextResolvers,
                                                            commandSender,
                                                            args,
                                                            label);
