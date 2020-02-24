@@ -10,6 +10,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spigot.version>1.15.1-R0.1-SNAPSHOT</spigot.version>
+        <mcspring.version>0.0.2</mcspring.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
@@ -62,12 +63,18 @@
         <dependency>
             <groupId>in.kyle.mcspring</groupId>
             <artifactId>mcspring</artifactId>
-            <version>0.0.2</version>
+            <version>${mcspring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>in.kyle.mcspring</groupId>
+            <artifactId>subcommands</artifactId>
+            <version>${mcspring.version}</version>
         </dependency>
         <dependency>
             <groupId>in.kyle.mcspring</groupId>
             <artifactId>annotations</artifactId>
-            <version>0.0.2</version>
+            <version>${mcspring.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -97,6 +104,59 @@
                             </sourceFile>
                             <destinationFile>${project.basedir}/spigot/plugins/plugin.jar
                             </destinationFile>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                        <exclude>favicon.ico</exclude>
+                                        <exclude>log4j2.springboot</exclude>
+                                        <exclude>aspectj*.dtd</exclude>
+                                        <exclude>Log4j-charsets.properties</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <relocations>
+                                <relocation>
+                                    <pattern>aj.org</pattern>
+                                    <shadedPattern>in.kyle.mcspring.deps.aj.org</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>ch.qos</pattern>
+                                    <shadedPattern>in.kyle.mcspring.deps.ch.qos</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>javax.annotation</pattern>
+                                    <shadedPattern>in.kyle.mcspring.deps.javax.annotation
+                                    </shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.yaml</pattern>
+                                    <shadedPattern>in.kyle.mcspring.deps.org.yaml</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.springframework</pattern>
+                                    <shadedPattern>in.kyle.mcspring.deps.org.springframework
+                                    </shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.slf4j</pattern>
+                                    <shadedPattern>in.kyle.mcspring.deps.org.slf4j</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.aspectj</pattern>
+                                    <shadedPattern>in.kyle.mcspring.deps.org.aspectj</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.apache</pattern>
+                                    <shadedPattern>in.kyle.mcspring.deps.org.apache</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.aopalliance</pattern>
+                                    <shadedPattern>in.kyle.mcspring.deps.org.aopalliance
+                                    </shadedPattern>
+                                </relocation>
+                            </relocations>
                         </configuration>
                     </execution>
                     <execution>
@@ -128,8 +188,11 @@
                             <goal>copy</goal>
                         </goals>
                         <configuration>
-                            <sourceFile>${project.build.directory}/${project.build.finalName}-big.jar</sourceFile>
-                            <destinationFile>${project.basedir}/spigot/update/plugin.jar</destinationFile>
+                            <sourceFile>
+                                ${project.build.directory}/${project.build.finalName}-big.jar
+                            </sourceFile>
+                            <destinationFile>${project.basedir}/spigot/update/plugin.jar
+                            </destinationFile>
                         </configuration>
                     </execution>
                 </executions>

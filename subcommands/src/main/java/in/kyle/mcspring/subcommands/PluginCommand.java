@@ -1,7 +1,6 @@
 package in.kyle.mcspring.subcommands;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.Method;
@@ -53,7 +52,7 @@ public class PluginCommand {
     }
     
     public void otherwise(Supplier<String> supplier) {
-        if (state == State.MISSING_ARG) {
+        if (state == State.MISSING_ARG || state == State.CLEAN) {
             String message = supplier.get();
             sender.sendMessage(message);
             state = State.EXECUTED;
@@ -151,35 +150,35 @@ public class PluginCommand {
     
     @SneakyThrows
     public <A> void then(Executors.E1<A> e) {
-        tryExecute(() -> invoke(e, 1));
+        then(() -> invoke(e, 1));
     }
     
     @SneakyThrows
     public <A, B> void then(Executors.E2<A, B> e) {
-        tryExecute(() -> invoke(e, 2));
+        then(() -> invoke(e, 2));
     }
     
     @SneakyThrows
     public <A, B, C> void then(Executors.E3<A, B, C> e) {
-        tryExecute(() -> invoke(e, 3));
+        then(() -> invoke(e, 3));
     }
     
     @SneakyThrows
     public <A, B, C, D> void then(Executors.E4<A, B, C, D> e) {
-        tryExecute(() -> invoke(e, 4));
+        then(() -> invoke(e, 4));
     }
     
     @SneakyThrows
     public <A, B, C, D, E> void then(Executors.E5<A, B, C, D, E> e) {
-        tryExecute(() -> invoke(e, 5));
+        then(() -> invoke(e, 5));
     }
     
     @SneakyThrows
     public <A, B, C, D, E, F> void then(Executors.E6<A, B, C, D, E, F> e) {
-        tryExecute(() -> invoke(e, 6));
+        then(() -> invoke(e, 6));
     }
     
-    private void tryExecute(Runnable r) {
+    public void then(Runnable r) {
         if (parts.size() == 0 && state == State.CLEAN) {
             r.run();
             state = State.EXECUTED;
@@ -190,10 +189,9 @@ public class PluginCommand {
     private void invoke(Executors executors, int argCount) {
         Method method = executors.getMethod(argCount);
         
-        Collections.reverse(injections);
         injections.add(sender);
         Object[] objects = injections.toArray(new Object[0]);
-        Object[] parameters = injection.getParameters(method, Collections.emptySet(), objects);
+        Object[] parameters = injection.getParameters(method, Collections.emptyList(), objects);
         
         Method handleMethod = getHandleMethod(executors);
         handleMethod.setAccessible(true);

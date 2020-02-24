@@ -5,9 +5,11 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,6 +20,7 @@ import lombok.AllArgsConstructor;
 @Component
 @Configuration
 @AllArgsConstructor
+@Profile("!test")
 class CommandScanner implements ApplicationContextAware {
     
     private final CommandController controller;
@@ -42,9 +45,9 @@ class CommandScanner implements ApplicationContextAware {
                 try {
                     CommandResolver.Command command =
                             new CommandResolver.Command(commandSender, args, label);
-                    Set<Resolver> contextResolvers = commandResolvers.stream()
+                    List<Resolver> contextResolvers = commandResolvers.stream()
                             .map(r -> r.makeResolver(command))
-                            .collect(Collectors.toSet());
+                            .collect(Collectors.toList());
                     Object result = methodInjection.invoke(e.getKey(),
                                                            e.getValue(),
                                                            contextResolvers,

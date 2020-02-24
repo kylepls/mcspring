@@ -26,10 +26,6 @@ public abstract class SpringPlugin extends JavaPlugin {
         }
     }
     
-    Class<?> getConfiguration() {
-        return Config.class;
-    }
-    
     private void initSpring() {
         ResourceLoader loader = new DefaultResourceLoader(getClassLoader());
         
@@ -40,7 +36,7 @@ public abstract class SpringPlugin extends JavaPlugin {
             builder.parent(StaticSpring.getParentContainer());
         }
         
-        context = builder.sources(getConfiguration(), SpringSpigotSupport.class)
+        context = builder.sources(SpringSpigotSupport.class)
                 .resourceLoader(loader)
                 .bannerMode(Banner.Mode.OFF)
                 .properties("spigot.plugin=" + getName())
@@ -53,11 +49,5 @@ public abstract class SpringPlugin extends JavaPlugin {
     private String getMainPackage() {
         String mainPackage = getDescription().getMain();
         return mainPackage.substring(0, mainPackage.lastIndexOf("."));
-    }
-    
-    @SuppressWarnings("SpringComponentScan")
-    @Configuration
-    @ComponentScan(basePackages = "${main}")
-    static class Config {
     }
 }

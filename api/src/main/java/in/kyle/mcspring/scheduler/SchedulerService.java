@@ -3,6 +3,7 @@ package in.kyle.mcspring.scheduler;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 @Service
 @Scope(SCOPE_SINGLETON)
 @RequiredArgsConstructor
+@Profile("!test")
 public class SchedulerService {
     
     private final BukkitScheduler scheduler;

@@ -30,7 +30,7 @@ public class SimpleMethodInjection {
     private final List<Resolver> resolvers;
     
     @SneakyThrows
-    public Object invoke(Method method, Object object, Set<Resolver> resolvers, Object... contextObjects) {
+    public Object invoke(Method method, Object object, List<Resolver> resolvers, Object... contextObjects) {
         Object[] params = getParameters(method, resolvers, contextObjects);
         method.setAccessible(true);
         if (params.length != 0) {
@@ -40,17 +40,17 @@ public class SimpleMethodInjection {
         }
     }
     
-    private Set<Resolver> makeResolvers(Object... contextObjects) {
+    private List<Resolver> makeResolvers(Object... contextObjects) {
         return Stream.of(contextObjects)
                 .filter(Objects::nonNull)
                 .map(o -> (Resolver) parameter -> ClassUtils.isAssignable(parameter.getType(),
                                                                           o.getClass())
                         ? Optional.of(o)
                         : Optional.empty())
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
     
-    public Object[] getParameters(Method method, Set<Resolver> contextResolvers, Object... contextObjects) {
+    public Object[] getParameters(Method method, List<Resolver> contextResolvers, Object... contextObjects) {
         Parameter[] parameters = method.getParameters();
         Object[] params = new Object[parameters.length];
         

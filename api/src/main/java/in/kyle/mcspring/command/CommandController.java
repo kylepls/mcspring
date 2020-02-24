@@ -3,6 +3,7 @@ package in.kyle.mcspring.command;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 
 import java.lang.reflect.Field;
@@ -10,6 +11,7 @@ import java.lang.reflect.Field;
 import lombok.SneakyThrows;
 
 @Controller
+@Profile("!test")
 public class CommandController {
     
     private final CommandMap commandMap = getCommandMap();
