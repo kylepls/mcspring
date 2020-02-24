@@ -19,6 +19,7 @@
         <dependency>
             <groupId>in.kyle.mcspring</groupId>
             <artifactId>test-plugin</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
 
