@@ -2,6 +2,8 @@ package in.kyle.mcspring.processor;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -59,6 +61,8 @@ public class AnnotationProcessor extends AbstractProcessor {
     
     private Set<String> findPackage(RoundEnvironment env) {
         Set<? extends Element> elements = env.getElementsAnnotatedWith(Component.class);
+        elements.addAll((Set) env.getElementsAnnotatedWith(Controller.class));
+        elements.addAll((Set) env.getElementsAnnotatedWith(Service.class));
         Set<String> packages = new HashSet<>();
         for (Element element : elements) {
             if (element instanceof TypeElement) {

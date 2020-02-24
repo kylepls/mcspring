@@ -16,6 +16,26 @@ public class TestPloogin { // We don't have to extend JavaPlugin
     public void onMove(PlayerMoveEvent e) {
         getLogger().info(e.getPlayer().getName() + " moved");
     }
+    
+    // sub-commands
+    @Command("plot")
+    public void plot(PluginCommand command) {
+        command.on("tp", this::plotTp);
+        command.otherwise("Usage: plot <tp>");
+    }
+    
+    public void tp(PluginCommand command) {
+        command.withInt("Parameter must be an integer");
+        command.withInt("Parameter must be an integer");
+        command.then(this::executeTp);
+        command.otherwise("Usage: plot tp <x> <y>");
+    }
+
+    // parameters are injected from the #with arguments
+    // Spring beans are also injected    
+    public void executeTp(Player sender, int x, int y) {
+        sender.teleportToPlot(x, y);
+    }    
 }
 ```
 
