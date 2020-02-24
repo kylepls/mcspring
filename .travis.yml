@@ -29,7 +29,6 @@ deploy:
   on:
     tags: true
     branch: master
-    repo: kylepls/mc-spring
   name: $project_version
 install:
   mvn --settings .maven.xml clean install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
