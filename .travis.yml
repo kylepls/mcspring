@@ -1,17 +1,11 @@
 language: java
-jdk:
-- openjdk8
-before_install:
-  - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
-  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
-install:
-  mvn --settings .maven.xml install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
-script:
-  mvn clean deploy --settings .maven.xml -B -U -Prelease
+before_deploy:
+  - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
+  - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
 deploy:
   provider: releases
   api_key:
-    secure: Nme4Am1OPij1n9dbTUceFol2SQygu/Xiy+T+BtYECm4g0hpjWhLoPdUOvjdAu6qPqu92xn1A6w1crXAuWspfWpeFsaGKXGBh2I+Q5hh5EZTt3+e/mhaI3sNx3HLPKkr+2ekaxHk3a/gkywoBt+Q0Y276f/4TCxb+9Q6R8+StxjYkkpJ8rYoUsQbs3e5kiMmGb2hx9XgxF3TzDYqL/Zcrkhat0cB0Doi4DUZAZ5nzhq3l1izfYcpIpmMZobUyl78n1HEpWTZJl6aCbJe0kEKJblEsdvxHrb6VclD6p0Q+FltkoT6V/wfpjxjaMpJWA1rUVl7Em+QTt1ABw2pzoMXUtGXlmBcxBcznuTzvUxD7Oc50CxfzQ+kdxcbRmdbrhGuIqlvwKORf9r9q4xtQ1sV6Y2UGDr7GZl7L7gV7w4IWKJX4rNpepnR+mGjE245swmiWKYpA9C9Hf/eZETfh0MuuVsIf9QrLrFPFBm3xFaeFqd+YzLOCH1ElSqf2jfy34E/RlVwE+L+KORHtxMvx+fGevu6hhqe1AyWM/w1p4S2jDjHgSvZ716AmPgP3VBl4+AZ1aQOILOYvUIAoQNP9LdJeTC86TO5ab537AjTouHWZEmFnXGSeaVI51blzB1qvH1c/gqrZGschi275QqHLf46hsILGpl+jGA3Ha+NVhfw18RA=
+    secure: YmhqsH9dxH3uK5JC+PLr15Fim/8vNhl93GBDSoLbsYmNmyAbybdXsn/JOmY6uIeveZLvWD8TUoi3fmycTTiSkw7hkYAhC6ZbzUp1cDtGxR+mSqqMqgud7mL5K+WQgGJYZkQgiyK95gLk0lmdQB3k2PwfQcutLdU6eIH/DQDjvDyhUB6qyhxpIN/fntismo2hWkDjXjGGJALcxAg/MmTro4Bli9gBbWwufyOdMPsWB/WnjkHyyZ0eTGbOf6YNtFC2m/fDcGfHj1cGzrj/5mJ88p/QqRb/Qii654iOIQsR7Ehpe0TwOB6hOw2eR/j0IFXBq9RkUwwEIzXxQS7HC7RE7Pg2OE/oNkk4jtEPHsMEN3MN2ZG/b40BUgjfP90RoNlVwDfNMS71Ge8w6hk38es8/Pv9GNyf0XN+x1x5LCD4rYHjtjXtBrp5PKU6yeyndD1UPQpFu6vlzan7KEYz58XRGTPEu1ivAAlDM0Sy9RWC155zUNybFKz7NA0Z5EAsGBTEpVv1ecJdu38WAfg3LdWp/dmM9BVoOqf3adjHggUibs9s+ZOxjP2sLzkdlsfzpVZvxMbNABj5cqUgyOKo4rxd0mh6rIX6myHptziFKxnw/wwyYH3DBRyuHD+syvwCoSehMK68cC5l03yKxw8nh4zuho2VjOBfe3RnKLDUHtsBNEY=
   file:
     - annotations/target/annotations-$project_version.jar
     - annotations/target/annotations-$project_version-javadoc.jar
