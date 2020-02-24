@@ -36,6 +36,22 @@
         <url>https://github.com/kylepls/mcspring/issues</url>
     </issueManagement>
 
+    <distributionManagement>
+        <site>
+            <id>api.wiki</id>
+            <url>https://github.com/phillip-kruger/apiee/wiki</url>
+        </site>
+
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
     <scm>
         <url>https://github.com/kylepls/mcspring</url>
         <connection>scm:git:git://github.com/kylepls/mcspring.git</connection>
@@ -56,17 +72,6 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
-
-    <distributionManagement>
-        <repository>
-            <id>myMavenRepoWrite</id>
-            <url>${myMavenRepoWriteUrl}</url>
-        </repository>
-        <snapshotRepository>
-            <id>myMavenRepoWrite</id>
-            <url>${myMavenRepoWriteUrl}</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <repositories>
         <repository>
@@ -105,6 +110,31 @@
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>1.6.8</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <serverId>ossrh</serverId>
+                        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                        <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>1.6</version>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
