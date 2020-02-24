@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/kylepls/mcspring.svg?branch=master)](https://travis-ci.org/kylepls/mcspring)
+![Maven Central](https://img.shields.io/maven-central/v/in.kyle.mcspring/mcspring)
+
+
 ### mc-spring
 ```java
 @Component
