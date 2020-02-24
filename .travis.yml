@@ -23,7 +23,7 @@ deploy:
     - subcommands/target/subcommands-$project_version.jar
     - subcommands/target/subcommands-$project_version-javadoc.jar
     - subcommands/target/subcommands-$project_version-sources.jar
-  skip_cleanup: false
+  skip_cleanup: true
   on:
     repo: kylepls/mc-spring
   name: $project_version

@@ -17,7 +17,7 @@
     <groupId>in.kyle.mcspring</groupId>
     <artifactId>mcspring-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <name>mcspring</name>
 
     <description>Adds Spring support to Bukkit plugins</description>
