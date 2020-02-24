@@ -24,11 +24,12 @@ deploy:
     - subcommands/target/subcommands-$project_version-javadoc.jar
     - subcommands/target/subcommands-$project_version-sources.jar
   skip_cleanup: true
+  ## Build and release to maven central on tagged version
+  script: mvn clean deploy --settings .maven.xml -DskipTests=true -B -U -Prelease
   on:
+    tags: true
+    branch: master
     repo: kylepls/mc-spring
   name: $project_version
 install:
   mvn --settings .maven.xml clean install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
-## Build and release to maven central
-script:
-  mvn clean deploy --settings .maven.xml -DskipTests=true -B -U -Prelease

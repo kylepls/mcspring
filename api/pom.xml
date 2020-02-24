@@ -5,8 +5,12 @@
     <parent>
         <artifactId>mcspring-parent</artifactId>
         <groupId>in.kyle.mcspring</groupId>
-        <version>0.0.3</version>
+        <version>0.0.4</version>
     </parent>
+
+    <properties>
+        <springboot.version>2.2.4.RELEASE</springboot.version>
+    </properties>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>mcspring</artifactId>
@@ -19,22 +23,21 @@
     </repositories>
 
     <dependencies>
-        <!-- Duplicated so Lombok runs before the annotation processor -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-            <version>2.2.4.RELEASE</version>
+            <version>${springboot.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
-            <version>2.2.4.RELEASE</version>
+            <version>${springboot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -42,10 +45,11 @@
             <version>2.12.1</version>
             <scope>provided</scope>
         </dependency>
+        <!-- Test Deps -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>2.2.4.RELEASE</version>
+            <version>${springboot.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

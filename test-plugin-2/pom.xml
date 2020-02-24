@@ -5,7 +5,7 @@
     <parent>
         <artifactId>mcspring-parent</artifactId>
         <groupId>in.kyle.mcspring</groupId>
-        <version>0.0.3</version>
+        <version>0.0.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,14 +15,10 @@
         <dependency>
             <groupId>in.kyle.mcspring</groupId>
             <artifactId>mcspring</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>in.kyle.mcspring</groupId>
             <artifactId>test-plugin</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 
@@ -32,40 +28,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.1</version>
-                <executions>
-                    <execution>
-                        <id>target-package</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <finalName>plugin-small</finalName>
-                            <shadedArtifactAttached>false</shadedArtifactAttached>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>com.coderplus.maven.plugins</groupId>
                 <artifactId>copy-rename-maven-plugin</artifactId>
-                <version>1.0.1</version>
-                <executions>
-                    <execution>
-                        <id>copy-plugin</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <sourceFile>
-                                ${project.build.directory}/${project.build.finalName}-small.jar
-                            </sourceFile>
-                            <destinationFile>${project.build.directory}/out.jar</destinationFile>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
