@@ -14,7 +14,7 @@ import javax.tools.FileObject;
 public class MainClassCreator {
     public static void generateMain(FileObject main, String fqn, String packageName, Set<String> packages)
             throws IOException {
-        InputStream resource = MainClassCreator.class.getResourceAsStream("/Main.txt");
+        InputStream resource = MainClassCreator.class.getResourceAsStream("/Main.java");
         try (Writer writer = main.openWriter()) {
             String template = IOUtils.toString(new InputStreamReader(resource));
             String name = fqn;

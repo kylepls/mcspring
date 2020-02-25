@@ -7,11 +7,15 @@ import org.bukkit.command.CommandSender;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import in.kyle.mcspring.command.SimpleMethodInjection;
@@ -85,6 +89,7 @@ public class PluginCommand {
             parts.clear();
         }
     }
+    
     public void withOfflinePlayer(String notPlayer) {
         withOfflinePlayer(s -> notPlayer);
     }
@@ -112,20 +117,11 @@ public class PluginCommand {
                 .findFirst(), notWorld);
     }
     
-    public void withAny(Function<String, String> invalidArg, String... options) {
-        withAny(Arrays.asList(options), invalidArg);
-    }
-    
-    public void withAny(List<String> options, Function<String, String> invalidArg) {
-        withAny(() -> options, invalidArg);
-    }
-    
-    public void withAny(Supplier<List<String>> options, Function<String, String> invalidArg) {
+    public <T> void withMap(Map<String, T> options, Function<String, String> invalidArg) {
         if (hasExecutablePart()) {
-            List<String> validOptions = options.get();
             String part = parts.remove(0).toLowerCase();
-            if (validOptions.contains(part)) {
-                injections.add(part);
+            if (options.containsKey(part)) {
+                injections.add(options.get(part));
             } else {
                 String message = invalidArg.apply(part);
                 sendMessage(message);
@@ -134,6 +130,22 @@ public class PluginCommand {
         } else {
             state = State.MISSING_ARG;
         }
+    }
+    
+    public void withAny(List<String> options, Function<String, String> invalidArg) {
+        BinaryOperator<String> merge = (a, b) -> {
+            throw new RuntimeException("Duplicate option " + a);
+        };
+        Map<String, String> optionsMap = options.stream()
+                .collect(Collectors.toMap(Function.identity(),
+                                          Function.identity(),
+                                          merge,
+                                          LinkedHashMap::new));
+        withMap(optionsMap, invalidArg);
+    }
+    
+    public void withAny(Function<String, String> invalidArg, String... options) {
+        withAny(Arrays.asList(options), invalidArg);
     }
     
     public void withOnlinePlayer(Function<String, String> playerNotFound) {

@@ -12,6 +12,7 @@
         <module>annotations</module>
         <module>archetype</module>
         <module>subcommands</module>
+        <module>plugin-layout</module>
     </modules>
 
     <groupId>in.kyle.mcspring</groupId>

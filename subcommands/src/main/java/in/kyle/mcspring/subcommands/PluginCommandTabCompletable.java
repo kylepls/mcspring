@@ -5,7 +5,9 @@ import org.bukkit.command.CommandSender;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -58,16 +60,16 @@ public class PluginCommandTabCompletable extends PluginCommand {
     }
     
     @Override
-    public void withAny(Supplier<List<String>> stringOptions, Function<String, String> invalidArg) {
+    public <T> void withMap(Map<String, T> options, Function<String, String> invalidArg) {
         if (hasExecutablePart()) {
-            List<String> validOptions = stringOptions.get();
+            Set<String> validOptions = options.keySet();
             String part = parts.remove(0).toLowerCase();
             if (!validOptions.contains(part)) {
                 state = State.INVALID_ARG;
             }
         } else {
             state = State.MISSING_ARG;
-            tabCompletionOptions.addAll(stringOptions.get());
+            tabCompletionOptions.addAll(options.keySet());
         }
     }
     

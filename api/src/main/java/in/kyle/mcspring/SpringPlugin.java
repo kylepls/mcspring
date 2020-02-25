@@ -1,5 +1,6 @@
 package in.kyle.mcspring;
 
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.springframework.boot.Banner;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -9,16 +10,36 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 
-public abstract class SpringPlugin extends JavaPlugin {
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.boot.remove.PluginJarLauncher;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public class SpringPlugin {
     
+    private static final Map<Plugin, SpringPlugin> PLUGINS = new HashMap<>();
+    
+    private final JavaPlugin plugin;
     private ConfigurableApplicationContext context;
     
-    @Override
-    public final void onEnable() {
+    public static void setup(JavaPlugin plugin) {
+        SpringPlugin springPlugin = new SpringPlugin(plugin);
+        PLUGINS.put(plugin, springPlugin);
+        springPlugin.onEnable();
+    }
+    
+    public static void teardown(JavaPlugin plugin) {
+        SpringPlugin springPlugin = PLUGINS.remove(plugin);
+        springPlugin.onDisable();
+    }
+    
+    public void onEnable() {
+        new PluginJarLauncher().launch(plugin.getClass().getClassLoader());
         initSpring();
     }
     
-    @Override
     public final void onDisable() {
         if (context != null) {
             context.close();
@@ -31,7 +52,7 @@ public abstract class SpringPlugin extends JavaPlugin {
     }
     
     private void initSpring() {
-        ResourceLoader loader = new DefaultResourceLoader(getClassLoader());
+        ResourceLoader loader = new DefaultResourceLoader(getClass().getClassLoader());
         
         StaticSpring.setupLogger();
         
@@ -43,7 +64,7 @@ public abstract class SpringPlugin extends JavaPlugin {
         context = builder.sources(getConfiguration(), SpringSpigotSupport.class)
                 .resourceLoader(loader)
                 .bannerMode(Banner.Mode.OFF)
-                .properties("spigot.plugin=" + getName())
+                .properties("spigot.plugin=" + plugin.getName())
                 .properties("main=" + getMainPackage())
                 .logStartupInfo(false)
                 .run();
@@ -51,7 +72,7 @@ public abstract class SpringPlugin extends JavaPlugin {
     }
     
     private String getMainPackage() {
-        String mainPackage = getDescription().getMain();
+        String mainPackage = plugin.getDescription().getMain();
         return mainPackage.substring(0, mainPackage.lastIndexOf("."));
     }
     
