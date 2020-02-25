@@ -1,9 +1,11 @@
 package in.kyle.mcspring.subcommands;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -19,21 +21,18 @@ import lombok.SneakyThrows;
 @RequiredArgsConstructor
 public class PluginCommand {
     
-    private final SimpleMethodInjection injection;
-    private final CommandSender sender;
-    private final List<String> parts;
-    private final List<Object> injections;
-    private State state = State.CLEAN;
+    final SimpleMethodInjection injection;
+    final CommandSender sender;
+    final List<String> parts;
+    final List<Object> injections;
+    State state = State.CLEAN;
     
     public void on(String command, Consumer<PluginCommand> executor) {
         if (hasExecutablePart()) {
             String part = parts.get(0);
             if (command.equalsIgnoreCase(part)) {
-                PluginCommand send = new PluginCommand(injection,
-                                                       sender,
-                                                       parts.subList(1, parts.size()),
-                                                       injections);
-                executor.accept(send);
+                parts.remove(0);
+                executor.accept(copy());
                 state = State.EXECUTED;
             }
         }
@@ -42,7 +41,7 @@ public class PluginCommand {
     public void onInvalid(Function<String, String> help) {
         if (hasExecutablePart()) {
             String message = help.apply(parts.get(0));
-            sender.sendMessage(message);
+            sendMessage(message);
             state = State.EXECUTED;
         }
     }
@@ -54,7 +53,7 @@ public class PluginCommand {
     public void otherwise(Supplier<String> supplier) {
         if (state == State.MISSING_ARG || state == State.CLEAN) {
             String message = supplier.get();
-            sender.sendMessage(message);
+            sendMessage(message);
             state = State.EXECUTED;
         }
     }
@@ -66,7 +65,8 @@ public class PluginCommand {
             if (apply.isPresent()) {
                 injections.add(apply.get());
             } else {
-                sender.sendMessage(error.apply(part));
+                String message = error.apply(part);
+                sendMessage(message);
                 state = State.INVALID_ARG;
             }
         } else {
@@ -112,6 +112,30 @@ public class PluginCommand {
                 .findFirst(), notWorld);
     }
     
+    public void withAny(Function<String, String> invalidArg, String... options) {
+        withAny(Arrays.asList(options), invalidArg);
+    }
+    
+    public void withAny(List<String> options, Function<String, String> invalidArg) {
+        withAny(() -> options, invalidArg);
+    }
+    
+    public void withAny(Supplier<List<String>> options, Function<String, String> invalidArg) {
+        if (hasExecutablePart()) {
+            List<String> validOptions = options.get();
+            String part = parts.remove(0).toLowerCase();
+            if (validOptions.contains(part)) {
+                injections.add(part);
+            } else {
+                String message = invalidArg.apply(part);
+                sendMessage(message);
+                state = State.INVALID_ARG;
+            }
+        } else {
+            state = State.MISSING_ARG;
+        }
+    }
+    
     public void withOnlinePlayer(Function<String, String> playerNotFound) {
         with(s -> Optional.ofNullable(Bukkit.getPlayer(s)), playerNotFound);
     }
@@ -146,6 +170,41 @@ public class PluginCommand {
         } catch (NumberFormatException e) {
             return Optional.empty();
         }
+    }
+    
+    @SneakyThrows
+    public <A> void then(Executors.O0 e) {
+        then(() -> invoke(e, 0));
+    }
+    
+    @SneakyThrows
+    public <A> void then(Executors.O1<A> e) {
+        then(() -> invoke(e, 1));
+    }
+    
+    @SneakyThrows
+    public <A, B> void then(Executors.O2<A, B> e) {
+        then(() -> invoke(e, 2));
+    }
+    
+    @SneakyThrows
+    public <A, B, C> void then(Executors.O3<A, B, C> e) {
+        then(() -> invoke(e, 3));
+    }
+    
+    @SneakyThrows
+    public <A, B, C, D> void then(Executors.O4<A, B, C, D> e) {
+        then(() -> invoke(e, 4));
+    }
+    
+    @SneakyThrows
+    public <A, B, C, D, E> void then(Executors.O5<A, B, C, D, E> e) {
+        then(() -> invoke(e, 5));
+    }
+    
+    @SneakyThrows
+    public <A, B, C, D, E, F> void then(Executors.O6<A, B, C, D, E, F> e) {
+        then(() -> invoke(e, 6));
     }
     
     @SneakyThrows
@@ -185,6 +244,14 @@ public class PluginCommand {
         }
     }
     
+    void sendMessage(String message) {
+        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+    }
+    
+    PluginCommand copy() {
+        return new PluginCommand(injection, sender, parts, injections);
+    }
+    
     @SneakyThrows
     private void invoke(Executors executors, int argCount) {
         Method method = executors.getMethod(argCount);
@@ -197,8 +264,12 @@ public class PluginCommand {
         handleMethod.setAccessible(true);
         Object output = handleMethod.invoke(executors, parameters);
         if (output != null) {
-            sender.sendMessage(output.toString());
+            sendMessage(output.toString());
         }
+    }
+    
+    boolean hasExecutablePart() {
+        return parts.size() > 0 && state == State.CLEAN;
     }
     
     private Method getHandleMethod(Executors executors) {
@@ -208,11 +279,7 @@ public class PluginCommand {
                 .orElseThrow(RuntimeException::new);
     }
     
-    private boolean hasExecutablePart() {
-        return parts.size() > 0 && state == State.CLEAN;
-    }
-    
-    enum State {
+    public enum State {
         CLEAN,
         MISSING_ARG,
         INVALID_ARG,

@@ -3,6 +3,7 @@ package in.kyle.mcspring.scheduler;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_SINGLETON;
 
+@Lazy
 @Service
 @Scope(SCOPE_SINGLETON)
 @RequiredArgsConstructor

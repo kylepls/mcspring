@@ -13,29 +13,27 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import in.kyle.api.bukkit.entity.TestPlayer;
 import in.kyle.api.generate.api.Generator;
+import in.kyle.mcspring.SpringSpigotSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ActiveProfiles("test")
-@SpringBootTest(classes = TestConfig.class)
-public class TestPluginCommand {
+@SpringBootTest
+class TestPluginCommand {
     
     @Autowired
-    Generator generator;
-    @Autowired
     TestConsole console;
-    List<String> outputMessages;
+    @Autowired
     TestPlayer sender;
+    List<String> outputMessages;
     
     @BeforeEach
     void setup() {
-        generator.inject(this);
         outputMessages = new ArrayList<>();
         sender.getMessages().subscribe(outputMessages::add);
     }
     
     @Test
-    public void testSenderArg() {
+    void testSenderArg() {
         class Test {
             void root(PluginCommand command) {
                 command.then(this::exec);
@@ -51,7 +49,7 @@ public class TestPluginCommand {
     }
     
     @Test
-    public void testCommandSingleSentenceArg() {
+    void testCommandSingleSentenceArg() {
         class Test {
             void root(PluginCommand command) {
                 command.withSentence();
@@ -68,7 +66,7 @@ public class TestPluginCommand {
     }
     
     @Test
-    public void testCommandIntArgs() {
+    void testCommandIntArgs() {
         AtomicBoolean ran = new AtomicBoolean();
         class Test {
             void root(PluginCommand command) {
@@ -92,7 +90,7 @@ public class TestPluginCommand {
     }
     
     @Test
-    public void testCommandBranching() {
+    void testCommandBranching() {
         class Test {
             void root(PluginCommand command) {
                 command.on("a", this::a);
@@ -123,7 +121,7 @@ public class TestPluginCommand {
     }
     
     @Test
-    public void testOtherwise() {
+    void testOtherwise() {
         class Test {
             void root(PluginCommand command) {
                 command.on("a", this::a);
@@ -149,7 +147,7 @@ public class TestPluginCommand {
     }
     
     @Test
-    public void testWithError() {
+    void testWithError() {
         class Test {
             void root(PluginCommand command) {
                 command.withInt(s -> s + " is not an int");

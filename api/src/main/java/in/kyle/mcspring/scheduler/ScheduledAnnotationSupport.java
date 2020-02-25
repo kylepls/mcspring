@@ -3,6 +3,7 @@ package in.kyle.mcspring.scheduler;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -14,6 +15,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 
+@Lazy
 @Component
 @AllArgsConstructor
 class ScheduledAnnotationSupport extends ThreadPoolTaskScheduler {

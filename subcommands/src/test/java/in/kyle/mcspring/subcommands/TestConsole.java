@@ -18,11 +18,11 @@ public class TestConsole {
     private final SimpleMethodInjection injection;
     
     public void run(CommandSender sender, String commandString, Consumer<PluginCommand> consumer) {
-        List<String> tp = new ArrayList<>(Arrays.asList(commandString.split(" ")));
-        if (tp.get(0).isEmpty()) {
-            tp.remove(0);
+        List<String> parts = new ArrayList<>(Arrays.asList(commandString.split(" ")));
+        if (parts.get(0).isEmpty()) {
+            parts.remove(0);
         }
-        PluginCommand command = new PluginCommand(injection, sender, tp, new ArrayList<>());
+        PluginCommand command = new PluginCommand(injection, sender, parts, new ArrayList<>());
         consumer.accept(command);
     }
 }

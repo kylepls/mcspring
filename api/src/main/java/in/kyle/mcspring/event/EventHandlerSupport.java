@@ -10,14 +10,16 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 
-@Configuration
+@Component
 @AllArgsConstructor
 class EventHandlerSupport implements ApplicationContextAware {
     

@@ -2,6 +2,7 @@ package in.kyle.mcspring.command;
 
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
@@ -23,6 +24,7 @@ import lombok.SneakyThrows;
  * Used to inject method parameters
  * Does not support annotated parameters
  */
+@Lazy
 @Component
 @RequiredArgsConstructor
 public class SimpleMethodInjection {
