@@ -43,6 +43,7 @@ public class PluginCommandTabCompletable extends PluginCommand {
     
     @Override
     public void onInvalid(Function<String, String> help) {
+        state = State.INVALID_ARG;
     }
     
     @Override

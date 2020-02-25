@@ -124,4 +124,26 @@ public class TestTabCompletion {
         completions = tabDiscovery.getCompletions(sender, "a", test::root);
         assertThat(completions).isEmpty();
     }
+    
+    @Test
+    void testInvalidStop() {
+        class Test {
+            void root(PluginCommand command) {
+                Consumer<PluginCommand> doesNothing = cmd -> fail("should not run");
+                command.on("a", doesNothing);
+                command.on("b", doesNothing);
+                command.on("c", doesNothing);
+                command.onInvalid(s -> String.format("%s is not valid", s));
+                command.then(this::exec);
+            }
+            
+            void exec(CommandSender sender) {
+                fail("Should not run");
+            }
+        }
+        
+        Test test = new Test();
+        var completions = tabDiscovery.getCompletions(sender, "g", test::root);
+        assertThat(completions).isEmpty();
+    }
 }
