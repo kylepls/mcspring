@@ -20,7 +20,7 @@
         </dependency>
         <dependency>
             <groupId>in.kyle.mcspring</groupId>
-            <artifactId>mcspring</artifactId>
+            <artifactId>mcspring-base</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>

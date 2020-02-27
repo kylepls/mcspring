@@ -21,7 +21,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>mcspring</artifactId>
+            <artifactId>mcspring-base</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
