@@ -42,15 +42,15 @@
         </dependency>
         <dependency>
             <groupId>in.kyle.mcspring</groupId>
-            <artifactId>mcspring</artifactId>
+            <artifactId>mcspring-base</artifactId>
         </dependency>
         <dependency>
             <groupId>in.kyle.mcspring</groupId>
-            <artifactId>subcommands</artifactId>
+            <artifactId>mcspring-subcommands</artifactId>
         </dependency>
         <dependency>
             <groupId>in.kyle.mcspring</groupId>
-            <artifactId>annotations</artifactId>
+            <artifactId>mcspring-annotations</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

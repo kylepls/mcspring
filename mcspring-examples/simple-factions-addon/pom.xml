@@ -43,15 +43,15 @@
         </dependency>
         <dependency>
             <groupId>in.kyle.mcspring</groupId>
-            <artifactId>mcspring</artifactId>
+            <artifactId>mcspring-base</artifactId>
         </dependency>
         <dependency>
             <groupId>in.kyle.mcspring</groupId>
-            <artifactId>subcommands</artifactId>
+            <artifactId>mcspring-subcommands</artifactId>
         </dependency>
         <dependency>
             <groupId>in.kyle.mcspring</groupId>
-            <artifactId>annotations</artifactId>
+            <artifactId>mcspring-annotations</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -62,7 +62,6 @@
         <dependency>
             <groupId>in.kyle.mcspring</groupId>
             <artifactId>simple-factions</artifactId>
-            <version>0.0.6</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
