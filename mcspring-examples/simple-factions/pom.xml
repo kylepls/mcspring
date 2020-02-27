@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>mcspring-parent</artifactId>
+        <artifactId>mcspring-examples</artifactId>
         <groupId>in.kyle.mcspring</groupId>
         <version>0.0.6</version>
     </parent>
