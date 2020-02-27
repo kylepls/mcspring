@@ -21,7 +21,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>mcspring</artifactId>
+            <artifactId>mcspring-base</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <!--Test Deps-->
@@ -40,6 +40,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <version>2.2.4.RELEASE</version>
             <exclusions>
                 <exclusion>
                     <artifactId>junit</artifactId>
