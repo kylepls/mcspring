@@ -212,8 +212,8 @@
                     <dependencies>
                         <dependency>
                             <groupId>in.kyle.mcspring</groupId>
-                            <artifactId>plugin-layout</artifactId>
-                            <version>0.0.6</version>
+                            <artifactId>mcspring-plugin-layout</artifactId>
+                            <version>${project.parent.version}</version>
                         </dependency>
                     </dependencies>
                     <executions>
