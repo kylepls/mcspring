@@ -5,20 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <modules>
-        <module>api</module>
-        <module>api-vault</module>
-        <module>test-plugin</module>
-        <module>test-plugin-2</module>
-        <module>annotations</module>
-        <module>archetype</module>
-        <module>subcommands</module>
-        <module>plugin-layout</module>
+        <module>mcspring-examples</module>
+        <module>mcspring-build</module>
+        <module>mcspring-api</module>
     </modules>
 
     <groupId>in.kyle.mcspring</groupId>
     <artifactId>mcspring-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.5</version>
+    <version>0.0.6</version>
     <name>mcspring</name>
 
     <description>Adds Spring support to Bukkit plugins</description>
@@ -172,6 +167,9 @@
                     <configuration>
                         <fork>true</fork>
                         <optimize>false</optimize>
+                        <compilerArgs>
+                            <arg>-AartifactId=${project.artifactId}</arg>
+                        </compilerArgs>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -199,77 +197,28 @@
                     </executions>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-shade-plugin</artifactId>
-                    <version>3.2.2</version>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <configuration>
+                        <mainClass>ignored</mainClass>
+                        <layoutFactory
+                                implementation="in.kyle.mcspring.layout.McSpringLayoutFactorry">
+                            <name>mcspring</name>
+                        </layoutFactory>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>in.kyle.mcspring</groupId>
+                            <artifactId>plugin-layout</artifactId>
+                            <version>0.0.6</version>
+                        </dependency>
+                    </dependencies>
                     <executions>
                         <execution>
-                            <id>init</id>
-                            <phase>package</phase>
+                            <id>build-info</id>
                             <goals>
-                                <goal>shade</goal>
+                                <goal>repackage</goal>
                             </goals>
-                            <configuration>
-                                <finalName>${project.artifactId}-big</finalName>
-                                <shadedArtifactAttached>false</shadedArtifactAttached>
-                                <filters>
-                                    <filter>
-                                        <artifact>*:*</artifact>
-                                        <excludes>
-                                            <exclude>META-INF/*.RSA</exclude>
-                                            <exclude>favicon.ico</exclude>
-                                            <exclude>log4j2.springboot</exclude>
-                                            <exclude>aspectj*.dtd</exclude>
-                                            <exclude>Log4j-charsets.properties</exclude>
-                                        </excludes>
-                                    </filter>
-                                </filters>
-                                <relocations>
-                                    <relocation>
-                                        <pattern>aj.org</pattern>
-                                        <shadedPattern>in.kyle.mcspring.deps.aj.org</shadedPattern>
-                                    </relocation>
-                                    <relocation>
-                                        <pattern>ch.qos</pattern>
-                                        <shadedPattern>in.kyle.mcspring.deps.ch.qos</shadedPattern>
-                                    </relocation>
-                                    <relocation>
-                                        <pattern>javax.annotation</pattern>
-                                        <shadedPattern>in.kyle.mcspring.deps.javax.annotation
-                                        </shadedPattern>
-                                    </relocation>
-                                    <relocation>
-                                        <pattern>org.yaml</pattern>
-                                        <shadedPattern>in.kyle.mcspring.deps.org.yaml
-                                        </shadedPattern>
-                                    </relocation>
-<!--                                    <relocation>-->
-<!--                                        <pattern>org.springframework</pattern>-->
-<!--                                        <shadedPattern>in.kyle.mcspring.deps.org.springframework-->
-<!--                                        </shadedPattern>-->
-<!--                                    </relocation>-->
-                                    <relocation>
-                                        <pattern>org.slf4j</pattern>
-                                        <shadedPattern>in.kyle.mcspring.deps.org.slf4j
-                                        </shadedPattern>
-                                    </relocation>
-                                    <relocation>
-                                        <pattern>org.aspectj</pattern>
-                                        <shadedPattern>in.kyle.mcspring.deps.org.aspectj
-                                        </shadedPattern>
-                                    </relocation>
-<!--                                    <relocation>-->
-<!--                                        <pattern>org.apache</pattern>-->
-<!--                                        <shadedPattern>in.kyle.mcspring.deps.org.apache-->
-<!--                                        </shadedPattern>-->
-<!--                                    </relocation>-->
-                                    <relocation>
-                                        <pattern>org.aopalliance</pattern>
-                                        <shadedPattern>in.kyle.mcspring.deps.org.aopalliance
-                                        </shadedPattern>
-                                    </relocation>
-                                </relocations>
-                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
@@ -286,9 +235,10 @@
                             </goals>
                             <configuration>
                                 <sourceFile>
-                                    ${project.build.directory}/${project.artifactId}-big.jar
+                                    ${project.build.directory}/${project.artifactId}.jar
                                 </sourceFile>
-                                <destinationFile>${project.basedir}/spigot/plugins/plugin.jar
+                                <destinationFile>
+                                    ${project.basedir}/spigot/plugins/${project.artifactId}.jar
                                 </destinationFile>
                             </configuration>
                         </execution>
@@ -300,10 +250,29 @@
                             </goals>
                             <configuration>
                                 <sourceFile>
-                                    ${project.build.directory}/${project.artifactId}-big.jar
+                                    ${project.build.directory}/${project.artifactId}.jar
                                 </sourceFile>
-                                <destinationFile>${project.basedir}/spigot/plugins/update/plugin.jar
+                                <destinationFile>
+                                    ${project.basedir}/spigot/plugins/update/${artifactId}.jar
                                 </destinationFile>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>com.googlecode.maven-download-plugin</groupId>
+                    <artifactId>download-maven-plugin</artifactId>
+                    <version>1.3.0</version>
+                    <executions>
+                        <execution>
+                            <phase>generate-resources</phase>
+                            <goals>
+                                <goal>wget</goal>
+                            </goals>
+                            <configuration>
+                                <url>https://cdn.getbukkit.org/spigot/spigot-1.15.2.jar</url>
+                                <outputFileName>spigot.jar</outputFileName>
+                                <outputDirectory>${project.basedir}/spigot</outputDirectory>
                             </configuration>
                         </execution>
                     </executions>

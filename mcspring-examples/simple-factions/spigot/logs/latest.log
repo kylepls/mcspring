@@ -1,0 +1,43 @@
+[23:39:47] [Server thread/INFO]: Starting minecraft server version 1.15.2
+[23:39:47] [Server thread/INFO]: Loading properties
+[23:39:47] [Server thread/INFO]: This server is running CraftBukkit version git-Spigot-800b93f-8160e29 (MC: 1.15.2) (Implementing API version 1.15.2-R0.1-SNAPSHOT)
+[23:39:47] [Server thread/INFO]: Debug logging is disabled
+[23:39:47] [Server thread/INFO]: Server Ping Player Sample Count: 12
+[23:39:47] [Server thread/INFO]: Using 4 threads for Netty based IO
+[23:39:47] [Server thread/INFO]: Default game type: CREATIVE
+[23:39:47] [Server thread/INFO]: Generating keypair
+[23:39:47] [Server thread/INFO]: Starting Minecraft server on *:25565
+[23:39:47] [Server thread/INFO]: Using default channel type
+[23:39:52] [Server thread/WARN]: Plugin simple-factions v0.0.1 does not specify an api-version.
+[23:39:52] [Server thread/INFO]: [simple-factions] Loading simple-factions v0.0.1
+[23:39:52] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[23:39:52] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
+[23:39:52] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[23:39:52] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
+[23:39:52] [Server thread/INFO]: Preparing level "world"
+[23:39:53] [Server thread/INFO]: Reloading ResourceManager: Default, bukkit
+[23:39:53] [Server thread/INFO]: Loaded 6 recipes
+[23:39:54] [Server thread/INFO]: Preparing start region for dimension 'world'/minecraft:overworld
+[23:39:54] [Server thread/INFO]: Preparing spawn area: 0%
+[23:39:54] [Server-Worker-4/INFO]: Preparing spawn area: 23%
+[23:39:55] [Server thread/INFO]: Preparing spawn area: 90%
+[23:39:55] [Server thread/INFO]: Time elapsed: 1361 ms
+[23:39:55] [Server thread/INFO]: [simple-factions] Enabling simple-factions v0.0.1
+[23:39:56] [Server thread/INFO]: Initializing ExecutorService 'scheduledAnnotationSupport'
+[23:39:57] [Server thread/INFO]: Server permissions file permissions.yml is empty, ignoring it
+[23:39:57] [Server thread/INFO]: Done (4.096s)! For help, type "help"
+[23:40:06] [User Authenticator #1/INFO]: UUID of player kittnz is cc4cc5b8-a829-34a7-b0b4-dccef07842d5
+[23:40:06] [Server thread/INFO]: kittnz[/127.0.0.1:61654] logged in with entity id 1 at ([world]-262.5, 4.0, -199.5)
+[23:40:11] [Server thread/INFO]: kittnz issued server command: /pl
+[23:40:17] [Server thread/INFO]: kittnz issued server command: /stop
+[23:40:19] [Server thread/INFO]: Stopping the server
+[23:40:19] [Server thread/INFO]: Stopping server
+[23:40:19] [Server thread/INFO]: [simple-factions] Disabling simple-factions v0.0.1
+[23:40:19] [Server thread/INFO]: Shutting down ExecutorService 'scheduledAnnotationSupport'
+[23:40:19] [Server thread/INFO]: Saving players
+[23:40:19] [Server thread/INFO]: kittnz lost connection: Server Shut Down
+[23:40:19] [Server thread/INFO]: kittnz left the game
+[23:40:19] [Server thread/INFO]: Saving worlds
+[23:40:19] [Server thread/INFO]: Saving chunks for level 'world'/minecraft:overworld
+[23:40:20] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[23:40:20] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved

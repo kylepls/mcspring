@@ -83,7 +83,7 @@ I tried to make this as easy as possible. If you're using Intellij just do the f
 
     1. group: `in.kyle.mcspring` 
     2. artifact: `archetype` 
-    3. version: `0.0.5` 
+    3. version: `0.0.6` 
 
 Then a project will be created for you with a project-specific Spigot folder already setup for you.
 
