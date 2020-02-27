@@ -17,4 +17,13 @@
 
     <packaging>pom</packaging>
     <artifactId>mcspring-examples</artifactId>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>${project.parent.groupId}</groupId>
+                <artifactId>mcspring-parent</artifactId>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
