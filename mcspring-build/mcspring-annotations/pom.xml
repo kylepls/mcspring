@@ -21,6 +21,7 @@
         <dependency>
             <groupId>in.kyle.mcspring</groupId>
             <artifactId>mcspring-base</artifactId>
+            <version>${project.parent.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
