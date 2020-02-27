@@ -213,6 +213,7 @@
                         <dependency>
                             <groupId>in.kyle.mcspring</groupId>
                             <artifactId>mcspring-plugin-layout</artifactId>
+                            <!--suppress MavenModelInspection -->
                             <version>${project.parent.version}</version>
                         </dependency>
                     </dependencies>
