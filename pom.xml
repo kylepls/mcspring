@@ -80,6 +80,12 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.12</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>2.1.4.RELEASE</version>
@@ -88,17 +94,17 @@
             </dependency>
             <dependency>
                 <groupId>in.kyle.mcspring</groupId>
-                <artifactId>mcspring</artifactId>
+                <artifactId>mcspring-base</artifactId>
                 <version>${project.parent.version}</version>
             </dependency>
             <dependency>
                 <groupId>in.kyle.mcspring</groupId>
-                <artifactId>subcommands</artifactId>
+                <artifactId>mcspring-subcommands</artifactId>
                 <version>${project.parent.version}</version>
             </dependency>
             <dependency>
                 <groupId>in.kyle.mcspring</groupId>
-                <artifactId>annotations</artifactId>
+                <artifactId>mcspring-annotations</artifactId>
                 <version>${project.parent.version}</version>
                 <scope>provided</scope>
             </dependency>
@@ -108,6 +114,17 @@
                 <version>4.12</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.spigotmc</groupId>
+                <artifactId>spigot-api</artifactId>
+                <scope>provided</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>net.md-5</groupId>
+                        <artifactId>bungeecord-chat</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -115,20 +132,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>${spigot.version}</version>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>net.md-5</groupId>
-                    <artifactId>bungeecord-chat</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 
