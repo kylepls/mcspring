@@ -1,7 +1,0 @@
-name: TestPlugin2
-main: in.kyle.test.AnotherPlugin
-description: Hello
-version: 0.0.1
-depend:
-  - TestPloogin
-api-version: "1.13"

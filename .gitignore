@@ -1,6 +1,7 @@
 .idea
 *.iml
 dependency-reduced-pom.xml
-*/target/*
+**/target/**
 pom.xml.versionsBackup
-*/spigot/plugins/*
+**/spigot/**
+!**/archetype-resources/spigot/**
