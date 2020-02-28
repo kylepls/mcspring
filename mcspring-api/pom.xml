@@ -19,4 +19,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>mcspring-api</artifactId>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>${project.parent.groupId}</groupId>
+                <artifactId>mcspring-parent</artifactId>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
