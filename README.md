@@ -9,7 +9,6 @@ Writing Bukkit plugins is a nightmare. I often lay awake in my bed late at night
 These are solved problems. Spring Boot took care of this issue ages ago. 
 So how about we ditch this ridiculous programming model and hop on the Spring train.
 
-
 ```java
 @Component
 class Test { // We don't have to extend JavaPlugin. The plugin.yml is also generated for us.
@@ -62,20 +61,15 @@ class Test { // We don't have to extend JavaPlugin. The plugin.yml is also gener
 
 ---
 
-#### Features
-* No main plugin class needed, ever.
-* No plugin.yml needed, ever.
-* Cross-plugin Spring injection
-* Automatic command registration via `@Command`
-* Automatic scheduler registration via `@Scheduled`
-* Automatic listener registration (no listener interface needed) via `@EventHandler`
-* Injection of common Bukkit objects as beans
-  * Plugin
-  * Server
-  * PluginManager
-  * ...
-* Optional vault support via (`in.kyle.mcspring.economy.EconomyService`)
-* Super sleek (optional) sub-commands API with automatic tab completion
+## What's in the sauce?
+* Main plugin class is generated automatically, you don't need to interact with it.
+* The `plugin.yml` is also a thing of the past. May it rest in peace.
+* Have two plugins? Want to share a Bean or two? Go for it. It's all taken care of.
+* Commands are now registered with `@Command`. Put it anywhere and forget about it.
+* Schedulers are defined with `@Scheduler`. Another thing to schlep away somewhere.
+* `@EventHandler` now registers itself. About damn time.
+* Like money? Vault support is in the box `in.kyle.mcspring.economy.EconomyService`
+* Want my hot take on sub-command handing? We've got you covered (see the wiki)
 
 ## Getting Started
 I went ahead and wrote a full tutorial series for you newcomers. Get started [here](https://github.com/kylepls/mcspring/wiki/Getting-Setup)
