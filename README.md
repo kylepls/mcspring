@@ -85,5 +85,7 @@ If you think you're too smart for the beginner tutorial; go to the
 
 If you're really really smart; check out the example plugins in the `mcspring-example` folder.
 
+---
+
 ##### Final Notes
 Thanks to https://github.com/Alan-Gomes/mcspring-boot/ for the inspiration of this project!
