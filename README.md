@@ -155,21 +155,6 @@ The types of parameters that can be injected are:
 
 `@Qualifier` and other parameter annotations of the like are not supported.
 
-Injection functionality can be extended by creating an `Resolver` component:
-
-```java
-@Component
-class IntResolver implements Resolver {
-    public Optional<Object> resolve(Parameter parameter) {
-        if (parameter.getType().equals(int.class)) {
-            return Optional.of(69);
-        } else {
-            return Optional.empty();
-        }
-    }
-}
-```
-
 ##### Dependencies
 Do not forget to add the `@PluginDepend` annotation to your project if you require any dependencies.
 
