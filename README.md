@@ -1,8 +1,15 @@
-[![Build Status](https://travis-ci.org/kylepls/mcspring.svg?branch=master)](https://travis-ci.org/kylepls/mcspring)
-![Maven Central](https://img.shields.io/maven-central/v/in.kyle.mcspring/mcspring)
+# mcspring [![Build Status](https://travis-ci.org/kylepls/mcspring.svg?branch=master)](https://travis-ci.org/kylepls/mcspring) ![Maven Central](https://img.shields.io/maven-central/v/in.kyle.mcspring/mcspring)
+
+Writing Bukkit plugins is a nightmare. I often lay awake in my bed late at night unable to sleep
+ because Bukkit made events an annotation but commands are created by implementing a class. 
+ The plugin.yml is useless and main classes that extend JavaPlugin are cluttered piles of shit. 
+ 
+ {insert your horror story/gripe here}
+  
+These are solved problems. Spring Boot took care of this issue ages ago. 
+So how about we ditch this ridiculous programming model and hop on the Spring train.
 
 
-### mc-spring
 ```java
 @Component
 class Test { // We don't have to extend JavaPlugin. The plugin.yml is also generated for us.
@@ -56,107 +63,22 @@ class Test { // We don't have to extend JavaPlugin. The plugin.yml is also gener
 ---
 
 #### Features
-
 * No main plugin class needed, ever.
 * No plugin.yml needed, ever.
-* Cross-plugin injection
-* Automatic command registration
-* Automatic scheduler registration
-* Automatic listener registration (no listener interface needed)
+* Cross-plugin Spring injection
+* Automatic command registration via `@Command`
+* Automatic scheduler registration via `@Scheduled`
+* Automatic listener registration (no listener interface needed) via `@EventHandler`
 * Injection of common Bukkit objects as beans
   * Plugin
   * Server
   * PluginManager
   * ...
 * Optional vault support via (`in.kyle.mcspring.economy.EconomyService`)
-* Super sleek sub-comands API
+* Super sleek (optional) sub-commands API with automatic tab completion
 
----
-#### Maven Setup
-
-I tried to make this as easy as possible. If you're using Intellij just do the following.
-
-1. Create a new project
-2. In the create dialog select `Maven -> create from archetype`
-3. Click `Add archetype` on the right-hand side
-4. Type in the following:
-
-    1. group: `in.kyle.mcspring` 
-    2. artifact: `archetype` 
-    3. version: `0.0.6` 
-
-Then a project will be created for you with a project-specific Spigot folder already setup for you.
-
-Next:
-
-1. Run a Maven install to create the required files
-2. Create a new JAR run configuration
-3. Select the downloaded `spigot.jar` in the `spigot` folder as the target
-4. Change the run environment to the `spigot` folder
-5. Add the following **VM flag** `-DIReallyKnowWhatIAmDoingISwear`
-6. To update the plugin on the server, just run a maven install and restart the server.
-
-##### Main class
-
-You don't need a main class. 
-Don't bother with the `plugin.yml` either, mcspring will take care of that. 
-Instead of using the `onEnable` and `onDisable` methods use the `@PostConstract` and `@PreDestroy` annotations.
-
-This will ensure that Spring is able to be properly initialized.
-
-If you need to add a dependency to the `plugin.yml` just use the `@PluginDepends` annotation
- somewhere in your project. If you care about versions, plugin names, or descriptions check out
-the `@SpringPlugin` annotation. Finally, there is the `@PluginAuthor` annotation.
-
-The `plugin.yml` is generated for you. Don't worry about it.
-
-**Do Not**: 
-* Use `@Autowired`. It's gross. Save it for your tests.
-* Create a constructor in the main plugin class. Bukkit still loads that.
-* Create cyclic dependencies between plugins. I promise you there will be errors.
-
---- 
-
-#### Other Notes
-
-##### Do not duplicate commands. For example:
-```java
-@Command("test")
-public String test(CommandSender sender) {
-    return "Only players can run this";
-}
-
-@Command("test")
-public String test(Player player) {
-    ...
-}
-```
-
-Instead do:
-
-```java
-@Command("test")
-public String test(CommandSender sender) {
-    if (sender instanceof Player) {
-        ...
-    } else {
-        return "Only players can execute this command";
-    }
-}
-```
-
-##### Injected Command Method Parameters
-`@Command` methods will have its' parameters automatically injected.
-The types of parameters that can be injected are:
-* CommandSender (or more specific type) - The sender of the command
-* String[] - The arguments of the command
-* String -  The command label
-* Any other Spring bean TYPE - Ex: Plugin, Server, ...
-
-`@Qualifier` and other parameter annotations of the like are not supported.
-
-##### Dependencies
-Do not forget to add the `@PluginDepend` annotation to your project if you require any dependencies.
+## Getting Started
+I went ahead and wrote a full tutorial series for you newcomers. Get started [here](https://github.com/kylepls/mcspring/wiki/Getting-Setup)
 
 ##### Final Notes
 Thanks to https://github.com/Alan-Gomes/mcspring-boot/ for the inspiration of this project!
