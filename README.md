@@ -80,5 +80,10 @@ class Test { // We don't have to extend JavaPlugin. The plugin.yml is also gener
 ## Getting Started
 I went ahead and wrote a full tutorial series for you newcomers. Get started [here](https://github.com/kylepls/mcspring/wiki/Getting-Setup)
 
+If you think you're too smart for the beginner tutorial; go to the 
+[wiki](https://github.com/kylepls/mcspring/wiki) and piece it together.
+
+If you're really really smart; check out the example plugins in the `mcspring-example` folder.
+
 ##### Final Notes
 Thanks to https://github.com/Alan-Gomes/mcspring-boot/ for the inspiration of this project!
