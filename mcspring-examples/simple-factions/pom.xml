@@ -6,7 +6,7 @@
     <parent>
         <artifactId>mcspring-examples</artifactId>
         <groupId>in.kyle.mcspring</groupId>
-        <version>0.0.6</version>
+        <version>0.0.7</version>
     </parent>
 
     <artifactId>simple-factions</artifactId>
