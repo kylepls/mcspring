@@ -43,17 +43,14 @@
         <dependency>
             <groupId>in.kyle.mcspring</groupId>
             <artifactId>mcspring-base</artifactId>
-            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>in.kyle.mcspring</groupId>
             <artifactId>mcspring-subcommands</artifactId>
-            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>in.kyle.mcspring</groupId>
             <artifactId>mcspring-annotations</artifactId>
-            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

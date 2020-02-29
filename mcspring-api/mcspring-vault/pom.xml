@@ -9,6 +9,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <properties>
+        <vault.version>1.7.3</vault.version>
+    </properties>
     <artifactId>mcspring-vault</artifactId>
 
     <repositories>
@@ -22,13 +25,16 @@
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>mcspring-base</artifactId>
-            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>Vault</artifactId>
-            <version>1.7.3</version>
+            <version>${vault.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
         </dependency>
     </dependencies>
 
