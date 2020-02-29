@@ -6,7 +6,7 @@ import org.springframework.boot.loader.tools.LibraryScope;
 
 import java.io.File;
 
-public class McSpringLayoutFactorry implements LayoutFactory {
+public class McSpringLayoutFactory implements LayoutFactory {
     
     // required by spring-boot
     @SuppressWarnings("unused")
