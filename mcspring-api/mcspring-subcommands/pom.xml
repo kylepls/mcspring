@@ -22,7 +22,6 @@
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>mcspring-base</artifactId>
-            <version>${project.parent.version}</version>
         </dependency>
         <!--Test Deps-->
         <dependency>
@@ -58,6 +57,12 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>5.3.2</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>1.15.1-R0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
