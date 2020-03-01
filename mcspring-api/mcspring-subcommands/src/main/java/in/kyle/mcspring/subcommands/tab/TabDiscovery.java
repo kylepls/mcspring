@@ -24,7 +24,7 @@ public class TabDiscovery {
     public List<String> getCompletions(CommandSender sender,
                                        String commandString,
                                        Consumer<PluginCommand> consumer) {
-        if (!commandString.endsWith(" ")) {
+        if (!commandString.isEmpty() && !commandString.endsWith(" ")) {
             // TODO: 2020-02-25 Enable partial completions
             return Collections.emptyList();
         }
