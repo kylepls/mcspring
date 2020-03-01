@@ -183,9 +183,48 @@ public class PluginCommand {
             return Optional.empty();
         }
     }
+
+    protected void callOn(String command, Executors executors, int argSize) {
+        if(hasExecutablePart()) {
+            if(parts.get(0).equalsIgnoreCase(command)) {
+                parts.remove(0);
+                then(() -> invoke(executors, argSize));
+            }
+        } else {
+            state = State.MISSING_ARG;
+        }
+    }
+
+    public void on(String command, Executors.O0 executors) {
+        callOn(command, executors, 0);
+    }
+
+    public <A> void on(String command, Executors.E1<A> e) {
+        callOn(command, e, 1);
+    }
+
+    public <A, B> void on(String command, Executors.E2<A, B> e) {
+        callOn(command, e, 2);
+    }
+
+    public <A, B, C> void on(String command, Executors.E3<A, B, C> e) {
+        callOn(command, e, 3);
+    }
+
+    public <A, B, C, D> void on(String command, Executors.E4<A, B, C, D> e) {
+        callOn(command, e, 4);
+    }
+
+    public <A, B, C, D, E> void on(String command, Executors.E5<A, B, C, D, E> e) {
+        callOn(command, e, 5);
+    }
+
+    public <A, B, C, D, E, F> void on(String command, Executors.E6<A, B, C, D, E, F> e) {
+        callOn(command, e, 6);
+    }
     
     @SneakyThrows
-    public <A> void then(Executors.O0 e) {
+    public void then(Executors.O0 e) {
         then(() -> invoke(e, 0));
     }
     

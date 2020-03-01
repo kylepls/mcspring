@@ -1,19 +1,24 @@
 package in.kyle.mcspring.subcommands;
 
+import lombok.SneakyThrows;
+
 import java.io.Serializable;
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Method;
 import java.util.stream.Stream;
 
-import lombok.SneakyThrows;
-
 public interface Executors {
-    
+
     @SneakyThrows
-    default Method getMethod(int argCount) {
+    default SerializedLambda getSerializedLambda() {
         Method writeReplace = this.getClass().getDeclaredMethod("writeReplace");
         writeReplace.setAccessible(true);
-        SerializedLambda sl = (SerializedLambda) writeReplace.invoke(this);
+        return (SerializedLambda) writeReplace.invoke(this);
+    }
+
+    @SneakyThrows
+    default Method getMethod(int argCount) {
+        SerializedLambda sl = getSerializedLambda();
         String methodName = sl.getImplMethodName();
         Class<?> clazz = Class.forName(sl.getImplClass().replace("/", "."));
         return Stream.of(clazz.getMethods(), clazz.getDeclaredMethods())

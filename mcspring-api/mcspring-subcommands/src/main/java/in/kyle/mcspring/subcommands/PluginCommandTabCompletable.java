@@ -42,7 +42,13 @@ public class PluginCommandTabCompletable extends PluginCommand {
         tabCompletionOptions.add(command);
         super.on(command, executor);
     }
-    
+
+    @Override
+    protected void callOn(String command, Executors executors, int argSize) {
+        tabCompletionOptions.add(command);
+        super.callOn(command, executors, argSize);
+    }
+
     @Override
     public void onInvalid(Function<String, String> help) {
         state = State.INVALID_ARG;

@@ -1,5 +1,9 @@
 package in.kyle.mcspring.subcommands;
 
+import in.kyle.api.bukkit.entity.TestPlayer;
+import in.kyle.mcspring.SpringSpigotSupport;
+import in.kyle.mcspring.subcommands.tab.TabDiscovery;
+import lombok.var;
 import org.bukkit.command.CommandSender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,15 +15,10 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import in.kyle.api.bukkit.entity.TestPlayer;
-import in.kyle.mcspring.subcommands.PluginCommand;
-import in.kyle.mcspring.subcommands.tab.TabDiscovery;
-import lombok.var;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
-@SpringBootTest
+@SpringBootTest(classes = SpringSpigotSupport.class)
 public class TestTabCompletion {
 
     @Autowired
@@ -32,6 +31,23 @@ public class TestTabCompletion {
     void setup() {
         outputMessages = new ArrayList<>();
         sender.getMessages().subscribe(outputMessages::add);
+    }
+
+    @Test
+    void testTabWithDirectExecution() {
+        class Test {
+
+            void root(PluginCommand command) {
+                command.on("test", this::exec);
+            }
+
+            void exec(String string) {
+                fail("Should not run");
+            }
+        }
+        Test test = new Test();
+        var completions = tabDiscovery.getCompletions(sender, "", test::root);
+        assertThat(completions).containsExactly("test");
     }
 
     @Test

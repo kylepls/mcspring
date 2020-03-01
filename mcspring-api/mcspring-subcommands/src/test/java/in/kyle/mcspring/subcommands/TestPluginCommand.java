@@ -1,6 +1,8 @@
 package in.kyle.mcspring.subcommands;
 
+import in.kyle.mcspring.SpringSpigotSupport;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,7 @@ import in.kyle.api.bukkit.entity.TestPlayer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@SpringBootTest(classes = SpringSpigotSupport.class)
 class TestPluginCommand {
 
     @Autowired
@@ -27,6 +29,36 @@ class TestPluginCommand {
     void setup() {
         outputMessages = new ArrayList<>();
         sender.getMessages().subscribe(outputMessages::add);
+    }
+
+    @Test
+    void testDirectExecutor() {
+        class Test {
+
+            void exec1(PluginCommand command) {
+                command.on("test", this::handler1);
+            }
+
+            void exec2(PluginCommand command) {
+                command.withString();
+                command.on("test2", this::handler2);
+            }
+
+            void handler1(Player player) {
+                player.sendMessage("Hello World");
+            }
+
+            void handler2(Player player, String string) {
+                player.sendMessage(string);
+            }
+        }
+
+        Test test = new Test();
+        console.run(sender, "test", test::exec1);
+        assertThat(outputMessages).containsExactly("Hello World");
+        outputMessages.clear();
+        console.run(sender, "hello test2", test::exec2);
+        assertThat(outputMessages).containsExactly("hello");
     }
 
     @Test
