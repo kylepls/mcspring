@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
-class PluginCommandBase {
+public class PluginCommandBase {
 
     final SimpleMethodInjection injection;
     final CommandSender sender;
@@ -23,7 +23,7 @@ class PluginCommandBase {
     final List<Object> injections;
     State state = State.CLEAN;
 
-    public void on(String command, Consumer<PluginCommandBase> executor) {
+    public void on(String command, Consumer<PluginCommand> executor) {
         if (hasExecutablePart()) {
             String part = parts.get(0);
             if (command.equalsIgnoreCase(part)) {
@@ -223,8 +223,8 @@ class PluginCommandBase {
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
     }
 
-    PluginCommandBase copy() {
-        return new PluginCommandBase(injection, sender, parts, injections);
+    PluginCommand copy() {
+        return new PluginCommand(injection, sender, parts, injections);
     }
 
     @SneakyThrows

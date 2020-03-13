@@ -36,7 +36,7 @@ public class PluginCommandTabCompletable extends PluginCommand {
     public boolean hasChild() {
         return child != null;
     }
-    
+
     @Override
     public void on(String command, Consumer<PluginCommand> executor) {
         tabCompletionOptions.add(command);
