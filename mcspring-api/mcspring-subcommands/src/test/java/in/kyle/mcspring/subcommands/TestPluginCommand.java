@@ -31,6 +31,36 @@ class TestPluginCommand {
     }
 
     @Test
+    void testDirectExecutor() {
+        class Test {
+
+            void exec1(PluginCommand command) {
+                command.on("test", this::handler1);
+            }
+
+            void exec2(PluginCommand command) {
+                command.withString();
+                command.on("test2", this::handler2);
+            }
+
+            void handler1(CommandSender sender) {
+                sender.sendMessage("Hello World");
+            }
+
+            void handler2(CommandSender sender, String string) {
+                sender.sendMessage(string);
+            }
+        }
+
+        Test test = new Test();
+        console.run(sender, "test", test::exec1);
+        assertThat(outputMessages).containsExactly("Hello World");
+        outputMessages.clear();
+        console.run(sender, "hello test2", test::exec2);
+        assertThat(outputMessages).containsExactly("hello");
+    }
+
+    @Test
     void testSenderArg() {
         class Test {
             void root(PluginCommand command) {

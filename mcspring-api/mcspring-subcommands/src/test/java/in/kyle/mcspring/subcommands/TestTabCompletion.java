@@ -1,5 +1,6 @@
 package in.kyle.mcspring.subcommands;
 
+import in.kyle.mcspring.test.MCSpringTest;
 import org.bukkit.command.CommandSender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ import lombok.var;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
-@SpringBootTest
+@MCSpringTest
 public class TestTabCompletion {
 
     @Autowired
@@ -31,6 +32,23 @@ public class TestTabCompletion {
     void setup() {
         outputMessages = new ArrayList<>();
         sender.getMessages().subscribe(outputMessages::add);
+    }
+
+    @Test
+    void testTabWithDirectExecution() {
+        class Test {
+
+            void root(PluginCommand command) {
+                command.on("test", this::exec);
+            }
+
+            void exec(String string) {
+                fail("Should not run");
+            }
+        }
+        Test test = new Test();
+        var completions = tabDiscovery.getCompletions(sender, "", test::root);
+        assertThat(completions).containsExactly("test");
     }
 
     @Test
