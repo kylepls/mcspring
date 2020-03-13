@@ -1,7 +1,7 @@
 package in.kyle.mcspring.command;
 
+import in.kyle.mcspring.subcommands.PluginCommand;
 import org.bukkit.command.Command;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.Plugin;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -33,16 +33,16 @@ class TabCommandFactory extends SimpleCommandFactory {
     
     @Override
     public Command makeCommand(Method method, Object object, String name) {
-        var command = (PluginCommand) super.makeCommand(method, object, name);
+        var command = (org.bukkit.command.PluginCommand) super.makeCommand(method, object, name);
         if (method.getParameterCount() == 1 && method.getParameters()[0].getType()
-                .isAssignableFrom(in.kyle.mcspring.subcommands.PluginCommand.class)) {
+                .isAssignableFrom(PluginCommand.class)) {
             command.setTabCompleter(makeTabCompleter(method, object));
         }
         return command;
     }
     
-    private Consumer<in.kyle.mcspring.subcommands.PluginCommand> methodToConsumer(Method method,
-                                                                                  Object object) {
+    private Consumer<PluginCommand> methodToConsumer(Method method,
+                                                     Object object) {
         return pluginCommand -> {
             method.setAccessible(true);
             invoke(method, object, pluginCommand);
@@ -52,7 +52,7 @@ class TabCommandFactory extends SimpleCommandFactory {
     @SneakyThrows
     private Object invoke(Method method,
                           Object object,
-                          in.kyle.mcspring.subcommands.PluginCommand command) {
+                          PluginCommand command) {
         return method.invoke(object, command);
     }
     

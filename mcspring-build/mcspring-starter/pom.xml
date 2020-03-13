@@ -5,7 +5,7 @@
     <parent>
         <artifactId>mcspring-build</artifactId>
         <groupId>in.kyle.mcspring</groupId>
-        <version>0.0.8</version>
+        <version>0.0.9</version>
     </parent>
 
     <packaging>pom</packaging>
@@ -23,17 +23,17 @@
             <dependency>
                 <groupId>in.kyle.mcspring</groupId>
                 <artifactId>mcspring-base</artifactId>
-                <version>0.0.8</version>
+                <version>0.0.9</version>
             </dependency>
             <dependency>
                 <groupId>in.kyle.mcspring</groupId>
                 <artifactId>mcspring-subcommands</artifactId>
-                <version>0.0.8</version>
+                <version>0.0.9</version>
             </dependency>
             <dependency>
                 <groupId>in.kyle.mcspring</groupId>
                 <artifactId>mcspring-annotations</artifactId>
-                <version>0.0.8</version>
+                <version>0.0.9</version>
                 <scope>provided</scope>
             </dependency>
         </dependencies>
@@ -58,7 +58,7 @@
                             <groupId>in.kyle.mcspring</groupId>
                             <artifactId>mcspring-plugin-layout</artifactId>
                             <!--suppress MavenModelInspection -->
-                            <version>0.0.8</version>
+                            <version>0.0.9</version>
                         </dependency>
                     </dependencies>
                     <executions>
