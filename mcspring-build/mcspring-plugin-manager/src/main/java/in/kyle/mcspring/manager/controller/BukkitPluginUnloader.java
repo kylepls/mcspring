@@ -26,6 +26,7 @@ import lombok.var;
 @Component
 @RequiredArgsConstructor
 @ConditionalOnBean(Plugin.class)
+@SuppressWarnings("unchecked")
 class BukkitPluginUnloader {
     
     private final PluginManager pluginManager;
