@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
-import in.kyle.mcspring.subcommands.PluginCommand;
 import in.kyle.mcspring.command.SimpleMethodInjection;
 import lombok.RequiredArgsConstructor;
 
