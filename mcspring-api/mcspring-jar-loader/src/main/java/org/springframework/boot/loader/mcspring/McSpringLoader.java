@@ -23,11 +23,6 @@ public class McSpringLoader extends JarLauncher {
         }
     }
     
-//    @SneakyThrows
-//    public void close() {
-//        getArchive().close();
-//    }
-    
     @Override
     protected String getMainClass() {
         return "";

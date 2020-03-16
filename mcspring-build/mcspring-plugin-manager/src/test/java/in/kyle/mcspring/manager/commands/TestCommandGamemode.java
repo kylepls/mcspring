@@ -5,13 +5,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-
-import in.kyle.api.bukkit.entity.TestPlayer;
 import in.kyle.mcspring.test.MCSpringTest;
 import in.kyle.mcspring.test.command.TestCommandExecutor;
+import in.kyle.mcspring.test.command.TestSender;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @MCSpringTest
 public class TestCommandGamemode {
@@ -19,40 +18,38 @@ public class TestCommandGamemode {
     @Autowired
     TestCommandExecutor executor;
     
-    @Autowired
-    TestPlayer sender;
+    TestSender sender;
     
     @BeforeEach
     void setup() {
-        sender.setGameMode(GameMode.SURVIVAL);
+        sender = spy(TestSender.class);
     }
     
     @Test
     void testGmc() {
-        List<String> output = executor.run(sender, "gmc");
-        assertThat(output).first().asString().isEqualTo("Game mode set to creative");
-        assertThat(sender.getGameMode()).isEqualTo(GameMode.CREATIVE);
+        executor.run(sender, "gmc");
+        assertThat(sender.getMessages()).containsExactly("Game mode set to creative");
+        verify(sender).setGameMode(GameMode.CREATIVE);
     }
     
     @Test
     void testGms() {
-        sender.setGameMode(GameMode.SPECTATOR);
-        List<String> output = executor.run(sender, "gms");
-        assertThat(output).first().asString().isEqualTo("Game mode set to survival");
-        assertThat(sender.getGameMode()).isEqualTo(GameMode.SURVIVAL);
+        executor.run(sender, "gms");
+        assertThat(sender.getMessages()).containsExactly("Game mode set to survival");
+        verify(sender).setGameMode(GameMode.SURVIVAL);
     }
     
     @Test
     void testGamemode() {
-        List<String> output = executor.run(sender, "gm creative");
-        assertThat(output).first().asString().isEqualTo("Game mode set to creative");
-        assertThat(sender.getGameMode()).isEqualTo(GameMode.CREATIVE);
+        executor.run(sender, "gm creative");
+        assertThat(sender.getMessages()).containsExactly("Game mode set to creative");
+        verify(sender).setGameMode(GameMode.CREATIVE);
     }
     
     @Test
     void testGamemodeNumeric() {
-        List<String> output = executor.run(sender, "gm 1");
-        assertThat(output).first().asString().isEqualTo("Game mode set to creative");
-        assertThat(sender.getGameMode()).isEqualTo(GameMode.CREATIVE);
+        executor.run(sender, "gm 1");
+        assertThat(sender.getMessages()).containsExactly("Game mode set to creative");
+        verify(sender).setGameMode(GameMode.CREATIVE);
     }
 }

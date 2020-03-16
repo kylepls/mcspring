@@ -32,6 +32,17 @@
             </dependency>
             <dependency>
                 <groupId>in.kyle.mcspring</groupId>
+                <artifactId>mcspring-test</artifactId>
+                <version>0.0.9</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>in.kyle.mcspring</groupId>
+                <artifactId>mcspring-vault</artifactId>
+                <version>0.0.9</version>
+            </dependency>
+            <dependency>
+                <groupId>in.kyle.mcspring</groupId>
                 <artifactId>mcspring-annotations</artifactId>
                 <version>0.0.9</version>
                 <scope>provided</scope>

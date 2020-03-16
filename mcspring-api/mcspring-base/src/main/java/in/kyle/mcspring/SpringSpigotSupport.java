@@ -2,6 +2,7 @@ package in.kyle.mcspring;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
+import org.bukkit.command.CommandMap;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -17,13 +18,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import java.lang.reflect.Field;
 import java.util.logging.Logger;
 
 @Configuration
 @ComponentScan(basePackageClasses = SpringPlugin.class)
 @EnableScheduling
 @EnableAspectJAutoProxy
-class SpringSpigotSupport {
+@RequiresSpigot
+public class SpringSpigotSupport {
     
     @Bean
     Plugin plugin(@Value("${spigot.plugin}") String pluginName) {
@@ -73,5 +76,12 @@ class SpringSpigotSupport {
     @Bean
     PluginLoader pluginLoader(Plugin plugin) {
         return plugin.getPluginLoader();
+    }
+    
+    @Bean
+    CommandMap getCommandMap(Server server) throws Exception {
+        Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+        bukkitCommandMap.setAccessible(true);
+        return (CommandMap) bukkitCommandMap.get(server);
     }
 }

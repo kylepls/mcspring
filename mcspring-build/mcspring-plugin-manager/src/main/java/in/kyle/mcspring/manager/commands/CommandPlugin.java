@@ -1,13 +1,12 @@
 package in.kyle.mcspring.manager.commands;
 
-import org.bukkit.plugin.Plugin;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import in.kyle.mcspring.RequiresSpigot;
 import in.kyle.mcspring.command.Command;
 import in.kyle.mcspring.manager.controller.PluginController;
 import in.kyle.mcspring.subcommands.PluginCommand;
@@ -16,7 +15,7 @@ import lombok.var;
 
 @Component
 @RequiredArgsConstructor
-@ConditionalOnBean(Plugin.class)
+@RequiresSpigot
 class CommandPlugin {
     
     private final PluginController pluginController;

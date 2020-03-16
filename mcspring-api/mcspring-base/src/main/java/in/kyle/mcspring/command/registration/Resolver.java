@@ -1,4 +1,4 @@
-package in.kyle.mcspring.command;
+package in.kyle.mcspring.command.registration;
 
 import java.lang.reflect.Parameter;
 import java.util.Optional;

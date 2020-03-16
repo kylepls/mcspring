@@ -4,7 +4,6 @@ import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.PluginManager;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Controller;
 
 import java.nio.file.Files;
@@ -21,13 +20,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import in.kyle.mcspring.RequiresSpigot;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.var;
 
 @Controller
 @RequiredArgsConstructor
-@ConditionalOnBean(Plugin.class)
+@RequiresSpigot
 public class PluginController {
     
     private final PluginManager pluginManager;

@@ -20,48 +20,42 @@ class FactionCommand {
     private final FactionsApi factions;
     
     @Command(value = "faction", aliases = "f", description = "Faction management commands")
-    void faction(PluginCommand command) {
-        command.on("create", this::create);
-        command.on("delete", this::delete);
-        command.on("list", this::list);
-        command.on("join", this::join);
-        command.on("mine", this::info);
+    void commandFaction(PluginCommand command) {
+        command.withPlayerSender("Sender must be a player");
+        command.on("create", this::commandCreate);
+        command.on("delete", this::commandDelete);
+        command.on("list", this::executeFactionList);
+        command.on("join", this::commandJoin);
+        command.on("info", this::executeFactionInfo);
         command.onInvalid(s -> String.format("Invalid sub-command %s", s));
-        command.otherwise("Usage: /faction <create|delete|join|list>");
+        command.otherwise("Usage: /faction <create|delete|join|list|mine>");
     }
     
-    private void info(PluginCommand command) {
-        command.then(this::factionMine);
-    }
-    
-    private void join(PluginCommand command) {
-        command.withMap(factions.getFactions()
-                                .stream()
-                                .collect(Collectors.toMap(Faction::getName, Function.identity())),
-                        s -> String.format("Faction %s not found", s));
-        command.then(this::factionJoin);
-        command.otherwise("Usage: /faction join <name>");
-    }
-    
-    private void create(PluginCommand command) {
+    private void commandCreate(PluginCommand command) {
         command.withString();
-        command.then(this::factionCreate);
+        command.then(this::executeFactionCreate);
         command.otherwise("Usage: /faction create <name>");
     }
     
-    private void delete(PluginCommand command) {
+    private void commandDelete(PluginCommand command) {
         command.withAny(factions.getFactionNames(),
                         s -> String.format("Faction &d%s&r not found", s));
-        command.then(this::factionDelete);
+        command.then(this::executeFactionDelete);
         command.onInvalid(s -> String.format("Invalid sub-command: %s", s));
         command.otherwise("Usage: /faction delete <name>");
     }
     
-    private void list(PluginCommand command) {
-        command.then(this::factionList);
+    private void commandJoin(PluginCommand command) {
+        command.withMap(factions.getFactions()
+                                .stream()
+                                .collect(Collectors.toMap(Faction::getName, Function.identity())),
+                        s -> String.format("Faction %s not found", s));
+        command.then(this::executeFactionJoin);
+        command.otherwise("Usage: /faction join <name>");
     }
     
-    private String factionJoin(Player sender, Faction faction) {
+    
+    private String executeFactionJoin(Player sender, Faction faction) {
         if (!factions.isFactionMember(sender)) {
             faction.getMembers().put(sender.getUniqueId(), Faction.Rank.MEMBER);
             return String.format("You joined &1%s", faction.getName());
@@ -70,13 +64,13 @@ class FactionCommand {
         }
     }
     
-    private String factionMine(Player sender) {
+    private String executeFactionInfo(Player sender) {
         return factions.getFaction(sender)
                 .map(f -> "Faction: " + formatFaction(f))
                 .orElse("You are not in a faction");
     }
     
-    private String factionList() {
+    private String executeFactionList() {
         return "Factions: \n" + factions.getFactions()
                 .stream()
                 .map(this::formatFaction)
@@ -94,7 +88,7 @@ class FactionCommand {
                                      .collect(Collectors.joining(", ")));
     }
     
-    private String factionCreate(Player sender, String name) {
+    private String executeFactionCreate(Player sender, String name) {
         if (factions.isFactionMember(sender)) {
             return "You must first leave your current faction";
         } else {
@@ -103,7 +97,7 @@ class FactionCommand {
         }
     }
     
-    private String factionDelete(Player sender, String name) {
+    private String executeFactionDelete(Player sender, String name) {
         factions.removeFaction(name);
         return String.format("Deleted faction: &1%s", name);
     }

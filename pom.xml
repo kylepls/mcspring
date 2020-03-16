@@ -42,7 +42,7 @@
     <distributionManagement>
         <site>
             <id>api.wiki</id>
-            <url>https://github.com/phillip-kruger/apiee/wiki</url>
+            <url>https://github.com/kylepls/mcspring/wiki</url>
         </site>
 
         <snapshotRepository>
@@ -211,8 +211,21 @@
                             <goals>
                                 <goal>jar</goal>
                             </goals>
+                            <configuration>
+                                <detectOfflineLinks>false</detectOfflineLinks>
+                            </configuration>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>3.0.0-M3</version>
+                    <configuration>
+                        <rules>
+                            <dependencyConvergence/>
+                        </rules>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

@@ -36,7 +36,7 @@ public class PluginCommandTabCompletable extends PluginCommand {
     public boolean hasChild() {
         return child != null;
     }
-
+    
     @Override
     public void on(String command, Consumer<PluginCommand> executor) {
         tabCompletionOptions.add(command);
@@ -44,8 +44,15 @@ public class PluginCommandTabCompletable extends PluginCommand {
     }
     
     @Override
+    protected void callOn(String command, Executors executors, int argSize) {
+        tabCompletionOptions.add(command);
+        if (hasExecutablePart()) {
+            state = State.EXECUTED;
+        }
+    }
+    
+    @Override
     public void onInvalid(Function<String, String> help) {
-        state = State.INVALID_ARG;
     }
     
     @Override
@@ -76,16 +83,16 @@ public class PluginCommandTabCompletable extends PluginCommand {
     @Override
     public void otherwise(Supplier<String> supplier) {
     }
-
+    
     
     @Override
     public void then(Runnable r) {
     }
     
     @Override
-    PluginCommand copy() {
+    protected PluginCommand subCommandCopy() {
         var command =
-                new PluginCommandTabCompletable(injection, sender, parts);
+                new PluginCommandTabCompletable(injection, sender, parts.subList(1, parts.size()));
         if (child == null) {
             child = command;
             return command;

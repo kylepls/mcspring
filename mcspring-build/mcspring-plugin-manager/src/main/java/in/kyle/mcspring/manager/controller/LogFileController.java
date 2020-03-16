@@ -1,7 +1,5 @@
 package in.kyle.mcspring.manager.controller;
 
-import org.bukkit.plugin.Plugin;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Controller;
 
 import java.nio.file.Files;
@@ -10,10 +8,11 @@ import java.nio.file.Paths;
 
 import javax.annotation.PostConstruct;
 
+import in.kyle.mcspring.RequiresSpigot;
 import lombok.SneakyThrows;
 
 @Controller
-@ConditionalOnBean(Plugin.class)
+@RequiresSpigot
 class LogFileController {
     
     private final Path logsFolder = Paths.get("logs");
