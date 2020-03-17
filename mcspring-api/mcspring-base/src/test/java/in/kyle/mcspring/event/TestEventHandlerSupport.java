@@ -4,9 +4,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
 
@@ -16,7 +16,7 @@ import in.kyle.mcspring.util.SpringScanner;
 
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@SpringBootTest("spigot.plugin")
 @Import({TestEventHandlerSupport.Config.class, SpringScanner.class, EventHandlerSupport.class,
          TestEventHandlerSupport.TestEvent.class})
 class TestEventHandlerSupport {
@@ -39,7 +39,7 @@ class TestEventHandlerSupport {
         }
     }
     
-    @SpringBootConfiguration
+    @Configuration
     @Order(1) // Need this config to load first
     static class Config {
         @Bean
