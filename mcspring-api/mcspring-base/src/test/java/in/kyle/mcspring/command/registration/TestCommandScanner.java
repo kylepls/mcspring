@@ -24,7 +24,7 @@ class TestCommandScanner {
     @Test
     void test() {
         var commands = scanner.getRegisteredCommands();
-        assertThat(commands).containsExactly(TestCommand.class.getDeclaredMethods()[0]);
+        assertThat(commands).hasSize(1);
     }
     
     @Component
