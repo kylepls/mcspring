@@ -1,11 +1,13 @@
 package in.kyle.mcspring.economy;
 
+import in.kyle.mcspring.annotation.PluginDepend;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ import java.math.BigDecimal;
 @Lazy
 @Service
 @ConditionalOnClass(Economy.class)
+@PluginDepend(plugins = "Vault")
 class VaultEconomyService implements EconomyService {
     
     private final Economy economy;

@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import javax.tools.FileObject;
 
 public class MainClassCreator {
+
     public static void generateMain(FileObject main,
                                     String fqn,
                                     String packageName,
