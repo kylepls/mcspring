@@ -4,6 +4,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.AliasFor;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -17,6 +18,7 @@ import java.lang.annotation.Target;
 @SpringBootTest(classes = TestSpringSpigotSupport.class)
 @Configuration
 @ComponentScan(basePackageClasses = TestSpringSpigotSupport.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public @interface MCSpringTest {
     
     @AliasFor(annotation = SpringBootTest.class,
