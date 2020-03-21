@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import in.kyle.mcspring.RequiresSpigot;
 import in.kyle.mcspring.command.Command;
 import in.kyle.mcspring.manager.controller.PluginController;
 import in.kyle.mcspring.subcommands.PluginCommand;
@@ -15,7 +14,6 @@ import lombok.var;
 
 @Component
 @RequiredArgsConstructor
-@RequiresSpigot
 class CommandPlugin {
     
     private final PluginController pluginController;
@@ -27,7 +25,7 @@ class CommandPlugin {
     void plugin(PluginCommand command) {
         command.on("load", this::load);
         command.on("unload", this::unload);
-        command.on("list", this::list);
+        command.on("list", this::executeListPlugins);
         command.otherwise("Usage: /plugin <load|unload|list>");
     }
     
@@ -47,10 +45,6 @@ class CommandPlugin {
         command.otherwise("Usage: /plugin unload <name>");
     }
     
-    private void list(PluginCommand command) {
-        command.then(this::executeListPlugins);
-    }
-    
     private String executeListPlugins() {
         return pluginController.getAllPlugins()
                 .entrySet()
@@ -64,16 +58,16 @@ class CommandPlugin {
         if (pluginOptional.isPresent()) {
             return String.format("Plugin %s enabled", pluginOptional.get().getName());
         } else {
-            return String.format("&4Could not load %s see log for details", jar);
+            return String.format("Could not load %s see log for details", jar);
         }
     }
     
     private String executeDisable(org.bukkit.plugin.Plugin plugin) {
         boolean disabled = pluginController.unload(plugin);
         if (disabled) {
-            return String.format("Plugin %s disabled", plugin);
+            return String.format("Plugin %s disabled", plugin.getName());
         } else {
-            return String.format("Could not disable %s, see log for details", plugin);
+            return String.format("Could not disable %s, see log for details", plugin.getName());
         }
     }
 }
