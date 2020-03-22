@@ -1,18 +1,18 @@
-package in.kyle.mcspring.command;
+package in.kyle.mcspring.command.registration;
 
-import org.bukkit.plugin.Plugin;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+import in.kyle.mcspring.RequiresSpigot;
+import in.kyle.mcspring.command.Command;
 import lombok.RequiredArgsConstructor;
 import lombok.var;
 
 @Component
-@ConditionalOnBean(Plugin.class)
 @RequiredArgsConstructor
+@RequiresSpigot
 class BukkitCommandRegistration implements CommandRegistration {
     
     private final CommandController controller;

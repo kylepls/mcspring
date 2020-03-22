@@ -1,10 +1,8 @@
-package in.kyle.mcspring.command;
+package in.kyle.mcspring.command.registration;
 
-import in.kyle.mcspring.subcommands.PluginCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.Plugin;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
@@ -12,13 +10,16 @@ import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import in.kyle.mcspring.RequiresSpigot;
+import in.kyle.mcspring.command.SimpleMethodInjection;
+import in.kyle.mcspring.subcommands.PluginCommand;
 import in.kyle.mcspring.subcommands.tab.TabDiscovery;
 import lombok.SneakyThrows;
 import lombok.var;
 
 @Primary
 @Component
-@ConditionalOnBean(Plugin.class)
+@RequiresSpigot
 class TabCommandFactory extends SimpleCommandFactory {
     
     private final TabDiscovery tabDiscovery;

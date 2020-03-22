@@ -10,14 +10,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <vault.version>1.7.3</vault.version>
+        <vault.version>1.7</vault.version>
     </properties>
     <artifactId>mcspring-vault</artifactId>
 
     <repositories>
         <repository>
-            <id>vault-repo</id>
-            <url>http://nexus.hc.to/content/repositories/pub_releases</url>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
@@ -27,8 +27,8 @@
             <artifactId>mcspring-base</artifactId>
         </dependency>
         <dependency>
-            <groupId>net.milkbowl.vault</groupId>
-            <artifactId>Vault</artifactId>
+            <groupId>com.github.MilkBowl</groupId>
+            <artifactId>VaultAPI</artifactId>
             <version>${vault.version}</version>
             <scope>provided</scope>
             <exclusions>

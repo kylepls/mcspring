@@ -42,7 +42,7 @@
     <distributionManagement>
         <site>
             <id>api.wiki</id>
-            <url>https://github.com/phillip-kruger/apiee/wiki</url>
+            <url>https://github.com/kylepls/mcspring/wiki</url>
         </site>
 
         <snapshotRepository>
@@ -75,6 +75,22 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
     </repositories>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
 
     <dependencyManagement>
         <dependencies>
@@ -152,6 +168,11 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.0.0-M4</version>
+                </plugin>
+                <plugin>
                     <groupId>org.sonatype.plugins</groupId>
                     <artifactId>nexus-staging-maven-plugin</artifactId>
                     <version>1.6.8</version>
@@ -211,10 +232,44 @@
                             <goals>
                                 <goal>jar</goal>
                             </goals>
+                            <configuration>
+                                <detectOfflineLinks>false</detectOfflineLinks>
+                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M3</version>
+                <configuration>
+                    <rules>
+                        <dependencyConvergence/>
+                    </rules>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>4.3.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.5</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>

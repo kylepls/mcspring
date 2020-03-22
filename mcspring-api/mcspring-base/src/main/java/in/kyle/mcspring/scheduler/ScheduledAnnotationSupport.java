@@ -1,7 +1,5 @@
 package in.kyle.mcspring.scheduler;
 
-import org.bukkit.plugin.Plugin;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -13,13 +11,14 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 
+import in.kyle.mcspring.RequiresSpigot;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 
 @Lazy
 @Component
 @AllArgsConstructor
-@ConditionalOnBean(Plugin.class)
+@RequiresSpigot
 class ScheduledAnnotationSupport extends ThreadPoolTaskScheduler {
 
     private final SchedulerService scheduler;

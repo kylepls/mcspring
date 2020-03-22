@@ -6,19 +6,18 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Method;
 
+import in.kyle.mcspring.RequiresSpigot;
 import lombok.AllArgsConstructor;
 import lombok.val;
 
-@Lazy
 @Service
 @AllArgsConstructor
-@ConditionalOnBean(Plugin.class)
+@RequiresSpigot
 class EventService {
     
     private final Server server;
@@ -26,15 +25,22 @@ class EventService {
     
     void registerEvent(Method method, EventExecutor executor) {
         val handler = method.getAnnotation(EventHandler.class);
-        val eventType = (Class<? extends Event>) method.getParameters()[0].getType();
+        val parameters = method.getParameters();
         
-        server.getPluginManager()
-                .registerEvent(eventType,
-                               makeListener(),
-                               handler.priority(),
-                               executor,
-                               plugin,
-                               handler.ignoreCancelled());
+        if (parameters.length == 1 && Event.class.isAssignableFrom(parameters[0].getType())) {
+            val eventType = (Class<? extends Event>) parameters[0].getType();
+            server.getPluginManager()
+                    .registerEvent(eventType,
+                                   makeListener(),
+                                   handler.priority(),
+                                   executor,
+                                   plugin,
+                                   handler.ignoreCancelled());
+        } else {
+            throw new BeanInitializationException(String.format(
+                    "Cannot load @EventHandler method %s, requires 1 parameter <? extends Event>",
+                    method));
+        }
     }
     
     private Listener makeListener() {

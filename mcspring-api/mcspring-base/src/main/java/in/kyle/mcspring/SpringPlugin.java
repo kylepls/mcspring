@@ -10,7 +10,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -26,20 +25,6 @@ public class SpringPlugin {
     @Getter
     private ConfigurableApplicationContext context;
     
-    public static void setup(Plugin plugin, Class<?> config) {
-        setupLogger();
-        SpringPlugin springPlugin = new SpringPlugin(plugin);
-        springPlugin.initSpring(config);
-        SETUP_PLUGINS.put(plugin, springPlugin);
-    }
-    
-    public static void teardown(Plugin plugin) {
-        SpringPlugin springPlugin = SETUP_PLUGINS.remove(plugin);
-        if (springPlugin != null) {
-            springPlugin.onDisable(plugin);
-        }
-    }
-    
     public final void onDisable(Plugin plugin) {
         if (context != null) {
             context.close();
@@ -50,20 +35,30 @@ public class SpringPlugin {
     
     private void initSpring(Class<?> config) {
         SpringApplicationBuilder builder = new SpringApplicationBuilder();
-        ClassLoader classLoader = plugin.getClass().getClassLoader();
-        ResourceLoader loader = new DefaultResourceLoader(classLoader);
-        Class<?>[] sources = new Class[]{config, SpringSpigotSupport.class};
         if (!SETUP_PLUGINS.isEmpty()) {
             SpringPlugin parent = findParentCandidate();
             builder.parent(parent.getContext());
-            sources = Arrays.copyOfRange(sources, 0, 1);
         }
-        context = builder.sources(sources)
-                .resourceLoader(loader)
-                .bannerMode(Banner.Mode.OFF)
-                .properties("spigot.plugin=" + plugin.getName())
-                .logStartupInfo(true)
-                .run();
+    
+        ClassLoader classLoader = plugin.getClass().getClassLoader();
+        Class<?>[] sources = new Class[]{config, SpringSpigotSupport.class};
+        ResourceLoader loader = new DefaultResourceLoader(classLoader);
+        
+        runWithContextClassLoader(classLoader, () -> {
+            context = builder.sources(sources)
+                    .resourceLoader(loader)
+                    .bannerMode(Banner.Mode.OFF)
+                    .properties("spigot.plugin=" + plugin.getName())
+                    .logStartupInfo(true)
+                    .run();
+        });
+    }
+    
+    private void runWithContextClassLoader(ClassLoader classLoader, Runnable runnable) {
+        ClassLoader temp = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(classLoader);
+        runnable.run();
+        Thread.currentThread().setContextClassLoader(temp);
     }
     
     private static void setupLogger() {
@@ -79,5 +74,19 @@ public class SpringPlugin {
                 .reduce((a, b) -> b)
                 .map(Map.Entry::getValue)
                 .orElse(null);
+    }
+    
+    public static void setup(Plugin plugin, Class<?> config) {
+        setupLogger();
+        SpringPlugin springPlugin = new SpringPlugin(plugin);
+        springPlugin.initSpring(config);
+        SETUP_PLUGINS.put(plugin, springPlugin);
+    }
+    
+    public static void teardown(Plugin plugin) {
+        SpringPlugin springPlugin = SETUP_PLUGINS.remove(plugin);
+        if (springPlugin != null) {
+            springPlugin.onDisable(plugin);
+        }
     }
 }

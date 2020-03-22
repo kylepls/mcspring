@@ -3,16 +3,16 @@ package in.kyle.mcspring.scheduler;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import in.kyle.mcspring.RequiresSpigot;
 import lombok.RequiredArgsConstructor;
 
 @Lazy
 @Service
 @RequiredArgsConstructor
-@ConditionalOnBean(Plugin.class)
+@RequiresSpigot
 public class SchedulerService {
     
     private final BukkitScheduler scheduler;

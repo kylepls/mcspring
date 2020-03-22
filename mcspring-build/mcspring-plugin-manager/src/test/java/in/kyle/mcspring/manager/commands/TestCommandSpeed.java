@@ -1,15 +1,15 @@
 package in.kyle.mcspring.manager.commands;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-
-import in.kyle.api.bukkit.entity.TestPlayer;
 import in.kyle.mcspring.test.MCSpringTest;
 import in.kyle.mcspring.test.command.TestCommandExecutor;
+import in.kyle.mcspring.test.command.TestSender;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @MCSpringTest
 class TestCommandSpeed {
@@ -17,24 +17,26 @@ class TestCommandSpeed {
     @Autowired
     TestCommandExecutor executor;
     
-    @Autowired
-    TestPlayer sender;
+    TestSender sender;
+    
+    @BeforeEach
+    void setup() {
+        sender = spy(TestSender.class);
+    }
     
     @Test
     void testSpeed() {
-        List<String> messages = executor.run(sender, "speed 10");
-        assertThat(messages).first().asString().matches("Speed set to [^ ]+");
-        assertThat(sender.getWalkSpeed()).isEqualTo(10F);
-        assertThat(sender.getFlySpeed()).isEqualTo(10F);
+        executor.run(sender, "speed 10");
+        assertThat(sender.getMessages()).first().asString().matches("Speed set to [^ ]+");
+        verify(sender).setFlySpeed(10);
+        verify(sender).setWalkSpeed(10);
     }
     
     @Test
     void testSpeedUsage() {
-        sender.setWalkSpeed(0);
-        sender.setFlySpeed(0);
-        List<String> messages = executor.run(sender, "speed");
-        assertThat(messages).first().asString().startsWith("Usage: ");
-        assertThat(sender.getWalkSpeed()).isEqualTo(0);
-        assertThat(sender.getFlySpeed()).isEqualTo(0);
+        executor.run(sender, "speed");
+        assertThat(sender.getMessages()).first().asString().startsWith("Usage: ");
+        verify(sender, never()).setFlySpeed(anyFloat());
+        verify(sender, never()).setWalkSpeed(anyFloat());
     }
 }

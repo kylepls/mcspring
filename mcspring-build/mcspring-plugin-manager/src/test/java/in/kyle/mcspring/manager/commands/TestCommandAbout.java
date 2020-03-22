@@ -8,7 +8,7 @@ import java.util.List;
 import in.kyle.mcspring.test.MCSpringTest;
 import in.kyle.mcspring.test.command.TestCommandExecutor;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 @MCSpringTest
 class TestCommandAbout {

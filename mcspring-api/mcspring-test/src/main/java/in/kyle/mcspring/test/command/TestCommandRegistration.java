@@ -13,8 +13,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import in.kyle.mcspring.command.Command;
-import in.kyle.mcspring.command.CommandRegistration;
-import in.kyle.mcspring.command.CommandResolver;
+import in.kyle.mcspring.command.registration.CommandRegistration;
+import in.kyle.mcspring.command.registration.CommandResolver;
 import in.kyle.mcspring.command.SimpleMethodInjection;
 import lombok.RequiredArgsConstructor;
 import lombok.var;
