@@ -16,26 +16,32 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-@Mojo(name = "mcspring-auto-generator", defaultPhase = LifecyclePhase.TEST,
+@Mojo(name = "mcspring-auto-generator", defaultPhase = LifecyclePhase.PROCESS_CLASSES,
         requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME,
         requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class AutoGenerationPlugin extends AbstractMojo {
 
-    public static final String ROOT_PACKAGE = "org.springframework.boot.loader";
     private static final List<String> VALID_SCOPES = Arrays.asList("provided", "compile", "runtime");
     @Parameter(defaultValue = "${project}", required = true)
     private MavenProject project;
 
-    public static String getMainClassLocation(MavenProject project) {
-        String groupId = project.getGroupId().replace("-", "");
-        String artifactId = project.getArtifactId().replace("-", "");
-        return AutoGenerationPlugin.ROOT_PACKAGE + "." + groupId + "." + artifactId;
-    }
-
     @SneakyThrows
     public void execute() {
+        addGeneratedSourcesDirectory();
         preparePluginYml();
         preparePluginMainClass();
+    }
+
+    private File getSourcesOutputDirectory() {
+        return new File(getGeneratedSourcesFolder(), "mc-spring/");
+    }
+
+    private void addGeneratedSourcesDirectory() {
+        File output = getSourcesOutputDirectory();
+        if(!output.exists()) {
+            output.mkdirs();
+        }
+        project.addCompileSourceRoot(output.getPath());
     }
 
     private void preparePluginYml() {
@@ -46,11 +52,11 @@ public class AutoGenerationPlugin extends AbstractMojo {
         PluginYamlAttributes attributes = new PluginYamlAttributes(project, resolver, getLog());
         attributes.loadAttributes();
         getLog().info("Finished obtaining data for plugin.yml");
-        getLog().info("=======================================");
+        getLog().info("----------------------------------------------------------------");
         attributes.getAttributes().forEach((key, data) -> getLog().info(key + ": " + data.toString()));
-        getLog().info("=======================================");
+        getLog().info("----------------------------------------------------------------");
         getLog().info("Writing plugin.yml to generated-sources");
-        File pluginFile = new File(getGeneratedSourcesFolder(), "plugin.yml");
+        File pluginFile = new File(getSourcesOutputDirectory(), "plugin.yml");
         attributes.writeToFile(pluginFile);
         getLog().info("Write completed");
     }
@@ -63,12 +69,19 @@ public class AutoGenerationPlugin extends AbstractMojo {
         Set<String> packages = scanner.getPackagesThatUseSpring();
         getLog().info(String.format("Scan complete. Found %d packages with spring annotation", packages.size()));
         getLog().info("Preparing to generate main class");
-        File destination = new File(getGeneratedSourcesFolder(), getMainClassLocation(project).replace(".", "/").concat(".java"));
-        destination.getParentFile().mkdirs();
-        PluginMainClassGenerator generator = new PluginMainClassGenerator(project.getName().replace("-", ""), packages, destination);
-        generator.generate();
+        writePluginMain(packages);
         getLog().info("Default main class has been added to generated-sources");
         getLog().info("Auto generation process complete");
+    }
+
+    private void writePluginMain(Set<String> packages) {
+        String mainClass = MainClassUtilities.getMainClassLocation(project);
+        File destination = new File(getSourcesOutputDirectory(), mainClass.replace(".", "/").concat(".java"));
+        if(!destination.getParentFile().exists()) {
+            destination.getParentFile().mkdirs();
+        }
+        PluginMainClassGenerator generator = new PluginMainClassGenerator(project, packages, destination);
+        generator.generate();
     }
 
     private File getSourceClassesFolder() {

@@ -2,7 +2,6 @@ package in.kyle.mcspring.autogenerator;
 
 import in.kyle.mcspring.annotation.PluginDepend;
 import lombok.SneakyThrows;
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.yaml.snakeyaml.Yaml;
@@ -41,7 +40,7 @@ public class PluginYamlAttributes {
 
     public void loadAttributes() {
         attributes.put(NAME, project.getName());
-        attributes.put(MAIN, AutoGenerationPlugin.getMainClassLocation(project));
+        attributes.put(MAIN, MainClassUtilities.getMainClassLocation(project));
         attributes.put(VERSION, project.getVersion());
         attributes.put(DESC, project.getDescription());
         setDependencies();

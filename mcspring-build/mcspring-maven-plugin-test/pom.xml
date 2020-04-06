@@ -54,14 +54,13 @@
                 <version>3.0.0</version>
                 <executions>
                     <execution>
-                        <phase>generate-sources</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>add-source</goal>
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${project.build.directory}/generated-sources/org</source>
-                                <source>${project.build.directory}/generated-sources/plugin.yml</source>
+                                <source>${project.build.directory}/generated-sources/mc-spring/</source>
                             </sources>
                         </configuration>
                     </execution>

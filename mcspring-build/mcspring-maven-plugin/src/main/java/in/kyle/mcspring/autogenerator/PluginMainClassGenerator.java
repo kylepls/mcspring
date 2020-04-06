@@ -2,6 +2,7 @@ package in.kyle.mcspring.autogenerator;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.apache.maven.project.MavenProject;
 
 import java.io.*;
 import java.util.Set;
@@ -10,13 +11,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PluginMainClassGenerator {
 
-    private final String mainClassName;
+    private final MavenProject project;
     private final Set<String> packages;
     private final File destination;
 
     public void generate() {
         String templateContent = getTemplateContent();
-        templateContent = templateContent.replace("{name}", mainClassName);
+        templateContent = templateContent.replace("{name}", MainClassUtilities.getMainClassName(project));
         templateContent = templateContent.replace("{scans}", createPackageScanList());
         write(templateContent);
     }
@@ -40,6 +41,10 @@ public class PluginMainClassGenerator {
         InputStreamReader inputStreamReader = new InputStreamReader(resource);
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
         StringBuilder builder = new StringBuilder();
+        builder.append("package ")
+                .append(MainClassUtilities.getMainClassPackage(project))
+                .append(";")
+                .append("\n");
         bufferedReader.lines().forEach(line -> builder.append(line).append("\n"));
         return builder.toString();
     }
