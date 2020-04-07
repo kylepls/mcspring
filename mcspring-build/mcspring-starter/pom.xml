@@ -30,12 +30,6 @@
                 <artifactId>mcspring-subcommands</artifactId>
                 <version>0.0.9</version>
             </dependency>
-            <dependency>
-                <groupId>in.kyle.mcspring</groupId>
-                <artifactId>mcspring-annotations</artifactId>
-                <version>0.0.9</version>
-                <scope>provided</scope>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -177,14 +171,14 @@
                         <groupId>com.googlecode.maven-download-plugin</groupId>
                         <artifactId>download-maven-plugin</artifactId>
                     </plugin>
+                    <plugin>
+                        <groupId>in.kyle.mcspring</groupId>
+                        <artifactId>mcspring-auto-generator</artifactId>
+                    </plugin>
                 </plugins>
                 <finalName>${project.artifactId}</finalName>
             </build>
             <dependencies>
-                <dependency>
-                    <groupId>in.kyle.mcspring</groupId>
-                    <artifactId>mcspring-annotations</artifactId>
-                </dependency>
                 <dependency>
                     <groupId>in.kyle.mcspring</groupId>
                     <artifactId>mcspring-base</artifactId>

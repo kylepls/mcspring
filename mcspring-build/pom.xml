@@ -13,7 +13,6 @@
     <modules>
         <module>mcspring-plugin-layout</module>
         <module>mcspring-archetype</module>
-        <module>mcspring-annotations</module>
         <module>mcspring-starter</module>
         <module>mcspring-maven-plugin</module>
         <module>mcspring-maven-plugin-test</module>
