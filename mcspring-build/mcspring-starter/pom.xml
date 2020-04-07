@@ -37,6 +37,11 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>in.kyle.mcspring</groupId>
+                    <artifactId>mcspring-maven-plugin</artifactId>
+                    <version>0.0.9</version>
+                </plugin>
+                <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring.version}</version>
@@ -173,7 +178,7 @@
                     </plugin>
                     <plugin>
                         <groupId>in.kyle.mcspring</groupId>
-                        <artifactId>mcspring-auto-generator</artifactId>
+                        <artifactId>mcspring-maven-plugin</artifactId>
                     </plugin>
                 </plugins>
                 <finalName>${project.artifactId}</finalName>

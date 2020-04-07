@@ -39,10 +39,11 @@
             <plugin>
                 <groupId>in.kyle.mcspring</groupId>
                 <artifactId>mcspring-maven-plugin</artifactId>
+                <version>${project.version}</version>
                 <executions>
                     <execution>
                         <goals>
-                            <goal>mcspring-maven-plugin</goal>
+                            <goal>mcspring-auto-generator</goal>
                         </goals>
                     </execution>
                 </executions>

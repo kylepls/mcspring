@@ -16,10 +16,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-@Mojo(name = "mcspring-auto-generator", defaultPhase = LifecyclePhase.PROCESS_CLASSES,
+@Mojo(name = "mcspring-maven-plugin", defaultPhase = LifecyclePhase.PROCESS_CLASSES,
         requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME,
         requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
-public class AutoGenerationPlugin extends AbstractMojo {
+public class McSpringMavenPlugin extends AbstractMojo {
 
     private static final List<String> VALID_SCOPES = Arrays.asList("provided", "compile", "runtime");
     @Parameter(defaultValue = "${project}", required = true)
