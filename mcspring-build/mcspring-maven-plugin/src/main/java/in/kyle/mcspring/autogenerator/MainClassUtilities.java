@@ -6,9 +6,6 @@ public class MainClassUtilities {
 
     public static final String ROOT_PACKAGE = "org.springframework.boot.loader";
 
-    private MainClassUtilities() {
-    }
-
     public static String getMainClassName(MavenProject project) {
         return project.getArtifactId().replace("-", "");
     }

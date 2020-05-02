@@ -6,9 +6,6 @@ import java.util.List;
 
 public class FileUtility {
 
-    private FileUtility() {
-    }
-
     public static List<File> getFilesInDirectory(File directory) {
         List<File> files = new ArrayList<>();
         File[] filesInDirectory = directory.listFiles();
