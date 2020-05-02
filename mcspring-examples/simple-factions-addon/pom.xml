@@ -56,11 +56,17 @@
                         <phase>generate-resources</phase>
                         <goals>
                             <goal>add-source</goal>
+                            <goal>add-resource</goal>
                         </goals>
                         <configuration>
                             <sources>
                                 <source>${project.build.directory}/generated-sources/mc-spring/</source>
                             </sources>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/generated-sources/mc-spring/</directory>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>
