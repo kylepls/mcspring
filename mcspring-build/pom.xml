@@ -15,7 +15,6 @@
         <module>mcspring-archetype</module>
         <module>mcspring-starter</module>
         <module>mcspring-maven-plugin</module>
-        <module>mcspring-maven-plugin-test</module>
     </modules>
 
     <modelVersion>4.0.0</modelVersion>
