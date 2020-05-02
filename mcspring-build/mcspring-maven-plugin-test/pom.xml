@@ -42,7 +42,7 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>mcspring-maven-plugin</goal>
+                            <goal>generate-files</goal>
                         </goals>
                     </execution>
                 </executions>

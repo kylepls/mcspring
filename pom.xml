@@ -67,6 +67,11 @@
             <email>mail@kyle.in</email>
             <id>kylepls</id>
         </developer>
+        <developer>
+            <name>Josh</name>
+            <email>joshuabetz12@gmail.com</email>
+            <id>Joshbpls</id>
+        </developer>
     </developers>
 
     <repositories>

@@ -10,13 +10,14 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
+import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 
-@Mojo(name = "mcspring-maven-plugin", defaultPhase = LifecyclePhase.PROCESS_CLASSES,
+@Mojo(name = "generate-files", defaultPhase = LifecyclePhase.PROCESS_CLASSES,
         requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME,
         requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class McSpringMavenPlugin extends AbstractMojo {
@@ -24,12 +25,24 @@ public class McSpringMavenPlugin extends AbstractMojo {
     private static final List<String> VALID_SCOPES = Arrays.asList("provided", "compile", "runtime");
     @Parameter(defaultValue = "${project}", required = true)
     private MavenProject project;
+    private URLClassLoader fullyQualifiedClassLoader;
 
     @SneakyThrows
     public void execute() {
+        initializeClassLoader();
         addGeneratedSourcesDirectory();
         preparePluginYml();
         preparePluginMainClass();
+    }
+
+    //Initializes a class loader with all maven dependency classes and project classes.
+    private void initializeClassLoader() {
+        ClassLoader parent = getClass().getClassLoader();
+        File projectSource = getSourceClassesFolder();
+        List<File> artifactFiles = getDependencyArtifacts().stream()
+                .map(Artifact::getFile)
+                .collect(Collectors.toList());
+        this.fullyQualifiedClassLoader = ClassLoadingUtility.createClassLoader(parent, artifactFiles, projectSource);
     }
 
     private File getSourcesOutputDirectory() {
@@ -38,7 +51,7 @@ public class McSpringMavenPlugin extends AbstractMojo {
 
     private void addGeneratedSourcesDirectory() {
         File output = getSourcesOutputDirectory();
-        if(!output.exists()) {
+        if (!output.exists()) {
             output.mkdirs();
         }
         project.addCompileSourceRoot(output.getPath());
@@ -48,7 +61,7 @@ public class McSpringMavenPlugin extends AbstractMojo {
         getLog().info("Scanning for project dependencies in qualifying scope");
         Set<Artifact> artifacts = getDependencyArtifacts();
         getLog().info(String.format("Dependency scan complete. Found %d dependencies", artifacts.size()));
-        PluginDependencyResolver resolver = new PluginDependencyResolver(artifacts);
+        PluginDependencyResolver resolver = new PluginDependencyResolver(fullyQualifiedClassLoader, getSourceClassesFolder(), artifacts);
         PluginYamlAttributes attributes = new PluginYamlAttributes(project, resolver, getLog());
         attributes.loadAttributes();
         getLog().info("Finished obtaining data for plugin.yml");
@@ -62,10 +75,9 @@ public class McSpringMavenPlugin extends AbstractMojo {
     }
 
     private void preparePluginMainClass() {
-        PluginDependencyResolver resolver = new PluginDependencyResolver(getDependencyArtifacts());
         getLog().info("Scanning project sources for spring annotations");
-        ProjectClassScanner scanner = new ProjectClassScanner(getSourceClassesFolder(), resolver.getDependencyURLs());
-        scanner.findPackages();
+        ProjectSpringPackageResolver scanner = new ProjectSpringPackageResolver(fullyQualifiedClassLoader, getSourceClassesFolder());
+        scanner.findPackagesThatUseSpring();
         Set<String> packages = scanner.getPackagesThatUseSpring();
         getLog().info(String.format("Scan complete. Found %d packages with spring annotation", packages.size()));
         getLog().info("Preparing to generate main class");
@@ -77,7 +89,7 @@ public class McSpringMavenPlugin extends AbstractMojo {
     private void writePluginMain(Set<String> packages) {
         String mainClass = MainClassUtilities.getMainClassLocation(project);
         File destination = new File(getSourcesOutputDirectory(), mainClass.replace(".", "/").concat(".java"));
-        if(!destination.getParentFile().exists()) {
+        if (!destination.getParentFile().exists()) {
             destination.getParentFile().mkdirs();
         }
         PluginMainClassGenerator generator = new PluginMainClassGenerator(project, packages, destination);

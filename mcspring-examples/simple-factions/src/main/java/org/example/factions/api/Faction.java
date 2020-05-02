@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import in.kyle.mcspring.processor.annotation.SpringPlugin;
 import lombok.Getter;
 
 @Getter
