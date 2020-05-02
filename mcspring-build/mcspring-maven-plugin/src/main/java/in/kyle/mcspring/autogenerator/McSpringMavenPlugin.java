@@ -1,11 +1,10 @@
 package in.kyle.mcspring.autogenerator;
 
-import lombok.SneakyThrows;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
@@ -16,6 +15,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import lombok.SneakyThrows;
+
 
 @Mojo(name = "generate-files", defaultPhase = LifecyclePhase.PROCESS_CLASSES,
         requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME,
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 public class McSpringMavenPlugin extends AbstractMojo {
 
     private static final List<String> VALID_SCOPES = Arrays.asList("provided", "compile", "runtime");
-    @Parameter(defaultValue = "${project}", required = true)
+    @Component
     private MavenProject project;
     private URLClassLoader fullyQualifiedClassLoader;
 
