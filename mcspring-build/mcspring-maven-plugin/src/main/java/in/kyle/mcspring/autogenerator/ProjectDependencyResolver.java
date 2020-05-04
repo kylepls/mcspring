@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
+import lombok.val;
 
 public class ProjectDependencyResolver {
 
@@ -39,11 +40,10 @@ public class ProjectDependencyResolver {
     public List<PluginDepend> resolveAllDependencies() {
         List<PluginDepend> dependencies = new ArrayList<>();
         List<JarFile> jars = getJarFiles();
-        JarFileDependencyScanner jarFileDependencyScanner = new JarFileDependencyScanner(fullyQualifiedClassLoader, jars);
-        ProjectDependencyScanner projectDependencyScanner = new ProjectDependencyScanner(fullyQualifiedClassLoader, sourcesFolder);
+        val jarFileDependencyScanner = new JarFileDependencyScanner(fullyQualifiedClassLoader, jars);
+        val projectDependencyScanner = new ProjectDependencyScanner(fullyQualifiedClassLoader, sourcesFolder);
         dependencies.addAll(jarFileDependencyScanner.getScannedAnnotations());
         dependencies.addAll(projectDependencyScanner.getScannedAnnotations());
         return dependencies;
     }
-
 }

@@ -15,7 +15,6 @@ public class TestGenerator extends AbstractMojoTestCase {
         File testPom = new File(getBasedir(),
                                 "src/test/resources/unit/basic-test/basic-test-plugin-config.xml");
         GenerateFilesMojo mojo = (GenerateFilesMojo) lookupEmptyMojo("generate-files", testPom);
-        
         assertNotNull(mojo);
         mojo.execute();
     }

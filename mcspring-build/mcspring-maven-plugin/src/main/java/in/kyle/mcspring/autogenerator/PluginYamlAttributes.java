@@ -10,10 +10,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.*;
 
-@SuppressWarnings("unchecked")
 public class PluginYamlAttributes {
 
-    private final Map<String, Object> attributes = new HashMap<>();
+    private final Map<String, Object> attributes = new LinkedHashMap<>();
     private final List<String> softDependencies = new ArrayList<>();
     private final List<String> requiredDependencies = new ArrayList<>();
     private final MavenProject project;
