@@ -1,35 +1,37 @@
 package in.kyle.mcspring.autogenerator.scan;
 
 import in.kyle.mcspring.annotation.PluginDepend;
-import in.kyle.mcspring.autogenerator.FileUtility;
+import in.kyle.mcspring.autogenerator.util.FileUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.io.File;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class ProjectDependencyScanner {
+public class ProjectDependencyScanner implements PluginDependAnnotationScanner {
 
     private final URLClassLoader classLoader;
     private final File sourcesFolder;
 
     @SneakyThrows
-    public List<PluginDepend> getPluginDependAnnotations() {
-        List<PluginDepend> list = new ArrayList<>();
-        List<File> files = FileUtility.getFilesInDirectory(sourcesFolder);
-        for(File file : files) {
-            if(isClass(file)) {
-                String className = getClassName(file);
-                Class<?> clazz = classLoader.loadClass(className);
-                if(clazz.isAnnotationPresent(PluginDepend.class)) {
-                    list.add(clazz.getAnnotation(PluginDepend.class));
-                }
-            }
-        }
-        return list;
+    @Override
+    public List<PluginDepend> getScannedAnnotations() {
+        return FileUtility.getFilesInDirectory(sourcesFolder)
+                .stream()
+                .filter(this::isClass)
+                .map(this::getClassName)
+                .map(this::loadClass)
+                .filter(clazz -> clazz.isAnnotationPresent(PluginDepend.class))
+                .map(clazz -> clazz.getAnnotation(PluginDepend.class))
+                .collect(Collectors.toList());
+    }
+
+    @SneakyThrows
+    private Class<?> loadClass(String className) {
+        return classLoader.loadClass(className);
     }
 
     private String getClassName(File classFile) {

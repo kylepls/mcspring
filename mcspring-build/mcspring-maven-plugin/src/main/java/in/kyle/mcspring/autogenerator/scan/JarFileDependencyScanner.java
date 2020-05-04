@@ -12,12 +12,13 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 @RequiredArgsConstructor
-public class JarFileDependencyScanner {
+public class JarFileDependencyScanner implements PluginDependAnnotationScanner {
 
     private final URLClassLoader classLoader;
     private final List<JarFile> jarFiles;
 
-    public List<PluginDepend> getPluginDependAnnotations() {
+    @Override
+    public List<PluginDepend> getScannedAnnotations() {
         List<PluginDepend> list = new ArrayList<>();
         jarFiles.forEach(jarFile -> list.addAll(findJarFileDependencies(jarFile)));
         return list;
@@ -43,12 +44,7 @@ public class JarFileDependencyScanner {
             if(clazz.isAnnotationPresent(PluginDepend.class)) {
                 destination.add(clazz.getAnnotation(PluginDepend.class));
             }
-            //Catching a throwable for optional dependencies not being present.
-            //It throws a ClassNotFoundException but for some reason we can't catch
-            //then handle it because WONK.
-        } catch (Throwable ignored) {
-
-        }
+        } catch (Throwable ignored) { }
     }
 
     private boolean isClassFile(JarEntry entry) {
@@ -60,5 +56,4 @@ public class JarFileDependencyScanner {
         String excludeClassExtension = fullName.substring(0, fullName.length() - 6);
         return excludeClassExtension.replace("/", ".");
     }
-
 }

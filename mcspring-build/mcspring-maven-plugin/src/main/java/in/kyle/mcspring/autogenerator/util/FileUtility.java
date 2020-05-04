@@ -1,4 +1,4 @@
-package in.kyle.mcspring.autogenerator;
+package in.kyle.mcspring.autogenerator.util;
 
 import java.io.File;
 import java.util.ArrayList;

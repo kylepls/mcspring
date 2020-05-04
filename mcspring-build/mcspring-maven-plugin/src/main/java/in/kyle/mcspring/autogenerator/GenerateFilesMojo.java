@@ -1,5 +1,8 @@
 package in.kyle.mcspring.autogenerator;
 
+import in.kyle.mcspring.autogenerator.scan.ProjectSourceAnnotationScanner;
+import in.kyle.mcspring.autogenerator.util.ClassLoadingUtility;
+import in.kyle.mcspring.autogenerator.util.MainClassUtilities;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Component;
@@ -21,7 +24,7 @@ import lombok.SneakyThrows;
 @Mojo(name = "generate-files", defaultPhase = LifecyclePhase.PROCESS_CLASSES,
         requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME,
         requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
-public class McSpringMavenPlugin extends AbstractMojo {
+public class GenerateFilesMojo extends AbstractMojo {
 
     private static final List<String> VALID_SCOPES = Arrays.asList("provided", "compile", "runtime");
     @Component
@@ -62,8 +65,8 @@ public class McSpringMavenPlugin extends AbstractMojo {
         getLog().info("Scanning for project dependencies in qualifying scope");
         Set<Artifact> artifacts = getDependencyArtifacts();
         getLog().info(String.format("Dependency scan complete. Found %d dependencies", artifacts.size()));
-        PluginDependencyResolver resolver = new PluginDependencyResolver(fullyQualifiedClassLoader, getSourceClassesFolder(), artifacts);
-        PluginYamlAttributes attributes = new PluginYamlAttributes(project, resolver, getLog());
+        ProjectDependencyResolver resolver = new ProjectDependencyResolver(fullyQualifiedClassLoader, getSourceClassesFolder(), artifacts);
+        PluginYamlAttributes attributes = new PluginYamlAttributes(project, resolver);
         attributes.loadAttributes();
         getLog().info("Finished obtaining data for plugin.yml");
         getLog().info("----------------------------------------------------------------");
@@ -77,7 +80,7 @@ public class McSpringMavenPlugin extends AbstractMojo {
 
     private void preparePluginMainClass() {
         getLog().info("Scanning project sources for spring annotations");
-        ProjectSpringPackageResolver scanner = new ProjectSpringPackageResolver(fullyQualifiedClassLoader, getSourceClassesFolder());
+        ProjectSourceAnnotationScanner scanner = new ProjectSourceAnnotationScanner(fullyQualifiedClassLoader, getSourceClassesFolder());
         scanner.findPackagesThatUseSpring();
         Set<String> packages = scanner.getPackagesThatUseSpring();
         getLog().info(String.format("Scan complete. Found %d packages with spring annotation", packages.size()));

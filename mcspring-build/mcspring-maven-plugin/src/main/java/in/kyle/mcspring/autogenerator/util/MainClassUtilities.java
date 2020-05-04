@@ -1,4 +1,4 @@
-package in.kyle.mcspring.autogenerator;
+package in.kyle.mcspring.autogenerator.util;
 
 import org.apache.maven.project.MavenProject;
 

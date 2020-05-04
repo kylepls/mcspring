@@ -14,7 +14,7 @@ public class TestGenerator extends AbstractMojoTestCase {
     public void testMojoGoal() throws Exception {
         File testPom = new File(getBasedir(),
                                 "src/test/resources/unit/basic-test/basic-test-plugin-config.xml");
-        McSpringMavenPlugin mojo = (McSpringMavenPlugin) lookupEmptyMojo("generate-files", testPom);
+        GenerateFilesMojo mojo = (GenerateFilesMojo) lookupEmptyMojo("generate-files", testPom);
         
         assertNotNull(mojo);
         mojo.execute();

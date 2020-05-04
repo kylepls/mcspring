@@ -1,5 +1,6 @@
 package in.kyle.mcspring.autogenerator;
 
+import in.kyle.mcspring.autogenerator.util.MainClassUtilities;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.maven.project.MavenProject;

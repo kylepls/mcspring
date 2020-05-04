@@ -5,7 +5,6 @@ import in.kyle.mcspring.autogenerator.scan.JarFileDependencyScanner;
 import in.kyle.mcspring.autogenerator.scan.ProjectDependencyScanner;
 import lombok.SneakyThrows;
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.plugin.logging.Log;
 
 import java.io.File;
 import java.net.URLClassLoader;
@@ -15,13 +14,13 @@ import java.util.List;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
-public class PluginDependencyResolver {
+public class ProjectDependencyResolver {
 
     private final URLClassLoader fullyQualifiedClassLoader;
     private final File sourcesFolder;
     private final List<File> jars;
 
-    public PluginDependencyResolver(URLClassLoader fullyQualifiedClassLoader, File sourcesFolder, Collection<Artifact> dependencies) {
+    public ProjectDependencyResolver(URLClassLoader fullyQualifiedClassLoader, File sourcesFolder, Collection<Artifact> dependencies) {
         this.fullyQualifiedClassLoader = fullyQualifiedClassLoader;
         this.sourcesFolder = sourcesFolder;
         this.jars = dependencies.stream().map(Artifact::getFile).collect(Collectors.toList());
@@ -42,8 +41,8 @@ public class PluginDependencyResolver {
         List<JarFile> jars = getJarFiles();
         JarFileDependencyScanner jarFileDependencyScanner = new JarFileDependencyScanner(fullyQualifiedClassLoader, jars);
         ProjectDependencyScanner projectDependencyScanner = new ProjectDependencyScanner(fullyQualifiedClassLoader, sourcesFolder);
-        dependencies.addAll(jarFileDependencyScanner.getPluginDependAnnotations());
-        dependencies.addAll(projectDependencyScanner.getPluginDependAnnotations());
+        dependencies.addAll(jarFileDependencyScanner.getScannedAnnotations());
+        dependencies.addAll(projectDependencyScanner.getScannedAnnotations());
         return dependencies;
     }
 

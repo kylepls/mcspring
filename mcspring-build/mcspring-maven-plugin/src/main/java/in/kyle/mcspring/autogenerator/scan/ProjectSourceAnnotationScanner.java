@@ -1,5 +1,6 @@
-package in.kyle.mcspring.autogenerator;
+package in.kyle.mcspring.autogenerator.scan;
 
+import in.kyle.mcspring.autogenerator.util.FileUtility;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 //Objective: Scan all classes in the provider folder and check for spring annotations.
 //If present, get the class package and add it to a list for springs package scan at runtime
 @RequiredArgsConstructor
-class ProjectSpringPackageResolver {
+public class ProjectSourceAnnotationScanner {
 
     private static final List<Class<? extends Annotation>> SPRING_ANNOTATIONS = Arrays.asList(
             Service.class,
