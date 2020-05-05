@@ -3,6 +3,7 @@ package in.kyle.mcspring.autogenerator;
 import in.kyle.mcspring.autogenerator.scan.ProjectSourceAnnotationScanner;
 import in.kyle.mcspring.autogenerator.util.ClassLoadingUtility;
 import in.kyle.mcspring.autogenerator.util.MainClassUtilities;
+import lombok.val;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Component;
@@ -27,6 +28,7 @@ import lombok.SneakyThrows;
 public class GenerateFilesMojo extends AbstractMojo {
 
     private static final List<String> VALID_SCOPES = Arrays.asList("provided", "compile", "runtime");
+
     @Component
     private MavenProject project;
     private URLClassLoader fullyQualifiedClassLoader;
@@ -65,7 +67,7 @@ public class GenerateFilesMojo extends AbstractMojo {
         getLog().info("Scanning for project dependencies in qualifying scope");
         Set<Artifact> artifacts = getDependencyArtifacts();
         getLog().info(String.format("Dependency scan complete. Found %d dependencies", artifacts.size()));
-        ProjectDependencyResolver resolver = new ProjectDependencyResolver(fullyQualifiedClassLoader, getSourceClassesFolder(), artifacts);
+        val resolver = new ProjectDependencyResolver(fullyQualifiedClassLoader, getSourceClassesFolder(), artifacts);
         PluginYamlAttributes attributes = new PluginYamlAttributes(project, resolver);
         attributes.loadAttributes();
         getLog().info("Finished obtaining data for plugin.yml");
@@ -80,7 +82,7 @@ public class GenerateFilesMojo extends AbstractMojo {
 
     private void preparePluginMainClass() {
         getLog().info("Scanning project sources for spring annotations");
-        ProjectSourceAnnotationScanner scanner = new ProjectSourceAnnotationScanner(fullyQualifiedClassLoader, getSourceClassesFolder());
+        val scanner = new ProjectSourceAnnotationScanner(fullyQualifiedClassLoader, getSourceClassesFolder());
         scanner.findPackagesThatUseSpring();
         Set<String> packages = scanner.getPackagesThatUseSpring();
         getLog().info(String.format("Scan complete. Found %d packages with spring annotation", packages.size()));
@@ -108,7 +110,6 @@ public class GenerateFilesMojo extends AbstractMojo {
         return new File(project.getBasedir(), "/target/generated-sources/");
     }
 
-    @SuppressWarnings("unchecked")
     private Set<Artifact> getDependencyArtifacts() {
         Set<Artifact> artifacts = project.getArtifacts();
         return artifacts.stream()
