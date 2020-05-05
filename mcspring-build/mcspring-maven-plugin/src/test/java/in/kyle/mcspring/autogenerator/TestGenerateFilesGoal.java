@@ -14,10 +14,12 @@ import java.util.stream.Collectors;
 public class TestGenerateFilesGoal extends BetterAbstractMojoTestCase {
 
     private GenerateFilesMojo mojo;
+    private File targetDirectory;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        this.targetDirectory = new File(getBasedir(), "/src/test/resources/unit/basic-test/target/");
         File testPom = new File(getBasedir(), "/src/test/resources/unit/basic-test/pom.xml");
         this.mojo = (GenerateFilesMojo) lookupConfiguredMojo(testPom, "generate-files");
         mojo.initializeClassLoader();
@@ -54,8 +56,7 @@ public class TestGenerateFilesGoal extends BetterAbstractMojoTestCase {
     public void testGeneratedFiles() {
         assertNotNull(mojo);
         mojo.execute();
-        File targetDir = TestingUtils.getTestProjectTargetDirectory(getBasedir());
-        File generatedDir = new File(targetDir, "generated-sources/mc-spring");
+        File generatedDir = new File(targetDirectory, "generated-sources/mc-spring");
         File mainClass = new File(generatedDir, "org/springframework/boot/loader/testprojectgroupid/testproject.java");
         File pluginYml = new File(generatedDir, "plugin.yml");
         assertTrue(generatedDir.exists());
