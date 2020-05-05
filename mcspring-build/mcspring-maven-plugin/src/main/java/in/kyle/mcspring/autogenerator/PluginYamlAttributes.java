@@ -16,11 +16,11 @@ public class PluginYamlAttributes {
     private final List<String> softDependencies = new ArrayList<>();
     private final List<String> requiredDependencies = new ArrayList<>();
     private final MavenProject project;
-    private final ProjectDependencyResolver resolver;
+    private final List<PluginDepend> dependencies;
 
-    PluginYamlAttributes(MavenProject project, ProjectDependencyResolver resolver) {
+    PluginYamlAttributes(MavenProject project, List<PluginDepend> dependencies) {
         this.project = project;
-        this.resolver = resolver;
+        this.dependencies = dependencies;
     }
 
     public Map<String, Object> getAttributes() {
@@ -36,9 +36,8 @@ public class PluginYamlAttributes {
     }
 
     private void loadDependencies() {
-        List<PluginDepend> list = resolver.resolveAllDependencies();
-        loadSoftDependencies(list);
-        loadRequiredDependencies(list);
+        loadSoftDependencies(dependencies);
+        loadRequiredDependencies(dependencies);
         attributes.put("softdepend", softDependencies);
         attributes.put("depend", requiredDependencies);
     }

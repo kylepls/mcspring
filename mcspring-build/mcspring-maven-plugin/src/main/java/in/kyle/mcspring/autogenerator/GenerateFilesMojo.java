@@ -42,7 +42,7 @@ public class GenerateFilesMojo extends AbstractMojo {
     }
 
     //Initializes a class loader with all maven dependency classes and project classes.
-    private void initializeClassLoader() {
+    public void initializeClassLoader() {
         ClassLoader parent = getClass().getClassLoader();
         File projectSource = getSourceClassesFolder();
         List<File> artifactFiles = getDependencyArtifacts().stream()
@@ -63,12 +63,30 @@ public class GenerateFilesMojo extends AbstractMojo {
         project.addCompileSourceRoot(output.getPath());
     }
 
+    public ProjectDependencyResolver getDependencyResolver() {
+        Set<Artifact> artifacts = getDependencyArtifacts();
+        File sources = getSourceClassesFolder();
+        return new ProjectDependencyResolver(fullyQualifiedClassLoader, sources, artifacts);
+    }
+
+    public PluginYamlAttributes getLoadedYamlAttributes() {
+        val resolver = getDependencyResolver();
+        val attributes = new PluginYamlAttributes(project, resolver.resolveAllDependencies());
+        attributes.loadAttributes();
+        return attributes;
+    }
+
+    public ProjectSourceAnnotationScanner getSourceAnnotationScanner() {
+        File sources = getSourceClassesFolder();
+        return new ProjectSourceAnnotationScanner(fullyQualifiedClassLoader, sources);
+    }
+
     private void preparePluginYml() {
         getLog().info("Scanning for project dependencies in qualifying scope");
         Set<Artifact> artifacts = getDependencyArtifacts();
-        getLog().info(String.format("Dependency scan complete. Found %d dependencies", artifacts.size()));
-        val resolver = new ProjectDependencyResolver(fullyQualifiedClassLoader, getSourceClassesFolder(), artifacts);
-        PluginYamlAttributes attributes = new PluginYamlAttributes(project, resolver);
+        getLog().info(String.format("Dependency scan complete. Found %d project dependencies", artifacts.size()));
+        val resolver = getDependencyResolver();
+        val attributes = new PluginYamlAttributes(project, resolver.resolveAllDependencies());
         attributes.loadAttributes();
         getLog().info("Finished obtaining data for plugin.yml");
         getLog().info("----------------------------------------------------------------");
