@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import in.kyle.mcspring.command.SimpleMethodInjection;
+import in.kyle.mcspring.subcommands.plugincommand.PluginCommand;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -22,7 +23,7 @@ public class TestConsole {
         if (parts.get(0).isEmpty()) {
             parts.remove(0);
         }
-        PluginCommand command = new PluginCommand(injection, sender, parts, new ArrayList<>());
+        PluginCommand command = new PluginCommand(injection, sender, parts);
         consumer.accept(command);
     }
 }

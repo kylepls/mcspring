@@ -40,6 +40,14 @@
                     <groupId>in.kyle.mcspring</groupId>
                     <artifactId>mcspring-maven-plugin</artifactId>
                     <version>0.0.9</version>
+                    <executions>
+                        <execution>
+                            <phase>process-classes</phase>
+                            <goals>
+                                <goal>generate-files</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>

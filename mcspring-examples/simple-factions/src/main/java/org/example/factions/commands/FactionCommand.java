@@ -10,7 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import in.kyle.mcspring.command.Command;
-import in.kyle.mcspring.subcommands.PluginCommand;
+import in.kyle.mcspring.subcommands.plugincommand.PluginCommand;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -25,13 +25,9 @@ class FactionCommand {
         command.on("delete", this::delete);
         command.on("list", this::list);
         command.on("join", this::join);
-        command.on("mine", this::info);
+        command.on("mine", this::factionMine);
         command.onInvalid(s -> String.format("Invalid sub-command %s", s));
         command.otherwise("Usage: /faction <create|delete|join|list>");
-    }
-    
-    private void info(PluginCommand command) {
-        command.then(this::factionMine);
     }
     
     private void join(PluginCommand command) {
