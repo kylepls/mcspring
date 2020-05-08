@@ -67,11 +67,6 @@
             <email>mail@kyle.in</email>
             <id>kylepls</id>
         </developer>
-        <developer>
-            <name>Josh</name>
-            <email>joshuabetz12@gmail.com</email>
-            <id>Joshbpls</id>
-        </developer>
     </developers>
 
     <repositories>
@@ -170,18 +165,6 @@
     </profiles>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0-M3</version>
-                <configuration>
-                    <rules>
-                        <dependencyConvergence/>
-                    </rules>
-                </configuration>
-            </plugin>
-        </plugins>
         <pluginManagement>
             <plugins>
                 <plugin>
