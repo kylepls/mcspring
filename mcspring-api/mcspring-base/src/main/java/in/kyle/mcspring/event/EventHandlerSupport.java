@@ -3,23 +3,22 @@ package in.kyle.mcspring.event;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.plugin.EventExecutor;
-import org.bukkit.plugin.Plugin;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 
+import in.kyle.mcspring.RequiresSpigot;
 import in.kyle.mcspring.util.SpringScanner;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 
 @Component
 @AllArgsConstructor
-@ConditionalOnBean(Plugin.class)
+@RequiresSpigot
 class EventHandlerSupport implements ApplicationContextAware {
     
     private final EventService eventService;

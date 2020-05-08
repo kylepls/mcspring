@@ -1,4 +1,6 @@
-package in.kyle.mcspring.command;
+package in.kyle.mcspring.command.registration;
+
+import com.google.common.annotations.VisibleForTesting;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -10,8 +12,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import in.kyle.mcspring.command.Command;
 import in.kyle.mcspring.util.SpringScanner;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.var;
 
 @Component
@@ -20,6 +25,9 @@ class CommandScanner implements ApplicationContextAware {
     
     private final SpringScanner scanner;
     private final CommandRegistration commandRegistration;
+    
+    @VisibleForTesting
+    @Getter(AccessLevel.PACKAGE)
     private final Set<Method> registeredCommands = new HashSet<>();
     
     @Override

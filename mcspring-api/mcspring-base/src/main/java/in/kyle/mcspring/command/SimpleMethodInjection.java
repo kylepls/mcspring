@@ -1,6 +1,7 @@
 package in.kyle.mcspring.command;
 
-import org.springframework.context.annotation.Lazy;
+import com.google.common.annotations.VisibleForTesting;
+
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
@@ -13,6 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import in.kyle.mcspring.command.registration.Resolver;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.var;
@@ -21,7 +23,6 @@ import lombok.var;
  * Used to inject method parameters
  * Does not support annotated parameters
  */
-@Lazy
 @Component
 @RequiredArgsConstructor
 public class SimpleMethodInjection {
@@ -29,7 +30,10 @@ public class SimpleMethodInjection {
     private final List<Resolver> resolvers;
     
     @SneakyThrows
-    public Object invoke(Method method, Object object, List<Resolver> resolvers, Object... contextObjects) {
+    public Object invoke(Method method,
+                         Object object,
+                         List<Resolver> resolvers,
+                         Object... contextObjects) {
         Object[] params = getParameters(method, resolvers, contextObjects);
         method.setAccessible(true);
         if (params.length != 0) {
@@ -39,7 +43,8 @@ public class SimpleMethodInjection {
         }
     }
     
-    private List<Resolver> makeResolvers(Object... contextObjects) {
+    @VisibleForTesting
+    List<Resolver> makeResolvers(Object... contextObjects) {
         return Stream.of(contextObjects)
                 .filter(Objects::nonNull)
                 .map(o -> (Resolver) parameter -> ClassUtils.isAssignable(parameter.getType(),
@@ -49,17 +54,25 @@ public class SimpleMethodInjection {
                 .collect(Collectors.toList());
     }
     
-    public Object[] getParameters(Method method, List<Resolver> contextResolvers, Object... contextObjects) {
+    public Object[] getParameters(Method method,
+                                  List<Resolver> contextResolvers,
+                                  Object... contextObjects) {
+        List<Resolver> methodResolvers = new ArrayList<>();
+        methodResolvers.addAll(contextResolvers);
+        methodResolvers.addAll(makeResolvers(contextObjects));
+        return getParameters(method, methodResolvers);
+    }
+    
+    public Object[] getParameters(Method method, List<Resolver> contextResolvers) {
         Parameter[] parameters = method.getParameters();
         Object[] params = new Object[parameters.length];
         
         List<Resolver> methodResolvers = new ArrayList<>();
         methodResolvers.addAll(contextResolvers);
-        methodResolvers.addAll(makeResolvers(contextObjects));
         methodResolvers.addAll(resolvers);
         for (int i = 0; i < parameters.length; i++) {
             Parameter parameter = parameters[i];
-    
+            
             for (int j = 0; j < methodResolvers.size(); j++) {
                 Resolver methodResolver = methodResolvers.get(j);
                 Optional<Object> resolved = methodResolver.resolve(parameter);
@@ -70,7 +83,7 @@ public class SimpleMethodInjection {
                     break;
                 }
             }
-    
+            
             if (params[i] == null) {
                 throw new RuntimeException(
                         "Unable to resolve parameter " + parameter.getType() + " for " +

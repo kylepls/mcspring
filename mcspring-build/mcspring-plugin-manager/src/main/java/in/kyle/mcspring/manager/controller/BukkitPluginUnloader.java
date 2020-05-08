@@ -6,7 +6,6 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +17,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
+import in.kyle.mcspring.RequiresSpigot;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.var;
@@ -25,7 +25,7 @@ import lombok.var;
 @Lazy
 @Component
 @RequiredArgsConstructor
-@ConditionalOnBean(Plugin.class)
+@RequiresSpigot
 @SuppressWarnings("unchecked")
 class BukkitPluginUnloader {
     

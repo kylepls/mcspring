@@ -11,12 +11,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import lombok.Data;
+import lombok.Getter;
 
 @Controller
-@Data
 class FactionsController implements FactionsApi {
     
+    @Getter
     private final Set<Faction> factions = new HashSet<>();
     
     @Override
@@ -31,7 +31,8 @@ class FactionsController implements FactionsApi {
     
     @Override
     public boolean isFactionMember(Player player) {
-        return getFaction(player).map(f -> f.getMembers().containsKey(player.getUniqueId())).orElse(false);
+        return getFaction(player).map(f -> f.getMembers().containsKey(player.getUniqueId()))
+                .orElse(false);
     }
     
     @Override

@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 
-import in.kyle.mcspring.command.CommandResolver;
-import in.kyle.mcspring.command.Resolver;
+import in.kyle.mcspring.command.registration.CommandResolver;
+import in.kyle.mcspring.command.registration.Resolver;
 import in.kyle.mcspring.command.SimpleMethodInjection;
 import lombok.AllArgsConstructor;
 
