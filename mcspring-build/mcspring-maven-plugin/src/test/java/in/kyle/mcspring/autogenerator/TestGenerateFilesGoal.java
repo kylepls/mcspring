@@ -1,14 +1,15 @@
 package in.kyle.mcspring.autogenerator;
 
 
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import in.kyle.mcspring.annotation.PluginDepend;
+import in.kyle.mcspring.autogenerator.scan.CommandAnnotationScanner;
+import in.kyle.mcspring.command.Command;
 import lombok.val;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TestGenerateFilesGoal extends BetterAbstractMojoTestCase {
@@ -23,6 +24,27 @@ public class TestGenerateFilesGoal extends BetterAbstractMojoTestCase {
         File testPom = new File(getBasedir(), "/src/test/resources/unit/basic-test/pom.xml");
         this.mojo = (GenerateFilesMojo) lookupConfiguredMojo(testPom, "generate-files");
         mojo.initializeClassLoader();
+    }
+
+    /*
+    Tests to make sure the plugin yml content is accurate
+     */
+    public void testPluginYamlAttributes() {
+        val attributes = mojo.getLoadedYamlAttributes();
+        Map<String, Object> map = attributes.getAttributes();
+        assertEquals(map.get("name"), "test-project");
+        assertEquals(map.get("main"), "org.springframework.boot.loader.testprojectgroupid.testproject");
+        assertEquals(((List) map.get("depend")).size(), 1);
+        assertEquals(((List) map.get("softdepend")).size(), 0);
+    }
+
+    /*
+    Tests command resolution
+     */
+    public void testCommandScanner() {
+        val scanner = mojo.getCommandAnnotationScanner();
+        List<Command> scanned = scanner.getCommandAnnotations();
+        assertEquals(1, scanned.size());
     }
 
     /*

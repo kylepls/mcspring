@@ -1,5 +1,6 @@
 package in.kyle.mcspring.autogenerator;
 
+import in.kyle.mcspring.autogenerator.scan.CommandAnnotationScanner;
 import in.kyle.mcspring.autogenerator.scan.ProjectSourceAnnotationScanner;
 import in.kyle.mcspring.autogenerator.util.ClassLoadingUtility;
 import in.kyle.mcspring.autogenerator.util.MainClassUtilities;
@@ -55,12 +56,17 @@ public class GenerateFilesMojo extends AbstractMojo {
         return new File(getGeneratedSourcesFolder(), "mc-spring/");
     }
 
+
     private void addGeneratedSourcesDirectory() {
         File output = getSourcesOutputDirectory();
         if (!output.exists()) {
             output.mkdirs();
         }
         project.addCompileSourceRoot(output.getPath());
+    }
+
+    public CommandAnnotationScanner getCommandAnnotationScanner() {
+        return new CommandAnnotationScanner(fullyQualifiedClassLoader, getSourceClassesFolder());
     }
 
     public ProjectDependencyResolver getDependencyResolver() {
@@ -71,7 +77,8 @@ public class GenerateFilesMojo extends AbstractMojo {
 
     public PluginYamlAttributes getLoadedYamlAttributes() {
         val resolver = getDependencyResolver();
-        val attributes = new PluginYamlAttributes(project, resolver.resolveAllDependencies());
+        val cmdScanner = new CommandAnnotationScanner(fullyQualifiedClassLoader, getSourceClassesFolder());
+        val attributes = new PluginYamlAttributes(project, resolver.resolveAllDependencies(), cmdScanner.getCommandAnnotations());
         attributes.loadAttributes();
         return attributes;
     }
@@ -86,7 +93,8 @@ public class GenerateFilesMojo extends AbstractMojo {
         Set<Artifact> artifacts = getDependencyArtifacts();
         getLog().info(String.format("Dependency scan complete. Found %d project dependencies", artifacts.size()));
         val resolver = getDependencyResolver();
-        val attributes = new PluginYamlAttributes(project, resolver.resolveAllDependencies());
+        val cmdScanner = new CommandAnnotationScanner(fullyQualifiedClassLoader, getSourceClassesFolder());
+        val attributes = new PluginYamlAttributes(project, resolver.resolveAllDependencies(), cmdScanner.getCommandAnnotations());
         attributes.loadAttributes();
         getLog().info("Finished obtaining data for plugin.yml");
         getLog().info("----------------------------------------------------------------");
