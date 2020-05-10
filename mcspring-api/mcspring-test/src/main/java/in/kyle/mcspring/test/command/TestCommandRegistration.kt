@@ -16,7 +16,7 @@ import kotlin.reflect.jvm.kotlinFunction
 typealias CommandSig = (CommandSender, String, Array<String>) -> Unit
 
 @Component
-internal class TestCommandRegistration(
+class TestCommandRegistration(
         private val injection: SimpleMethodInjection,
         private val commandResolvers: Set<CommandResolver>
 ) : CommandRegistration {

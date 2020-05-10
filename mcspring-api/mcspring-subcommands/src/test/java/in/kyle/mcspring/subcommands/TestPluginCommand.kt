@@ -5,21 +5,10 @@ import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
 import org.assertj.core.api.Assertions.assertThat
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
 
 internal class TestPluginCommand {
-
-    lateinit var sender: Player
-    lateinit var outputMessages: MutableList<String>
-
-    @BeforeEach
-    fun setup() {
-        outputMessages = mutableListOf()
-        sender = mock(Player::class.java)
-        doAnswer { outputMessages.add(it.getArgument(0)) }.`when`(sender).sendMessage(anyString())
-    }
 
     @Test
     fun testDirectExecutor() {
@@ -34,7 +23,8 @@ internal class TestPluginCommand {
             fun handler2(string: String) = "handler2: $string"
         }
 
-        run("subcommand1", Test()::exec1)
+        val (sender, outputMessages) = makePlayer()
+        run("subcommand1", Test()::exec1, true, sender)
         assertThat(outputMessages).containsExactly("handler1")
         outputMessages.clear()
 
@@ -47,9 +37,11 @@ internal class TestPluginCommand {
         class Test {
             fun root(command: PluginCommand) = command.then(this::exec)
 
+            @Suppress("UNUSED_PARAMETER")
             fun exec(sender: CommandSender) = "Hello World"
         }
 
+        val (sender, outputMessages) = makePlayer()
         run("", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("Hello World")
     }
@@ -85,6 +77,7 @@ internal class TestPluginCommand {
             fun exec(sentence: String) = sentence
         }
 
+        val (sender, outputMessages) = makePlayer()
         run("Hello to you world", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("Hello to you world")
     }
@@ -105,6 +98,7 @@ internal class TestPluginCommand {
             }
         }
 
+        val (sender, outputMessages) = makePlayer()
         run("1 2 3", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("true")
     }
@@ -114,18 +108,21 @@ internal class TestPluginCommand {
         class Test {
             fun root(command: PluginCommand) = command.on("a", this::a)
 
-            fun a(command: PluginCommand) {
+            private fun a(command: PluginCommand) {
                 command.on("b", this::b)
                 command.on("c", this::c)
             }
 
             private fun b(command: PluginCommand) = command.then(this::exec)
 
-            private fun c(command: PluginCommand) {}
+            @Suppress("UNUSED_PARAMETER")
+            private fun c(command: PluginCommand) {
+            }
 
-            fun exec(sender: CommandSender) = "Works"
+            private fun exec() = "Works"
         }
 
+        val (sender, outputMessages) = makePlayer()
         run("a b", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("Works")
         outputMessages.clear()
@@ -143,11 +140,12 @@ internal class TestPluginCommand {
             }
 
             fun a(command: PluginCommand) {
-                command.withInt{ "error" }
+                command.withInt { "error" }
                 command.otherwise("should run if int passed or missing arg")
             }
         }
 
+        val (sender, outputMessages) = makePlayer()
         run("", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("no subcommand at root")
         outputMessages.clear()
@@ -165,7 +163,15 @@ internal class TestPluginCommand {
             fun root(command: PluginCommand) = command.withInt { "$it is not an int" }
         }
 
+        val (sender, outputMessages) = makePlayer()
         run("swag", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("swag is not an int")
+    }
+
+    private fun makePlayer(): Pair<Player, MutableList<String>> {
+        val sender = mock(Player::class.java)
+        val messages = mutableListOf<String>()
+        doAnswer { messages.add(it.getArgument(0)) }.`when`(sender).sendMessage(anyString())
+        return Pair(sender, messages)
     }
 }

@@ -34,6 +34,7 @@
             <groupId>in.kyle.mcspring</groupId>
             <artifactId>mcspring-test</artifactId>
             <version>${project.parent.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

@@ -66,7 +66,7 @@ class PluginController(
         return false
     }
 
-    fun getPlugin(name: String?): Plugin? {
+    fun getPlugin(name: String): Plugin? {
         return pluginManager.getPlugin(name)
     }
 

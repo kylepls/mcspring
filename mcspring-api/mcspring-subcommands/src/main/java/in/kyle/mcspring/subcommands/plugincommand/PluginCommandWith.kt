@@ -12,7 +12,7 @@ interface PluginCommandWith : PluginCommandBase, PluginCommand {
     override fun withSentence() {
         addCompletionStage("sentence", "with")
         if (nextPart() != null) {
-            injections.add(parts.joinToString())
+            injections.add(parts.joinToString(" "))
             parts.clear()
         }
     }
@@ -22,6 +22,7 @@ interface PluginCommandWith : PluginCommandBase, PluginCommand {
     override fun withDouble(errorMessage: Err1) = with({ it.toDoubleOrNull() },
             errorMessage, "double")
 
+    @Suppress("DEPRECATION")
     override fun withOfflinePlayer(errorMessage: Err1) {
         with({ Bukkit.getOfflinePlayer(it) }, errorMessage, "offline player")
     }

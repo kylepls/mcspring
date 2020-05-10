@@ -14,6 +14,7 @@ internal class CommandGamemode {
 
         val gamemodes = mutableMapOf<String, GameMode>()
         GameMode.values().forEach {
+            @Suppress("DEPRECATION")
             gamemodes[it.value.toString()] = it
             gamemodes[it.name.toLowerCase()] = it
         }

@@ -10,7 +10,7 @@ import org.bukkit.entity.Player
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 
-class TestTabDiscovery {
+internal class TestTabDiscovery {
 
     private val tabDiscovery = TabDiscovery(SimpleMethodInjection(emptyList()))
 

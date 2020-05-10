@@ -6,6 +6,7 @@ import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.jvm.javaType
 
 interface PluginCommandExecutors : PluginCommandBase, PluginCommand {
 
@@ -13,7 +14,7 @@ interface PluginCommandExecutors : PluginCommandBase, PluginCommand {
 
     override fun otherwise(e: KFunction<Any>) {
         dirtiesState(requiredStates = arrayOf(State.CLEAN, State.MISSING_ARG)) {
-            execute { runWithContext(e) }
+            execute { runWithKotlinContext(e) }
         }
     }
 
@@ -25,9 +26,9 @@ interface PluginCommandExecutors : PluginCommandBase, PluginCommand {
                     it.type.isSubtypeOf(PluginCommand::class.createType())
                 }
                 if (receivesPluginCommand) {
-                    runWithContext(e, sendOutput = false)
+                    runWithKotlinContext(e, sendOutput = false)
                 } else {
-                    execute { runWithContext(e) }
+                    execute { runWithKotlinContext(e) }
                 }
             }
         }
@@ -41,15 +42,20 @@ interface PluginCommandExecutors : PluginCommandBase, PluginCommand {
         }
     }
 
-    override fun then(e: KFunction<Any>) = dirtiesState { execute { runWithContext(e) } }
+    override fun then(e: KFunction<Any>) = dirtiesState { execute { runWithKotlinContext(e) } }
 
-    private fun runWithContext(e: KFunction<Any>, sendOutput: Boolean = true) {
+    fun runWithContext(e: KFunction<Any>, types: List<Class<*>>, sendOutput: Boolean = true) {
         val nextExecutor = makeNextExecutor()
         child = nextExecutor
-        val out = injection.run(e, injections.plus(nextExecutor))
+        val out = injection.callWithInjection(e, types, injections.plus(nextExecutor).plus(sender))
         if (out !is Unit && sendOutput) {
             sendMessage(out.toString())
         }
+    }
+
+    private fun runWithKotlinContext(e: KFunction<Any>, sendOutput: Boolean = true) {
+        val types = e.parameters.map { it.type.javaType as Class<*> }
+        return runWithContext(e, types, sendOutput)
     }
 
     private fun makeNextExecutor(): PluginCommandImpl? {

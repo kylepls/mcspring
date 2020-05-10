@@ -3,22 +3,20 @@ package in.kyle.mcspring.subcommands;
 import org.bukkit.entity.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import in.kyle.mcspring.command.SimpleMethodInjection;
+import in.kyle.mcspring.subcommands.plugincommand.PluginCommandImpl;
 import in.kyle.mcspring.subcommands.plugincommand.api.PluginCommand;
-import in.kyle.mcspring.test.MCSpringTest;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@MCSpringTest
-public class TestJavaPluginCommand {
-    
-    @Autowired
-    TestConsole console;
+class TestJavaPluginCommand {
     
     Player sender;
     List<String> messages;
@@ -47,7 +45,12 @@ public class TestJavaPluginCommand {
             }
         }
         
-        console.run("test-arg another-arg", new Test()::parse, true, mock(Player.class));
-        assertThat(messages).containsExactly("part is test-arg true");
+        PluginCommandImpl pluginCommand =
+                new PluginCommandImpl(new SimpleMethodInjection(Collections.emptyList()),
+                                      sender,
+                                      Arrays.asList("test-arg", "another-arg"),
+                                      true);
+        new Test().parse(pluginCommand);
+        assertThat(messages).containsExactly("part is test-arg");
     }
 }

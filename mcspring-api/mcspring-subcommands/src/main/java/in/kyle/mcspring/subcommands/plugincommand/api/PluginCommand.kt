@@ -7,6 +7,8 @@ import kotlin.reflect.KFunction
 typealias Err = () -> String
 typealias Err1 = (String) -> String
 
+const val defaultStageName = "UNKNOWN"
+
 interface PluginCommand {
 
     val sender: CommandSender
@@ -109,10 +111,10 @@ interface PluginCommand {
 
     fun requiresOp(errorMessage: Err)
 
-    fun with(processor: (String) -> Any?, errorMessage: Err1 = { "" }, stageName: String = "UNKNOWN")
+    fun with(processor: (String) -> Any?, errorMessage: Err1 = { "" }, stageName: String = defaultStageName)
 
     fun with(processor: (String) -> Any?, errorMessage: Err1 = { "" })
-             = with(processor, errorMessage, "UNKNOWN")
+             = with(processor, errorMessage, defaultStageName)
 
     fun withString()
 
@@ -140,17 +142,17 @@ interface PluginCommand {
 
     fun withXYZInt(errorMessage: String)
 
-    fun <T> withMap(options: Map<String, T>, errorMessage: Err1, stageName: String = "UNKNOWN")
+    fun <T> withMap(options: Map<String, T>, errorMessage: Err1, stageName: String = defaultStageName)
 
     fun <T> withMap(options: Map<String, T>, errorMessage: Err1)
-            = withMap(options, errorMessage, "UNKNOWN")
+            = withMap(options, errorMessage, defaultStageName)
 
     fun <T> withMap(options: Map<String, T>, errorMessage: String)
 
-    fun withAny(options: Collection<String>, errorMessage: Err1, stageName: String = "UNKNOWN")
+    fun withAny(options: Collection<String>, errorMessage: Err1, stageName: String = defaultStageName)
 
     fun withAny(options: Collection<String>, errorMessage: Err1)
-            = withAny(options, errorMessage, "UNKNOWN")
+            = withAny(options, errorMessage, defaultStageName)
 
     fun withAny(options: Collection<String>, errorMessage: String)
 

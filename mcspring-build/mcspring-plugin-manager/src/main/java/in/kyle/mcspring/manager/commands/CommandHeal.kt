@@ -16,6 +16,7 @@ internal class CommandHeal {
     }
 
     private fun executeHeal(target: Player): String {
+        @Suppress("DEPRECATION")
         target.health = target.maxHealth
         return "Healed ${target.name}"
     }

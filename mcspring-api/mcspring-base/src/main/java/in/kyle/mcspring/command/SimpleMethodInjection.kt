@@ -3,6 +3,7 @@ package `in`.kyle.mcspring.command
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component
 import kotlin.reflect.KFunction
+import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaType
 
@@ -23,17 +24,12 @@ class SimpleMethodInjection(
     private fun makeResolverFor(contextObject: Any): ParameterResolver {
         return object : ParameterResolver {
             override fun resolve(parameter: Class<*>): Any? {
-                return contextObject.takeIf { parameter.isAssignableFrom(contextObject.javaClass) }
+                return contextObject.takeIf { contextObject::class.isSubclassOf(parameter.kotlin) }
             }
         }
     }
 
-    fun run(function: KFunction<Any>, contextObjects: List<Any?>): Any {
-        val types = function.parameters.map { it.type.javaType as Class<*> }
-        return run(function, types, contextObjects)
-    }
-
-    fun run(function: KFunction<Any>, types: List<Class<*>>, contextObjects: List<Any?>): Any {
+    fun callWithInjection(function: KFunction<Any>, types: List<Class<*>>, contextObjects: List<Any?>): Any {
         val contextResolvers = makeResolvers(contextObjects)
         val parameters = getParameters(types, contextResolvers)
         try {

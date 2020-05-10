@@ -2,6 +2,7 @@ package `in`.kyle.mcspring.subcommands.plugincommand.javacompat
 
 import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandBase.State
 import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandExecutors
+import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
 import `in`.kyle.mcspring.subcommands.plugincommand.javacompat.HighIQExecutors.*
 import java.lang.invoke.SerializedLambda
 import java.lang.reflect.Method
@@ -94,8 +95,11 @@ interface PluginCommandExecutorsJavaSupport : PluginCommandExecutors {
 
     private fun then(e: HighIQExecutors, function: KFunction<Any>) {
         dirtiesState {
-            val types: List<Class<*>> = getMethod(e).parameterTypes.toList()
-            injection.run(function, types)
+            execute {
+                val types: List<Class<*>> = getMethod(e).parameterTypes.toList()
+                val sendOutput = types.any { PluginCommand::class.java.isAssignableFrom(it) }
+                super.runWithContext(function, types, sendOutput)
+            }
         }
     }
 

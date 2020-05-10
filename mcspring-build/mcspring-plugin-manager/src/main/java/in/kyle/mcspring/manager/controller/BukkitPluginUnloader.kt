@@ -31,6 +31,7 @@ class BukkitPluginUnloader(
         names.putAll(getDeclaredField(pluginManager, "lookupNames"))
         val knownCommands = SimpleCommandMap::class.java.getDeclaredField("knownCommands")
         knownCommands.isAccessible = true
+        @Suppress("UNCHECKED_CAST")
         commands.putAll(knownCommands.get(commandMap) as Map<String, Command>)
     }
 
@@ -53,7 +54,6 @@ class BukkitPluginUnloader(
         unregister.forEach { it.value.unregister(commandMap); commands.remove(it.key) }
     }
 
-    @SneakyThrows
     private fun closeClassLoader(classLoader: ClassLoader) {
         if (classLoader is URLClassLoader) {
             setDeclaredField(classLoader, "plugin", null)
@@ -62,14 +62,13 @@ class BukkitPluginUnloader(
         }
     }
 
-    @SneakyThrows
     private fun <T> getDeclaredField(obj: Any, fieldName: String): T {
         val field = obj.javaClass.getDeclaredField(fieldName)
         field.isAccessible = true
+        @Suppress("UNCHECKED_CAST")
         return field[obj] as T
     }
 
-    @SneakyThrows
     private fun setDeclaredField(obj: Any, fieldName: String, value: Any?) {
         val field = obj.javaClass.getDeclaredField(fieldName)
         field.isAccessible = true
