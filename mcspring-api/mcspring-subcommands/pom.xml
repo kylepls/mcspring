@@ -23,10 +23,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
             <groupId>in.kyle.mcspring</groupId>
             <artifactId>mcspring-test</artifactId>
             <version>${project.parent.version}</version>

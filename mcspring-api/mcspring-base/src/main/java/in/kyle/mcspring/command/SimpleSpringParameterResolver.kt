@@ -5,10 +5,10 @@ import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Component
 
 @Component
-internal class SimpleSpringResolver(
+internal class SimpleSpringParameterResolver(
         private val context: ApplicationContext
-) : Resolver {
-    override fun invoke(parameter: Class<*>): Any? {
+) : ParameterResolver {
+    override fun resolve(parameter: Class<*>): Any? {
         return try {
             context.getBean(parameter)
         } catch (e: NoSuchBeanDefinitionException) {

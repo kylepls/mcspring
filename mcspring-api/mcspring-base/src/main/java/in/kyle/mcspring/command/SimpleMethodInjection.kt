@@ -2,8 +2,9 @@ package `in`.kyle.mcspring.command
 
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component
+import kotlin.reflect.KFunction
+import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaType
-import kotlin.reflect.jvm.reflect
 
 /**
  * Used to inject method parameters
@@ -12,35 +13,42 @@ import kotlin.reflect.jvm.reflect
 @Lazy
 @Component
 class SimpleMethodInjection(
-        private val resolvers: List<Resolver>
+        private val parameterResolvers: List<ParameterResolver>
 ) {
 
-    fun makeResolvers(vararg contextObjects: Any?): List<Resolver> {
+    fun makeResolvers(contextObjects: List<Any?>): List<ParameterResolver> {
         return contextObjects.filterNotNull().map(this::makeResolverFor)
     }
 
-    private fun makeResolverFor(contextObject: Any): Resolver {
-        return object : Resolver {
-            override fun invoke(parameter: Class<*>): Any? {
-                return if (contextObject::class.java.isAssignableFrom(parameter)) {
-                    contextObject
-                } else {
-                    null
-                }
+    private fun makeResolverFor(contextObject: Any): ParameterResolver {
+        return object : ParameterResolver {
+            override fun resolve(parameter: Class<*>): Any? {
+                return contextObject.takeIf { parameter.isAssignableFrom(contextObject.javaClass) }
             }
         }
     }
 
-    fun getParameters(func: Function<Any>, contextResolvers: List<Resolver>): Array<Any> {
-        val parameters = func.reflect()!!.parameters.map { it.type.javaType as Class<*> }
-        return getParameters(parameters, contextResolvers)
+    fun run(function: KFunction<Any>, contextObjects: List<Any?>): Any {
+        val types = function.parameters.map { it.type.javaType as Class<*> }
+        return run(function, types, contextObjects)
     }
 
-    fun getParameters(parameters: List<Class<*>>, contextResolvers: List<Resolver>): Array<Any> {
-        val methodResolvers = contextResolvers.plus(resolvers).toMutableList()
+    fun run(function: KFunction<Any>, types: List<Class<*>>, contextObjects: List<Any?>): Any {
+        val contextResolvers = makeResolvers(contextObjects)
+        val parameters = getParameters(types, contextResolvers)
+        try {
+            function.isAccessible = true
+        } catch (e: RuntimeException) {
+            // java compat required
+        }
+        return function.call(*parameters)
+    }
+
+    fun getParameters(parameters: List<Class<*>>, contextParameterResolvers: List<ParameterResolver>): Array<Any> {
+        val methodResolvers = contextParameterResolvers.plus(parameterResolvers).toMutableList()
 
         return parameters.map { parameter: Class<*> ->
-            val candidates = methodResolvers.map { it(parameter) }.toMutableList()
+            val candidates = methodResolvers.map { it.resolve(parameter) }.toMutableList()
             val firstIndex = candidates.indexOfFirst { it != null }
             require(firstIndex != -1) { "Unable to resolve parameter $parameter for func($parameters)" }
             methodResolvers.cycleElement(firstIndex)

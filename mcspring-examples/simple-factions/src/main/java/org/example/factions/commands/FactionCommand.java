@@ -10,7 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import in.kyle.mcspring.command.Command;
-import in.kyle.mcspring.subcommands.plugincommand.PluginCommand;
+import in.kyle.mcspring.subcommands.plugincommand.api.PluginCommand;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -23,7 +23,7 @@ class FactionCommand {
     void faction(PluginCommand command) {
         command.on("create", this::create);
         command.on("delete", this::delete);
-        command.on("list", this::list);
+        command.on("list", this::factionList);
         command.on("join", this::join);
         command.on("mine", this::factionMine);
         command.onInvalid(s -> String.format("Invalid sub-command %s", s));
@@ -51,10 +51,6 @@ class FactionCommand {
         command.then(this::factionDelete);
         command.onInvalid(s -> String.format("Invalid sub-command: %s", s));
         command.otherwise("Usage: /faction delete <name>");
-    }
-    
-    private void list(PluginCommand command) {
-        command.then(this::factionList);
     }
     
     private String factionJoin(Player sender, Faction faction) {

@@ -6,20 +6,6 @@ import java.lang.reflect.Method
 
 interface HighIQExecutors {
 
-    @JvmDefault
-    fun getMethod(e: HighIQExecutors): Method {
-        val argCount = this::class.java.declaredMethods.find { it.name == "handle" }!!.parameterCount
-        val writeReplace = this::class.java.getDeclaredMethod("writeReplace")
-        writeReplace.isAccessible = true
-        val sl = writeReplace.invoke(e) as SerializedLambda
-        val methodName = sl.implMethodName
-        val clazz = Class.forName(sl.implClass.replace("/", "."))
-
-        return clazz.methods.plus(clazz.declaredMethods)
-                .filter { it.name == methodName }.first { it.parameters.size == argCount }
-                ?: throw RuntimeException("Method not found")
-    }
-
     interface E1<A> : HighIQExecutors, Serializable {
         fun handle(a1: A)
     }

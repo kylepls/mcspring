@@ -1,7 +1,7 @@
 package `in`.kyle.mcspring.manager.commands
 
 import `in`.kyle.mcspring.command.Command
-import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommand
+import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandImpl
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.springframework.stereotype.Component
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 @Component
 internal class CommandGamemode {
     @Command(value = "gamemode", aliases = ["gm"], description = "Set your game mode", usage = "/gamemode <creative|survival...>")
-    fun gamemode(command: PluginCommand) {
+    fun gamemode(command: PluginCommandImpl) {
         command.requiresPlayerSender { "Only players can run this command." }
 
         val gamemodes = mutableMapOf<String, GameMode>()

@@ -1,48 +1,60 @@
 package `in`.kyle.mcspring.subcommands.plugincommand
 
 import `in`.kyle.mcspring.command.SimpleMethodInjection
+import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandBase.State
+import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
 import kotlin.reflect.KFunction
-import kotlin.reflect.jvm.isAccessible
+import kotlin.reflect.full.createType
+import kotlin.reflect.full.isSubtypeOf
 
-interface PluginCommandExecutors : PluginCommandBase {
+interface PluginCommandExecutors : PluginCommandBase, PluginCommand {
 
     val injection: SimpleMethodInjection
 
-    fun otherwise(e: KFunction<Any>) {
-        dirtiesState(requiredStates = arrayOf(PluginCommandBase.State.CLEAN, PluginCommandBase.State.MISSING_ARG)) { run(e) }
-    }
-
-    fun on(command: String, e: KFunction<Any>) {
-        if (nextPart().equals(command)) {
-            dirtiesState { run(e) }
+    override fun otherwise(e: KFunction<Any>) {
+        dirtiesState(requiredStates = arrayOf(State.CLEAN, State.MISSING_ARG)) {
+            execute { runWithContext(e) }
         }
     }
 
-    fun onInvalid(errorMessage: (String) -> String) {
-        if (nextPart() != null) {
+    override fun on(command: String, e: KFunction<Any>) {
+        addCompletion(command, "on")
+        if (nextPart().equals(command)) {
             dirtiesState {
-                sendMessage(errorMessage(parts[0]))
+                val receivesPluginCommand = e.parameters.any {
+                    it.type.isSubtypeOf(PluginCommand::class.createType())
+                }
+                if (receivesPluginCommand) {
+                    runWithContext(e, sendOutput = false)
+                } else {
+                    execute { runWithContext(e) }
+                }
             }
         }
     }
 
-    fun then(e: KFunction<Any>) {
-        dirtiesState { run(e) }
-    }
-
-    override fun run(function: KFunction<Any>) {
-        val contextResolvers = injection.makeResolvers(sender, makeNextExecutor(), *injections.toTypedArray())
-        val parameters = injection.getParameters(function, contextResolvers)
-        function.isAccessible = true
-        val output = function.call(*parameters)
-        if (output !is Unit) {
-            sendMessage(output.toString())
+    override fun onInvalid(errorMessage: (String) -> String) {
+        if (nextPart() != null) {
+            dirtiesState {
+                execute { sendMessage(errorMessage(parts[0])) }
+            }
         }
     }
 
-    fun makeNextExecutor(): PluginCommand? {
+    override fun then(e: KFunction<Any>) = dirtiesState { execute { runWithContext(e) } }
+
+    private fun runWithContext(e: KFunction<Any>, sendOutput: Boolean = true) {
+        val nextExecutor = makeNextExecutor()
+        child = nextExecutor
+        val out = injection.run(e, injections.plus(nextExecutor))
+        if (out !is Unit && sendOutput) {
+            sendMessage(out.toString())
+        }
+    }
+
+    private fun makeNextExecutor(): PluginCommandImpl? {
         return if (parts.isNotEmpty()) {
-            PluginCommand(injection, sender, parts).apply {
+            PluginCommandImpl(injection, sender, parts, runExecutors).apply {
                 injections.addAll(this.injections)
                 parts.removeAt(0)
             }

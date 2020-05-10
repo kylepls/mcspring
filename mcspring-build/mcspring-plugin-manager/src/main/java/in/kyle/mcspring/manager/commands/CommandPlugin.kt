@@ -2,7 +2,7 @@ package `in`.kyle.mcspring.manager.commands
 
 import `in`.kyle.mcspring.command.Command
 import `in`.kyle.mcspring.manager.controller.PluginController
-import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommand
+import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandImpl
 import org.bukkit.plugin.Plugin
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Component
@@ -15,20 +15,20 @@ internal class CommandPlugin(
 ) {
 
     @Command(value = "plugin", aliases = ["pl"], description = "Load/unload/reload a specific plugin", usage = "/plugin <load|unload|list>")
-    fun plugin(command: PluginCommand) {
+    fun plugin(command: PluginCommandImpl) {
         command.on("load", ::load)
         command.on("unload", ::unload)
         command.on("list", ::executeListPlugins)
         command.otherwise("Usage: /plugin <load|unload|list>")
     }
 
-    private fun load(command: PluginCommand) {
+    private fun load(command: PluginCommandImpl) {
         command.withMap<Path>(pluginController.loadablePlugins) { "Plugin $it not found or is already loaded" }
         command.then(::executeLoad)
         command.otherwise("Usage: /plugin load <name>")
     }
 
-    private fun unload(command: PluginCommand) {
+    private fun unload(command: PluginCommandImpl) {
         val plugins = pluginController.plugins.associateBy({ it.name }, { it })
         command.withMap(plugins) { "Plugin $it is not loaded" }
         command.then(::executeDisable)

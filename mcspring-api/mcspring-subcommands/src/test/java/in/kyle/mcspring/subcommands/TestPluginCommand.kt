@@ -1,21 +1,15 @@
 package `in`.kyle.mcspring.subcommands
 
-import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommand
-import `in`.kyle.mcspring.test.MCSpringTest
+import `in`.kyle.mcspring.subcommands.TestConsole.run
+import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
 import org.assertj.core.api.Assertions.assertThat
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
-import org.springframework.beans.factory.annotation.Autowired
-import java.util.concurrent.atomic.AtomicBoolean
 
-@MCSpringTest
 internal class TestPluginCommand {
-    @Autowired
-    lateinit var console: TestConsole
 
     lateinit var sender: Player
     lateinit var outputMessages: MutableList<String>
@@ -31,23 +25,20 @@ internal class TestPluginCommand {
     fun testDirectExecutor() {
         class Test {
             fun exec1(command: PluginCommand) = command.on("subcommand1", this::handler1)
-
             fun exec2(command: PluginCommand) {
                 command.withString()
                 command.on("subcommand2", this::handler2)
             }
 
             fun handler1() = "handler1"
-
             fun handler2(string: String) = "handler2: $string"
         }
 
-        val test = Test()
-        console.run(sender, "subcommand1", test::exec1)
+        run("subcommand1", Test()::exec1)
         assertThat(outputMessages).containsExactly("handler1")
         outputMessages.clear()
 
-        console.run(sender, "test-string subcommand2", test::exec2)
+        run("test-string subcommand2", Test()::exec2, sender = sender)
         assertThat(outputMessages).containsExactly("handler2: test-string")
     }
 
@@ -59,7 +50,7 @@ internal class TestPluginCommand {
             fun exec(sender: CommandSender) = "Hello World"
         }
 
-        console.run(sender, "", Test()::root)
+        run("", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("Hello World")
     }
 
@@ -75,13 +66,14 @@ internal class TestPluginCommand {
     //            }
     //        }
     //        Test test = new Test();
-    //        console.run(sender, "", test::root);
+    //        run(sender, "", test::root);
     //        assertThat(outputMessages).isEmpty();
     //
     //        sender.setOp(true);
-    //        console.run(sender, "", test::root);
+    //        run(sender, "", test::root);
     //        assertThat(outputMessages).containsExactly("Works");
     //    }
+
     @Test
     fun testCommandSingleSentenceArg() {
         class Test {
@@ -93,7 +85,7 @@ internal class TestPluginCommand {
             fun exec(sentence: String) = sentence
         }
 
-        console.run(sender, "Hello to you world", Test()::root)
+        run("Hello to you world", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("Hello to you world")
     }
 
@@ -101,7 +93,7 @@ internal class TestPluginCommand {
     fun testCommandIntArgs() {
         class Test {
             fun root(command: PluginCommand) {
-                command.withXYZInt("error")
+                command.withXYZInt { "error" }
                 command.then(this::exec)
             }
 
@@ -113,7 +105,7 @@ internal class TestPluginCommand {
             }
         }
 
-        console.run(sender, "1 2 3", Test()::root)
+        run("1 2 3", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("true")
     }
 
@@ -134,11 +126,11 @@ internal class TestPluginCommand {
             fun exec(sender: CommandSender) = "Works"
         }
 
-        console.run(sender, "a b", Test()::root)
+        run("a b", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("Works")
         outputMessages.clear()
 
-        console.run(sender, "a c", Test()::root)
+        run("a c", Test()::root, sender = sender)
         assertThat(outputMessages).isEmpty()
     }
 
@@ -151,19 +143,19 @@ internal class TestPluginCommand {
             }
 
             fun a(command: PluginCommand) {
-                command.withInt("error")
+                command.withInt{ "error" }
                 command.otherwise("should run if int passed or missing arg")
             }
         }
 
-        console.run(sender, "", Test()::root)
+        run("", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("no subcommand at root")
         outputMessages.clear()
 
-        console.run(sender, "a", Test()::root)
+        run("a", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("should run if int passed or missing arg")
         outputMessages.clear()
-        console.run(sender, "a 2", Test()::root)
+        run("a 2", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("should run if int passed or missing arg")
     }
 
@@ -173,7 +165,7 @@ internal class TestPluginCommand {
             fun root(command: PluginCommand) = command.withInt { "$it is not an int" }
         }
 
-        console.run(sender, "swag", Test()::root)
+        run("swag", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("swag is not an int")
     }
 }

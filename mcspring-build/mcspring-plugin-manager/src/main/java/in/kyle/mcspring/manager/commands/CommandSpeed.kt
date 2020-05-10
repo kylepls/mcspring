@@ -1,7 +1,7 @@
 package `in`.kyle.mcspring.manager.commands
 
 import `in`.kyle.mcspring.command.Command
-import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommand
+import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandImpl
 import org.bukkit.entity.Player
 import org.springframework.stereotype.Component
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 internal class CommandSpeed {
 
     @Command(value = "speed", description = "Set your movement and fly speed", usage = "/speed <player> <speed>")
-    fun speed(command: PluginCommand) {
+    fun speed(command: PluginCommandImpl) {
         command.requiresPlayerSender { "Sender must be a player" }
         command.withDouble("Speed value must be an integer")
         command.then(::speedExecutor)

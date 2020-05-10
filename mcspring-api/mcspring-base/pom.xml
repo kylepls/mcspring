@@ -34,11 +34,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.jodah</groupId>
-            <artifactId>typetools</artifactId>
-            <version>0.6.2</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-loader</artifactId>
         </dependency>
@@ -70,7 +65,7 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-reflect</artifactId>
-            <version>1.3.61</version>
+            <version>1.3.72</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

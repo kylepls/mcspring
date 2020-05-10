@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
-import in.kyle.mcspring.subcommands.plugincommand.PluginCommand;
+import in.kyle.mcspring.subcommands.plugincommand.api.PluginCommand;
 import in.kyle.mcspring.test.MCSpringTest;
 
 import static org.assertj.core.api.Assertions.*;
@@ -38,16 +38,16 @@ public class TestJavaPluginCommand {
         class Test {
             void parse(PluginCommand command) {
                 command.withString();
-                command.then(this::handle);
+                command.then(this::parse2);
             }
             
-            String handle(Player sender, String arg) {
-                return arg;
+            String parse2(PluginCommand command, String parsedPart) {
+                assertThat(command).isNotNull();
+                return String.format("part is %s", parsedPart);
             }
         }
         
-        console.run(sender, "test-arg", new Test()::parse);
-        assertThat(messages).containsExactly("test-arg");
+        console.run("test-arg another-arg", new Test()::parse, true, mock(Player.class));
+        assertThat(messages).containsExactly("part is test-arg true");
     }
-    
 }

@@ -1,29 +1,28 @@
 package `in`.kyle.mcspring.subcommands
 
 import `in`.kyle.mcspring.command.CommandResolver
-import `in`.kyle.mcspring.command.Resolver
+import `in`.kyle.mcspring.command.ParameterResolver
 import `in`.kyle.mcspring.command.SimpleMethodInjection
-import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommand
-import lombok.AllArgsConstructor
+import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandImpl
+import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
-@AllArgsConstructor
 internal class PluginCommandResolver(
         private val injection: SimpleMethodInjection
 ) : CommandResolver {
-    override fun makeResolver(command: CommandResolver.Command): Resolver {
-        return object : Resolver {
-            override fun invoke(parameter: Class<*>): Any? {
-                return if (parameter.isAssignableFrom(PluginCommand::class.java)) Optional.of(
-                        makeCommand(command)) else Optional.empty<Any>()
+
+    override fun makeResolver(command: CommandResolver.Command): ParameterResolver {
+        return object : ParameterResolver {
+            override fun resolve(parameter: Class<*>): Any? {
+                return if (parameter.isAssignableFrom(PluginCommand::class.java)) {
+                    return makeCommand(command)
+                } else null
             }
         }
     }
 
-    private fun makeCommand(command: CommandResolver.Command): PluginCommand {
-        val args = mutableListOf(*command.args)
-        return PluginCommand(injection, command.sender, args)
+    private fun makeCommand(command: CommandResolver.Command): PluginCommandImpl {
+        return PluginCommandImpl(injection, command.sender, command.args.toMutableList(), true)
     }
 }

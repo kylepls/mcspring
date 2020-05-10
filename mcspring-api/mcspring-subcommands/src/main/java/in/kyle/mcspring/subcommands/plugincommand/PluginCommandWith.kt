@@ -1,55 +1,57 @@
 package `in`.kyle.mcspring.subcommands.plugincommand
 
 import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandBase.State
+import `in`.kyle.mcspring.subcommands.plugincommand.api.Err1
+import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
 import org.bukkit.Bukkit
 
-interface PluginCommandWith : PluginCommandBase {
+interface PluginCommandWith : PluginCommandBase, PluginCommand {
 
-    fun withString() = with({ it })
+    override fun withString() = with({ it }, stageName = "string")
 
-    fun withSentence() {
+    override fun withSentence() {
+        addCompletionStage("sentence", "with")
         if (nextPart() != null) {
-            val out = injections.add(parts.joinToString())
+            injections.add(parts.joinToString())
             parts.clear()
         }
     }
 
-    fun withInt(errorMessage: (String) -> String) = with({ it.toIntOrNull() }, errorMessage)
+    override fun withInt(errorMessage: Err1) = with({ it.toIntOrNull() }, errorMessage, "int")
 
-    fun withDouble(errorMessage: (String) -> String) = with({ it.toDoubleOrNull() }, errorMessage)
+    override fun withDouble(errorMessage: Err1) = with({ it.toDoubleOrNull() },
+            errorMessage, "double")
 
-    fun withOfflinePlayer(errorMessage: (String) -> String) {
-        with({ Bukkit.getOfflinePlayer(it) }, errorMessage)
+    override fun withOfflinePlayer(errorMessage: Err1) {
+        with({ Bukkit.getOfflinePlayer(it) }, errorMessage, "offline player")
     }
 
-    fun withPlayer(errorMessage: (String) -> String) {
-        with({ Bukkit.getPlayer(it) }, errorMessage)
+    override fun withPlayer(errorMessage: Err1) {
+        withMap(Bukkit.getOnlinePlayers().associateBy { it.name }, errorMessage, "player")
     }
 
-    fun withWorld(errorMessage: (String) -> String) {
-        with({ worldName: String ->
-            Bukkit.getWorlds().find { it.name === worldName }
-        }, errorMessage)
+    override fun withWorld(errorMessage: Err1) {
+        withMap(Bukkit.getWorlds().associateBy { it.name }, errorMessage, "world")
     }
 
-    fun withXYZInt(errorMessage: (String) -> String) {
-        repeat(3) { withInt(errorMessage) }
+    override fun withXYZInt(errorMessage: Err1) = repeat(3) { withInt(errorMessage) }
+
+    override fun <T> withMap(options: Map<String, T>, errorMessage: Err1, stageName: String) {
+        with({ options[it] }, errorMessage, stageName)
+        options.keys.forEach { addCompletion(it, "with") }
     }
 
-    fun <T> withMap(options: Map<String, T>, errorMessage: (String) -> String) {
-        with({ options[it] }, errorMessage)
+    override fun withAny(options: Collection<String>, errorMessage: Err1, stageName: String) {
+        withMap(options.associateBy { it }, errorMessage, stageName)
     }
 
-    fun withAny(options: Collection<String>, errorMessage: (String) -> String) {
-        withMap(options.associateBy { it }, errorMessage)
-    }
-
-    fun with(processor: (String) -> Any?, errorMessage: (String) -> String = { "" }) {
+    override fun with(processor: (String) -> Any?, errorMessage: Err1, stageName: String) {
+        addCompletionStage(stageName, "with")
         val part = nextPart()
         if (part != null) {
             val parsed = processor(part)
             if (parsed != null) {
-                consumePart()
+                parts.removeAt(0)
                 injections.add(parsed)
             } else {
                 dirtiesState { sendMessage(errorMessage(part)) }

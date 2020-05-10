@@ -1,28 +1,29 @@
 package `in`.kyle.mcspring.subcommands.plugincommand
 
+import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
 import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.entity.Player
 
-interface PluginCommandRequires : PluginCommandBase {
+interface PluginCommandRequires : PluginCommandBase, PluginCommand {
 
-    fun requires(predicate: Boolean, errorMessage: () -> String) {
+    override fun requires(predicate: Boolean, errorMessage: () -> String) {
         if (!predicate) {
             dirtiesState { sendMessage(errorMessage()) }
         }
     }
 
-    fun requiresPlayerSender(errorMessage: () -> String) {
+    override fun requiresPlayerSender(errorMessage: () -> String) {
         requires(sender is Player, errorMessage)
     }
 
-    fun requireConsoleSender(errorMessage: () -> String) {
+    override fun requiresConsoleSender(errorMessage: () -> String) {
         requires(sender is ConsoleCommandSender, errorMessage)
     }
 
-    fun requiresPermission(permission: String, errorMessage: () -> String) {
+    override fun requiresPermission(permission: String, errorMessage: () -> String) {
         requires(sender.hasPermission(permission), errorMessage)
     }
 
-    fun requiresOp(errorMessage: () -> String) = requires(sender.isOp, errorMessage)
+    override fun requiresOp(errorMessage: () -> String) = requires(sender.isOp, errorMessage)
 
 }

@@ -1,21 +1,26 @@
 package `in`.kyle.mcspring.subcommands.plugincommand
 
 import `in`.kyle.mcspring.command.SimpleMethodInjection
+import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandBase.CompletionStage
 import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandBase.State
 import `in`.kyle.mcspring.subcommands.plugincommand.javacompat.PluginCommandExecutorsJavaSupport
 import `in`.kyle.mcspring.subcommands.plugincommand.javacompat.PluginCommandWithJavaSupport
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
+import java.lang.RuntimeException
 
-open class PluginCommand(
+open class PluginCommandImpl(
         override val injection: SimpleMethodInjection,
         override val sender: CommandSender,
-        override val parts: MutableList<String>
+        override val parts: MutableList<String>,
+        override val runExecutors: Boolean
 ) : PluginCommandBase, PluginCommandWith, PluginCommandRequires, PluginCommandExecutors,
         PluginCommandExecutorsJavaSupport, PluginCommandWithJavaSupport {
 
     override val injections = mutableListOf<Any>()
     override var state: State = State.CLEAN
+    override var child: PluginCommandBase? = null
+    override val completions: MutableList<CompletionStage> = mutableListOf()
 
     override fun sendMessage(message: String) {
         if (message.isNotBlank()) {
@@ -33,9 +38,10 @@ open class PluginCommand(
         }
     }
 
-    override fun nextPart(): String? = parts.getOrNull(0).takeIf { state == State.CLEAN }
-
-    override fun consumePart() {
-        parts.removeAt(0)
+    override fun nextPart(): String? {
+        val part = parts.getOrNull(0).takeIf { state == State.CLEAN }
+        assert(part?.isNotBlank() ?: true)
+        return part
     }
 }
+
