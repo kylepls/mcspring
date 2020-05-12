@@ -1,9 +1,9 @@
-package `in`.kyle.mcspring.subcommands.plugincommand.javacompat
+package `in`.kyle.mcspring.subcommands.plugincommand.impl.javasupport
 
-import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandBase.State
-import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandExecutors
 import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
-import `in`.kyle.mcspring.subcommands.plugincommand.javacompat.HighIQExecutors.*
+import `in`.kyle.mcspring.subcommands.plugincommand.impl.PluginCommandBase.State
+import `in`.kyle.mcspring.subcommands.plugincommand.impl.PluginCommandExecutors
+import `in`.kyle.mcspring.subcommands.plugincommand.impl.javasupport.HighIQExecutors.*
 import java.lang.invoke.SerializedLambda
 import java.lang.reflect.Method
 import kotlin.reflect.KFunction

@@ -1,6 +1,6 @@
 package `in`.kyle.mcspring.subcommands
 
-import `in`.kyle.mcspring.subcommands.TestConsole.run
+import `in`.kyle.mcspring.subcommands.TestConsole.runCommand
 import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.fail
@@ -17,7 +17,7 @@ internal class TestTabCompletion {
             }
         }
 
-        val command = run("hello world", Test()::base, runExecutors = false)
+        val command = runCommand("hello world", Test()::base, runExecutors = false)
 
         assertThat(command.completions).hasSize(2)
         assertThat(command.completions.first().completions).isEmpty()
@@ -34,7 +34,7 @@ internal class TestTabCompletion {
             fun fail(): Unit = fail("Should not run")
         }
 
-        run("", Test()::base, runExecutors = false)
+        runCommand("", Test()::base, runExecutors = false)
     }
 
     @Test
@@ -53,7 +53,7 @@ internal class TestTabCompletion {
             fun fail(): Unit = fail("Should not run")
         }
 
-        val command = run("subcommand-1 subcommand-2", Test()::base, runExecutors = false)
+        val command = runCommand("subcommand-1 subcommand-2", Test()::base, runExecutors = false)
         assertThat(command.completions).hasSize(1)
         assertThat(command.completions[0].completions).hasSize(3)
         assertThat(command.child).isNotNull()
@@ -72,7 +72,7 @@ internal class TestTabCompletion {
             fun fail(): Unit = fail()
         }
 
-        val command = run("", Test()::base, runExecutors = false)
+        val command = runCommand("", Test()::base, runExecutors = false)
         assertThat(command.completions).hasSize(1)
         assertThat(command.completions[0].completions).containsExactly("a", "b", "c")
     }
@@ -83,7 +83,7 @@ internal class TestTabCompletion {
             fun base(command: PluginCommand) = command.withAny(listOf("a", "b", "c")) { "" }
         }
 
-        val command = run("", Test()::base, runExecutors = false)
+        val command = runCommand("", Test()::base, runExecutors = false)
         assertThat(command.completions).hasSize(1)
         assertThat(command.completions[0].completions).containsExactly("a", "b", "c")
     }

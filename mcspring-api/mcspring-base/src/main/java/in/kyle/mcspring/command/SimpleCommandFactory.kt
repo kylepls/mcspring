@@ -31,9 +31,12 @@ open class SimpleCommandFactory(
         return CommandExecutor { commandSender: CommandSender, bukkitCommand: Command, label: String, args: Array<String> ->
             try {
                 val command = CommandResolver.Command(commandSender, args.toList(), label)
-                val contextParameterResolvers: List<ParameterResolver> = commandResolvers.map { it.makeResolver(command) }
-                        .plus(injection.makeResolvers(listOf(commandSender, args, label, bukkitCommand)))
-                val types: List<Class<*>> = method.parameterTypes.toList()
+                val injectionResolvers =
+                        injection.makeResolvers(listOf(commandSender, args, label, bukkitCommand))
+                val contextParameterResolvers =
+                        commandResolvers.map { it.makeResolver(command) }.plus(injectionResolvers)
+
+                val types = method.parameterTypes.toList()
                 val parameters = injection.getParameters(types, contextParameterResolvers)
                 val result = method.invoke(obj, *parameters)
                 if (result !is Unit) {

@@ -1,6 +1,6 @@
 package `in`.kyle.mcspring.command
 
-@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 annotation class Command(
         val value: String,

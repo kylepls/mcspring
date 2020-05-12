@@ -1,6 +1,6 @@
 package `in`.kyle.mcspring.subcommands
 
-import `in`.kyle.mcspring.subcommands.TestConsole.run
+import `in`.kyle.mcspring.subcommands.TestConsole.runCommand
 import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
 import org.assertj.core.api.Assertions.assertThat
 import org.bukkit.command.CommandSender
@@ -24,11 +24,11 @@ internal class TestPluginCommand {
         }
 
         val (sender, outputMessages) = makePlayer()
-        run("subcommand1", Test()::exec1, true, sender)
+        runCommand("subcommand1", Test()::exec1, true, sender)
         assertThat(outputMessages).containsExactly("handler1")
         outputMessages.clear()
 
-        run("test-string subcommand2", Test()::exec2, sender = sender)
+        runCommand("test-string subcommand2", Test()::exec2, sender = sender)
         assertThat(outputMessages).containsExactly("handler2: test-string")
     }
 
@@ -42,7 +42,7 @@ internal class TestPluginCommand {
         }
 
         val (sender, outputMessages) = makePlayer()
-        run("", Test()::root, sender = sender)
+        runCommand("", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("Hello World")
     }
 
@@ -78,7 +78,7 @@ internal class TestPluginCommand {
         }
 
         val (sender, outputMessages) = makePlayer()
-        run("Hello to you world", Test()::root, sender = sender)
+        runCommand("Hello to you world", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("Hello to you world")
     }
 
@@ -99,7 +99,7 @@ internal class TestPluginCommand {
         }
 
         val (sender, outputMessages) = makePlayer()
-        run("1 2 3", Test()::root, sender = sender)
+        runCommand("1 2 3", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("true")
     }
 
@@ -123,11 +123,11 @@ internal class TestPluginCommand {
         }
 
         val (sender, outputMessages) = makePlayer()
-        run("a b", Test()::root, sender = sender)
+        runCommand("a b", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("Works")
         outputMessages.clear()
 
-        run("a c", Test()::root, sender = sender)
+        runCommand("a c", Test()::root, sender = sender)
         assertThat(outputMessages).isEmpty()
     }
 
@@ -146,14 +146,14 @@ internal class TestPluginCommand {
         }
 
         val (sender, outputMessages) = makePlayer()
-        run("", Test()::root, sender = sender)
+        runCommand("", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("no subcommand at root")
         outputMessages.clear()
 
-        run("a", Test()::root, sender = sender)
+        runCommand("a", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("should run if int passed or missing arg")
         outputMessages.clear()
-        run("a 2", Test()::root, sender = sender)
+        runCommand("a 2", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("should run if int passed or missing arg")
     }
 
@@ -164,7 +164,7 @@ internal class TestPluginCommand {
         }
 
         val (sender, outputMessages) = makePlayer()
-        run("swag", Test()::root, sender = sender)
+        runCommand("swag", Test()::root, sender = sender)
         assertThat(outputMessages).containsExactly("swag is not an int")
     }
 

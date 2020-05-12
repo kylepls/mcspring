@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import in.kyle.mcspring.command.SimpleMethodInjection;
-import in.kyle.mcspring.subcommands.plugincommand.PluginCommandImpl;
+import in.kyle.mcspring.subcommands.plugincommand.impl.PluginCommandImpl;
 import in.kyle.mcspring.subcommands.plugincommand.api.PluginCommand;
 
 import static org.assertj.core.api.Assertions.*;
@@ -48,7 +48,7 @@ class TestJavaPluginCommand {
         PluginCommandImpl pluginCommand =
                 new PluginCommandImpl(new SimpleMethodInjection(Collections.emptyList()),
                                       sender,
-                                      Arrays.asList("test-arg", "another-arg"),
+                                      new ArrayList<>(Arrays.asList("test-arg", "another-arg")),
                                       true);
         new Test().parse(pluginCommand);
         assertThat(messages).containsExactly("part is test-arg");

@@ -1,10 +1,10 @@
-package `in`.kyle.mcspring.subcommands.plugincommand
+package `in`.kyle.mcspring.subcommands.plugincommand.impl
 
 import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
 import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.entity.Player
 
-interface PluginCommandRequires : PluginCommandBase, PluginCommand {
+internal interface PluginCommandRequires : PluginCommandBase, PluginCommand {
 
     override fun requires(predicate: Boolean, errorMessage: () -> String) {
         if (!predicate) {

@@ -1,6 +1,6 @@
-package `in`.kyle.mcspring.subcommands.plugincommand.javacompat
+package `in`.kyle.mcspring.subcommands.plugincommand.impl.javasupport
 
-import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandWith
+import `in`.kyle.mcspring.subcommands.plugincommand.impl.PluginCommandWith
 
 interface PluginCommandWithJavaSupport : PluginCommandWith {
 

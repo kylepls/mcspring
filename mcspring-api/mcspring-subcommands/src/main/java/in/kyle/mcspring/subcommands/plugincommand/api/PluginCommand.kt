@@ -1,6 +1,6 @@
 package `in`.kyle.mcspring.subcommands.plugincommand.api
 
-import `in`.kyle.mcspring.subcommands.plugincommand.javacompat.HighIQExecutors
+import `in`.kyle.mcspring.subcommands.plugincommand.impl.javasupport.HighIQExecutors
 import org.bukkit.command.CommandSender
 import kotlin.reflect.KFunction
 
@@ -44,6 +44,8 @@ interface PluginCommand {
     fun <A, B, C, D, E, F> otherwise(e: HighIQExecutors.E6<A, B, C, D, E, F>)
 
     fun on(command: String, e: KFunction<Any>)
+
+    fun onAny(vararg command: String, e: KFunction<Any>)
 
     fun on(command: String, e: HighIQExecutors.O0)
 

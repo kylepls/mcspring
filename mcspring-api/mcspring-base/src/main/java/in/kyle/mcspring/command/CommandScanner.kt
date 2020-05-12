@@ -5,7 +5,6 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.springframework.stereotype.Component
 import java.lang.reflect.Method
-import java.util.*
 
 @Component
 internal class CommandScanner(
@@ -13,7 +12,7 @@ internal class CommandScanner(
         private val commandRegistration: CommandRegistration
 ) : ApplicationContextAware {
 
-    private val registeredCommands: MutableSet<Method> = HashSet()
+    private val registeredCommands: MutableSet<Method> = mutableSetOf()
 
     override fun setApplicationContext(ctx: ApplicationContext) {
         val scan = scanner.scanMethods(Command::class.java)

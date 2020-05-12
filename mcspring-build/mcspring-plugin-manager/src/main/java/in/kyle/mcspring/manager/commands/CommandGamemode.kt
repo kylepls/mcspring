@@ -1,15 +1,21 @@
 package `in`.kyle.mcspring.manager.commands
 
 import `in`.kyle.mcspring.command.Command
-import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandImpl
+import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.springframework.stereotype.Component
 
 @Component
 internal class CommandGamemode {
-    @Command(value = "gamemode", aliases = ["gm"], description = "Set your game mode", usage = "/gamemode <creative|survival...>")
-    fun gamemode(command: PluginCommandImpl) {
+
+    @Command(
+            value = "gamemode",
+            aliases = ["gm"],
+            description = "Set your game mode",
+            usage = "/gamemode <creative|survival...>"
+    )
+    fun gamemode(command: PluginCommand) {
         command.requiresPlayerSender { "Only players can run this command." }
 
         val gamemodes = mutableMapOf<String, GameMode>()
@@ -20,7 +26,7 @@ internal class CommandGamemode {
         }
 
         command.withMap(gamemodes) { "$it is not a valid game mode" }
-        command.then(::gamemodeExecutor)
+        command.then(this::gamemodeExecutor)
         command.otherwise("Usage: /gamemode <game mode>")
     }
 

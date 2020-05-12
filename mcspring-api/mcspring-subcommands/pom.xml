@@ -17,10 +17,8 @@
             <artifactId>mcspring-base</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>${spigot.version}</version>
-            <scope>provided</scope>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
         </dependency>
         <dependency>
             <groupId>in.kyle.mcspring</groupId>

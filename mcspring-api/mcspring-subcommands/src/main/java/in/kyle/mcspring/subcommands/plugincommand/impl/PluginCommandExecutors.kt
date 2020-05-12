@@ -1,7 +1,8 @@
-package `in`.kyle.mcspring.subcommands.plugincommand
+package `in`.kyle.mcspring.subcommands.plugincommand.impl
 
 import `in`.kyle.mcspring.command.SimpleMethodInjection
-import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandBase.State
+import `in`.kyle.mcspring.subcommands.plugincommand.impl.PluginCommandBase.State
+import `in`.kyle.mcspring.subcommands.plugincommand.api.Err1
 import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.createType
@@ -20,7 +21,21 @@ interface PluginCommandExecutors : PluginCommandBase, PluginCommand {
 
     override fun on(command: String, e: KFunction<Any>) {
         addCompletion(command, "on")
-        if (nextPart().equals(command)) {
+        onPartCondition({ it.equals(command) }, e)
+    }
+
+    override fun onAny(vararg command: String, e: KFunction<Any>) = command.forEach { on(it, e) }
+
+    override fun onInvalid(errorMessage: Err1) {
+        if (nextPart() != null) {
+            dirtiesState {
+                execute { sendMessage(errorMessage(parts[0])) }
+            }
+        }
+    }
+
+    fun onPartCondition(condition: (String?) -> Boolean, e: KFunction<Any>) {
+        if (condition(nextPart())) {
             dirtiesState {
                 val receivesPluginCommand = e.parameters.any {
                     it.type.isSubtypeOf(PluginCommand::class.createType())
@@ -30,14 +45,6 @@ interface PluginCommandExecutors : PluginCommandBase, PluginCommand {
                 } else {
                     execute { runWithKotlinContext(e) }
                 }
-            }
-        }
-    }
-
-    override fun onInvalid(errorMessage: (String) -> String) {
-        if (nextPart() != null) {
-            dirtiesState {
-                execute { sendMessage(errorMessage(parts[0])) }
             }
         }
     }

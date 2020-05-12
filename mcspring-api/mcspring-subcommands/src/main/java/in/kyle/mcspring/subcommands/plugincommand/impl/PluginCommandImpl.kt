@@ -1,15 +1,13 @@
-package `in`.kyle.mcspring.subcommands.plugincommand
+package `in`.kyle.mcspring.subcommands.plugincommand.impl
 
 import `in`.kyle.mcspring.command.SimpleMethodInjection
-import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandBase.CompletionStage
-import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandBase.State
-import `in`.kyle.mcspring.subcommands.plugincommand.javacompat.PluginCommandExecutorsJavaSupport
-import `in`.kyle.mcspring.subcommands.plugincommand.javacompat.PluginCommandWithJavaSupport
-import org.bukkit.ChatColor
+import `in`.kyle.mcspring.subcommands.plugincommand.impl.PluginCommandBase.CompletionStage
+import `in`.kyle.mcspring.subcommands.plugincommand.impl.PluginCommandBase.State
+import `in`.kyle.mcspring.subcommands.plugincommand.impl.javasupport.PluginCommandExecutorsJavaSupport
+import `in`.kyle.mcspring.subcommands.plugincommand.impl.javasupport.PluginCommandWithJavaSupport
 import org.bukkit.command.CommandSender
-import java.lang.RuntimeException
 
-open class PluginCommandImpl(
+class PluginCommandImpl(
         override val injection: SimpleMethodInjection,
         override val sender: CommandSender,
         override val parts: MutableList<String>,
@@ -22,17 +20,10 @@ open class PluginCommandImpl(
     override var child: PluginCommandBase? = null
     override val completions: MutableList<CompletionStage> = mutableListOf()
 
-    override fun sendMessage(message: String) {
-        if (message.isNotBlank()) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', message))
-        }
-    }
-
-    override fun dirtiesState(predicate: Boolean,
-                              requiredStates: Array<State>,
+    override fun dirtiesState(requiredStates: Array<State>,
                               resultingState: State,
                               action: () -> Unit) {
-        if (state in requiredStates && predicate) {
+        if (state in requiredStates) {
             action()
             state = resultingState
         }

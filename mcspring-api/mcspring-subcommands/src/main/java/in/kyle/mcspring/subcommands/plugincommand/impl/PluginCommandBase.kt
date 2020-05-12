@@ -1,5 +1,6 @@
-package `in`.kyle.mcspring.subcommands.plugincommand
+package `in`.kyle.mcspring.subcommands.plugincommand.impl
 
+import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
 
 interface PluginCommandBase {
@@ -15,12 +16,16 @@ interface PluginCommandBase {
 
     fun nextPart(): String?
 
-    fun dirtiesState(predicate: Boolean = true,
-                     requiredStates: Array<State> = arrayOf(State.CLEAN),
-                     resultingState: State = State.SUCCESS,
+    fun dirtiesState(requiredStates: Array<State> = arrayOf(State.CLEAN),
+                     resultingState: State = State.COMPLETED,
                      action: () -> Unit)
 
-    fun sendMessage(message: String)
+    fun sendMessage(message: String) {
+        if (message.isNotBlank()) {
+            val colored = ChatColor.translateAlternateColorCodes('&', message)
+            colored.lines().forEach { sender.sendMessage(it) }
+        }
+    }
 
     fun addCompletion(completion: String, type: String) {
         var stage = if (completions.size != 0) completions.last() else addCompletionStage(type, type)
@@ -49,6 +54,6 @@ interface PluginCommandBase {
     enum class State {
         CLEAN,
         MISSING_ARG,
-        SUCCESS
+        COMPLETED
     }
 }

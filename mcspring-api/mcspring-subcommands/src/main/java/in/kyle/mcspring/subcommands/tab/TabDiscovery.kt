@@ -1,8 +1,8 @@
 package `in`.kyle.mcspring.subcommands.tab
 
 import `in`.kyle.mcspring.command.SimpleMethodInjection
-import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandBase.State
-import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandImpl
+import `in`.kyle.mcspring.subcommands.plugincommand.impl.PluginCommandBase.State
+import `in`.kyle.mcspring.subcommands.plugincommand.impl.PluginCommandImpl
 import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
 import org.bukkit.command.CommandSender
 import org.springframework.stereotype.Component

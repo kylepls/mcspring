@@ -3,8 +3,8 @@ package `in`.kyle.mcspring.subcommands
 import `in`.kyle.mcspring.command.CommandResolver
 import `in`.kyle.mcspring.command.ParameterResolver
 import `in`.kyle.mcspring.command.SimpleMethodInjection
-import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandImpl
 import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
+import `in`.kyle.mcspring.subcommands.plugincommand.impl.PluginCommandImpl
 import org.springframework.stereotype.Component
 
 @Component

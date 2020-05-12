@@ -1,8 +1,8 @@
-package `in`.kyle.mcspring.subcommands.plugincommand
+package `in`.kyle.mcspring.subcommands.plugincommand.impl
 
-import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandBase.State
 import `in`.kyle.mcspring.subcommands.plugincommand.api.Err1
 import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
+import `in`.kyle.mcspring.subcommands.plugincommand.impl.PluginCommandBase.State
 import org.bukkit.Bukkit
 
 interface PluginCommandWith : PluginCommandBase, PluginCommand {

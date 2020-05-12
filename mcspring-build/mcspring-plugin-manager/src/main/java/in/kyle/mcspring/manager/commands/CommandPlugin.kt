@@ -2,7 +2,7 @@ package `in`.kyle.mcspring.manager.commands
 
 import `in`.kyle.mcspring.command.Command
 import `in`.kyle.mcspring.manager.controller.PluginController
-import `in`.kyle.mcspring.subcommands.plugincommand.PluginCommandImpl
+import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
 import org.bukkit.plugin.Plugin
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Component
@@ -11,27 +11,32 @@ import java.nio.file.Path
 @Component
 @ConditionalOnBean(Plugin::class)
 internal class CommandPlugin(
-    private val pluginController: PluginController
+        private val pluginController: PluginController
 ) {
 
-    @Command(value = "plugin", aliases = ["pl"], description = "Load/unload/reload a specific plugin", usage = "/plugin <load|unload|list>")
-    fun plugin(command: PluginCommandImpl) {
-        command.on("load", ::load)
-        command.on("unload", ::unload)
-        command.on("list", ::executeListPlugins)
+    @Command(
+            value = "plugin",
+            aliases = ["pl"],
+            description = "Load/unload/reload a specific plugin",
+            usage = "/plugin <load|unload|list>"
+    )
+    fun plugin(command: PluginCommand) {
+        command.on("load", this::load)
+        command.on("unload", this::unload)
+        command.on("list", this::executeListPlugins)
         command.otherwise("Usage: /plugin <load|unload|list>")
     }
 
-    private fun load(command: PluginCommandImpl) {
-        command.withMap<Path>(pluginController.loadablePlugins) { "Plugin $it not found or is already loaded" }
-        command.then(::executeLoad)
+    private fun load(command: PluginCommand) {
+        command.withMap(pluginController.loadablePlugins) { "Plugin $it not found or is already loaded" }
+        command.then(this::executeLoad)
         command.otherwise("Usage: /plugin load <name>")
     }
 
-    private fun unload(command: PluginCommandImpl) {
+    private fun unload(command: PluginCommand) {
         val plugins = pluginController.plugins.associateBy({ it.name }, { it })
         command.withMap(plugins) { "Plugin $it is not loaded" }
-        command.then(::executeDisable)
+        command.then(this::executeDisable)
         command.otherwise("Usage: /plugin unload <name>")
     }
 

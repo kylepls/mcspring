@@ -73,13 +73,8 @@
                 </executions>
                 <configuration>
                     <jvmTarget>1.8</jvmTarget>
-                    <args>
-                        <arg>-Xjvm-default=enable</arg>
-                    </args>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
-
 </project>

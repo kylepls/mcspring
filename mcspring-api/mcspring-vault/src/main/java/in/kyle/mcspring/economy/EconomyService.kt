@@ -1,25 +1,15 @@
-package in.kyle.mcspring.economy;
+package `in`.kyle.mcspring.economy
 
-import org.bukkit.OfflinePlayer;
+import org.bukkit.OfflinePlayer
+import java.math.BigDecimal
 
-import java.math.BigDecimal;
-
-public interface EconomyService {
-    
-    void deposit(OfflinePlayer player, BigDecimal amount);
-    
-    void withdraw(OfflinePlayer player, BigDecimal amount);
-    
-    void transfer(OfflinePlayer origin, OfflinePlayer destination, BigDecimal amount);
-    
-    boolean hasAmount(OfflinePlayer player, BigDecimal amount);
-    
-    void createAccount(OfflinePlayer player);
-    
-    String format(BigDecimal amount);
-    
-    BigDecimal getBalance(OfflinePlayer player);
-    
-    boolean hasAccount(OfflinePlayer player);
-    
+interface EconomyService {
+    fun deposit(player: OfflinePlayer, amount: BigDecimal)
+    fun withdraw(player: OfflinePlayer, amount: BigDecimal)
+    fun transfer(origin: OfflinePlayer, destination: OfflinePlayer, amount: BigDecimal)
+    fun hasAmount(player: OfflinePlayer, amount: BigDecimal): Boolean
+    fun createAccount(player: OfflinePlayer)
+    fun format(amount: BigDecimal): String
+    fun getBalance(player: OfflinePlayer): BigDecimal
+    fun hasAccount(player: OfflinePlayer): Boolean
 }

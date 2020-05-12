@@ -1,6 +1,5 @@
 package `in`.kyle.mcspring.manager.controller
 
-import lombok.SneakyThrows
 import org.bukkit.command.Command
 import org.bukkit.command.CommandMap
 import org.bukkit.command.PluginCommand

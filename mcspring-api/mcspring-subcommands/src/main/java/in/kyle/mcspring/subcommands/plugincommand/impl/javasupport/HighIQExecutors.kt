@@ -1,8 +1,6 @@
-package `in`.kyle.mcspring.subcommands.plugincommand.javacompat
+package `in`.kyle.mcspring.subcommands.plugincommand.impl.javasupport
 
 import java.io.Serializable
-import java.lang.invoke.SerializedLambda
-import java.lang.reflect.Method
 
 interface HighIQExecutors {
 

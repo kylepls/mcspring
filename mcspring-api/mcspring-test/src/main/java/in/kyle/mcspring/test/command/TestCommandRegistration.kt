@@ -8,7 +8,6 @@ import org.bukkit.command.CommandSender
 import org.springframework.stereotype.Component
 import java.lang.reflect.Method
 import java.util.*
-import java.util.function.Consumer
 import kotlin.reflect.KFunction
 import kotlin.reflect.jvm.javaMethod
 import kotlin.reflect.jvm.kotlinFunction
@@ -25,26 +24,19 @@ class TestCommandRegistration(
 
     override fun register(command: Command, method: Method, obj: Any) {
         @Suppress("UNCHECKED_CAST")
-        val executor = makeExecutor(method.kotlinFunction as KFunction<Any>)
-        getAllNames(command).forEach(Consumer { key: String -> commandExecutors[key] = executor })
+        val executor = makeExecutor(method.kotlinFunction as KFunction<Any>, obj)
+        command.aliases.plus(command.value).forEach { commandExecutors[it] = executor }
     }
 
-    private fun getAllNames(command: Command): List<String> {
-        val commands = command.aliases.toMutableList()
-        commands.add(command.value)
-        return commands
-    }
-
-    private fun makeExecutor(e: KFunction<Any>): CommandSig {
+    private fun makeExecutor(e: KFunction<Any>, obj: Any): CommandSig {
         return { sender: CommandSender, label: String, args: Array<String> ->
             val temp = CommandResolver.Command(sender, args.toList(), label)
-            val thisResolvers = injection.makeResolvers(listOf(sender, args, label))
+            val miscResolvers = injection.makeResolvers(listOf(sender))
             val contextResolvers = commandResolvers.map { it.makeResolver(temp) }
 
-            val parameters = injection.getParameters(e.javaMethod!!.parameterTypes.toList(),
-                    contextResolvers.plus
-                    (thisResolvers))
-            val result = e.call(*parameters)
+            val parameterTypes = e.javaMethod!!.parameterTypes.toList()
+            val parameters = injection.getParameters(parameterTypes, contextResolvers.plus(miscResolvers))
+            val result = e.call(obj, *parameters)
             if (result !is Unit) {
                 sender.sendMessage(result.toString())
             }
