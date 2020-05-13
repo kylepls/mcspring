@@ -64,4 +64,13 @@
             <version>1.3.72</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <!--            <plugin>-->
+            <!--                <groupId>org.jetbrains.dokka</groupId>-->
+            <!--                <artifactId>dokka-maven-plugin</artifactId>-->
+            <!--            </plugin>-->
+        </plugins>
+    </build>
 </project>

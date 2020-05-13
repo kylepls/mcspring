@@ -1,4 +1,4 @@
-package `in`.kyle.mcspring.vault.api
+package `in`.kyle.mcspring.vault.economy
 
 import org.bukkit.OfflinePlayer
 import java.math.BigDecimal

@@ -24,6 +24,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <spigot.version>1.15.1-R0.1-SNAPSHOT</spigot.version>
         <spring.version>2.2.4.RELEASE</spring.version>
+        <orchid.version>0.20.0</orchid.version>
     </properties>
 
     <licenses>
@@ -80,6 +81,18 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jcenter</id>
+            <name>JCenter</name>
+            <url>https://jcenter.bintray.com/</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>kotlinx</id>
+            <url>https://kotlin.bintray.com/kotlinx</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <dependencyManagement>
         <dependencies>
@@ -165,6 +178,14 @@
                     </rules>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.jetbrains.dokka</groupId>
+                <artifactId>dokka-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>io.github.javaeden.orchid</groupId>
+                <artifactId>orchid-maven-plugin</artifactId>
+            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
@@ -230,6 +251,57 @@
                             </goals>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.jetbrains.dokka</groupId>
+                    <artifactId>dokka-maven-plugin</artifactId>
+                    <version>0.10.1</version>
+                    <executions>
+                        <execution>
+                            <phase>pre-site</phase>
+                            <goals>
+                                <goal>dokka</goal>
+                                <goal>javadoc</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <outputFormat>html</outputFormat>
+                        <skipEmptyPackages>true</skipEmptyPackages>
+                        <includeNonPublic>false</includeNonPublic>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>io.github.javaeden.orchid</groupId>
+                    <artifactId>orchid-maven-plugin</artifactId>
+                    <version>${orchid.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>io.github.javaeden.orchid</groupId>
+                            <artifactId>OrchidDocs</artifactId>
+                            <version>${orchid.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>io.github.javaeden.orchid</groupId>
+                            <artifactId>OrchidKotlindoc</artifactId>
+                            <version>${orchid.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>io.github.javaeden.orchid</groupId>
+                            <artifactId>OrchidPluginDocs</artifactId>
+                            <version>${orchid.version}</version>
+                        </dependency>
+                    </dependencies>
+
+                    <configuration>
+                        <theme>Editorial</theme>
+                        <version>${project.version}</version>
+                        <baseUrl>https://kyle.github.io/project</baseUrl>
+<!--                        <baseUrl>${baseUrl}</baseUrl>                        &lt;!&ndash; a baseUrl prepended to all generated links. Can also be set as `site.baseUrl` in `config.yml` Defaults to '/' &ndash;&gt;-->
+<!--                        <srcDir>path/to/new/source/directory</srcDir>        &lt;!&ndash; defaults to 'src/orchid/resources' &ndash;&gt;-->
+<!--                        <destDir>path/to/new/destination/directory</destDir> &lt;!&ndash; defaults to 'target/docs/orchid' &ndash;&gt;-->
+                        <runTask>build</runTask>                             <!-- specify a task to run with 'mvn orchid:run' -->
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

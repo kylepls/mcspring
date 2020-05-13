@@ -1,8 +1,6 @@
-package `in`.kyle.mcspring.vault.impl
+package `in`.kyle.mcspring.vault.economy
 
 import `in`.kyle.mcspring.annotation.PluginDepend
-import `in`.kyle.mcspring.vault.api.EconomyException
-import `in`.kyle.mcspring.vault.api.EconomyService
 import net.milkbowl.vault.economy.Economy
 import net.milkbowl.vault.economy.EconomyResponse
 import org.bukkit.OfflinePlayer

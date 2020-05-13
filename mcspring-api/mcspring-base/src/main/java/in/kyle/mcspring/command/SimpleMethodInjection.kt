@@ -7,10 +7,6 @@ import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaType
 
-/**
- * Used to inject method parameters
- * Does not support annotated parameters
- */
 @Lazy
 @Component
 class SimpleMethodInjection(

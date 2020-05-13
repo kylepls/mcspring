@@ -1,5 +1,9 @@
 package `in`.kyle.mcspring.command
 
+/**
+ * Defines a command to be handled by a certain method.
+ * Values from this annotation will be reflected in the `plugin.yml`.
+ */
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 annotation class Command(
