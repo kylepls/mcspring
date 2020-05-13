@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 import java.lang.reflect.Method
 
 @Component
-class SpringScanner(
+internal class SpringScanner(
         private val context: ApplicationContext
 ) {
     fun scanMethods(annotation: Class<out Annotation>): Map<Method, Any> {

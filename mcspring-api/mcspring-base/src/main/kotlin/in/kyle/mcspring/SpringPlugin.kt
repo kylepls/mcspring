@@ -10,7 +10,7 @@ import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.core.io.DefaultResourceLoader
 import java.util.*
 
-class SpringPlugin(
+internal class SpringPlugin(
         private val plugin: Plugin
 ) {
 

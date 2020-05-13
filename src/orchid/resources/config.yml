@@ -16,12 +16,12 @@ Editorial:
       itemId: 'Changelog'
     - type: 'separator'
       title: 'API Docs'
-    - type: 'sourcedocPages'
-      moduleType: 'kotlindoc'
+    - type: 'kotlindocClasses'
+      moduleType: 'kotlindocClasses'
       node: 'classes'
       asSubmenu: true
       submenuTitle: 'Classes'
-    - type: 'sourcedocPages'
+    - type: 'kotlindocPackages'
       moduleType: 'kotlindoc'
       node: 'packages'
       asSubmenu: true
@@ -29,10 +29,20 @@ Editorial:
 
 kotlindoc:
   sourceDirs:
-    - './../../../../app/src/main/kotlin'
-  sourcePages:
-    menu:
-      - type: 'sourcedocPageLinks'
-        moduleType: 'kotlindoc'
-        itemTitleType: 'SIGNATURE'
-        includeItems: true
+    - './../../../mcspring-api/mcspring-base/src/main/kotlin'
+    - './../../../mcspring-api/mcspring-subcommands/src/main/kotlin'
+    - './../../../mcspring-api/mcspring-vault/src/main/kotlin'
+        #  modules:
+#    - name: 'mcspring-base'
+#      moduleGroup: 'group-one'
+#      sourceDirs:
+#        - './../../../../mcspring-api/mcspring-base/src/main/kotlin'
+#    - name: 'mcspring-subcommands'
+#      sourceDirs:
+#        - './../../../../../mcspring-api/mcspring-subcommands/src/main/kotlin'
+#  sourcePages:
+#    menu:
+#      - type: 'sourcedocPageLinks'
+#        moduleType: 'kotlindoc'
+#        itemTitleType: 'SIGNATURE'
+#        includeItems: true
