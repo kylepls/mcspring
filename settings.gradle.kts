@@ -1,0 +1,22 @@
+rootProject.name = "mcspring-parent"
+
+include(":mcspring-build:mcspring-plugin-layout")
+include(":mcspring-build:mcspring-archetype")
+include(":mcspring-build:mcspring-starter:mcspring-examples:simple-factions")
+include(":mcspring-build:mcspring-starter:mcspring-examples:simple-factions-addon")
+include(":mcspring-build:mcspring-starter:mcspring-examples")
+include(":mcspring-build:mcspring-starter:mcspring-plugin-manager")
+include(":mcspring-build:mcspring-starter")
+include(":mcspring-build:mcspring-maven-plugin")
+include(":mcspring-build")
+include(":mcspring-api:mcspring-subcommands")
+include(":mcspring-api:mcspring-base")
+include(":mcspring-api:mcspring-vault")
+include(":mcspring-api:mcspring-jar-loader")
+include(":mcspring-api:mcspring-test")
+include(":mcspring-api")
+
+project(":mcspring-build:mcspring-starter:mcspring-examples:simple-factions").projectDir = file("mcspring-examples/simple-factions")
+project(":mcspring-build:mcspring-starter:mcspring-examples:simple-factions-addon").projectDir = file("mcspring-examples/simple-factions-addon")
+project(":mcspring-build:mcspring-starter:mcspring-examples").projectDir = file("mcspring-examples")
+project(":mcspring-build:mcspring-starter:mcspring-plugin-manager").projectDir = file("mcspring-build/mcspring-plugin-manager")
