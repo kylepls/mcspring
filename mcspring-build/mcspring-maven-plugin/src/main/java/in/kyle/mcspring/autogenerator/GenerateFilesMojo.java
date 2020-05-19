@@ -7,10 +7,7 @@ import in.kyle.mcspring.autogenerator.util.MainClassUtilities;
 import lombok.val;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugins.annotations.Component;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
@@ -30,16 +27,23 @@ public class GenerateFilesMojo extends AbstractMojo {
 
     private static final List<String> VALID_SCOPES = Arrays.asList("provided", "compile", "runtime");
 
-    @Component
+    @Parameter(defaultValue = "${project}", readonly = true)
     private MavenProject project;
     private URLClassLoader fullyQualifiedClassLoader;
 
     @SneakyThrows
     public void execute() {
         initializeClassLoader();
-        addGeneratedSourcesDirectory();
+        createSourcesDirectoryIfNonExists();
         preparePluginYml();
         preparePluginMainClass();
+    }
+
+    private void createSourcesDirectoryIfNonExists() {
+        File output = getSourcesOutputDirectory();
+        if (!output.exists()) {
+            output.mkdirs();
+        }
     }
 
     //Initializes a class loader with all maven dependency classes and project classes.
@@ -54,15 +58,6 @@ public class GenerateFilesMojo extends AbstractMojo {
 
     private File getSourcesOutputDirectory() {
         return new File(getGeneratedSourcesFolder(), "mc-spring/");
-    }
-
-
-    private void addGeneratedSourcesDirectory() {
-        File output = getSourcesOutputDirectory();
-        if (!output.exists()) {
-            output.mkdirs();
-        }
-        project.addCompileSourceRoot(output.getPath());
     }
 
     public CommandAnnotationScanner getCommandAnnotationScanner() {

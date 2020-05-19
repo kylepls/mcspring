@@ -1,15 +1,16 @@
 package in.kyle.mcspring.autogenerator;
 
 
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import in.kyle.mcspring.annotation.PluginDepend;
-import in.kyle.mcspring.autogenerator.scan.CommandAnnotationScanner;
 import in.kyle.mcspring.command.Command;
 import lombok.val;
 
 import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TestGenerateFilesGoal extends BetterAbstractMojoTestCase {

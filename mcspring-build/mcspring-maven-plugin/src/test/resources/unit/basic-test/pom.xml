@@ -23,6 +23,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>${spigot.version}</version>
+        </dependency>
+        <dependency>
             <groupId>in.kyle.mcspring</groupId>
             <artifactId>mcspring-subcommands</artifactId>
         </dependency>
@@ -36,6 +41,41 @@
             <plugin>
                 <groupId>in.kyle.mcspring</groupId>
                 <artifactId>mcspring-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate-files</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/mc-spring/</source>
+                            </sources>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/generated-sources/mc-spring/</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>**/plugin.yml</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
