@@ -14,15 +14,14 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.EnableAspectJAutoProxy
 import org.springframework.scheduling.annotation.EnableScheduling
 import java.util.logging.Logger
 
 @Configuration
-@ComponentScan(basePackageClasses = [SpringPlugin::class])
+@ComponentScan(basePackageClasses = [SpringSpigotSupport::class])
 @EnableScheduling
-@EnableAspectJAutoProxy
 internal open class SpringSpigotSupport {
+
     @Bean
     open fun plugin(@Value("\${spigot.plugin}") pluginName: String): Plugin {
         return Bukkit.getPluginManager().getPlugin(pluginName)!!

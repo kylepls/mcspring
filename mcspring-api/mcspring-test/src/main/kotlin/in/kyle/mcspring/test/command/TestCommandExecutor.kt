@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class TestCommandExecutor(
-        private val registration: TestCommandRegistration
+//        private val registration: TestCommandRegistration
 ) {
 
     fun makeTestPlayer(): Pair<Player, MutableList<String>> {
@@ -31,7 +31,7 @@ class TestCommandExecutor(
         if (parts.isNotEmpty()) {
             val label = parts[0]
             val args = parts.subList(1, parts.size)
-            registration.run(label, sender, label, args.toTypedArray())
+//            registration.run(label, sender, label, args.toTypedArray())
         } else {
             throw RuntimeException("Empty command")
         }

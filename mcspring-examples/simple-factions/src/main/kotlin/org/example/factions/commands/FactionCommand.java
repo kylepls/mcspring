@@ -10,7 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import in.kyle.mcspring.command.Command;
-import in.kyle.mcspring.subcommands.plugincommand.api.PluginCommand;
+import in.kyle.mcspring.commandDsl.plugincommand.api.PluginCommand;
 import lombok.RequiredArgsConstructor;
 
 @Component

@@ -2,7 +2,7 @@ package `in`.kyle.mcspring.manager.commands
 
 import `in`.kyle.mcspring.command.Command
 import `in`.kyle.mcspring.manager.controller.PluginController
-import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
+import `in`.kyle.mcspring.commands.dsl.commandExecutor
 import org.bukkit.plugin.Plugin
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Component
@@ -10,9 +10,7 @@ import java.nio.file.Path
 
 @Component
 @ConditionalOnBean(Plugin::class)
-internal class CommandPlugin(
-        private val pluginController: PluginController
-) {
+internal class CommandPlugin(private val pluginController: PluginController) {
 
     @Command(
             value = "plugin",
@@ -20,24 +18,38 @@ internal class CommandPlugin(
             description = "Load/unload/reload a specific plugin",
             usage = "/plugin <load|unload|list>"
     )
-    fun plugin(command: PluginCommand) {
-        command.on("load", this::load)
-        command.on("unload", this::unload)
-        command.on("list", this::executeListPlugins)
-        command.otherwise("Usage: /plugin <load|unload|list>")
+    fun plugin() = commandExecutor {
+        subcommand {
+            on("load", commandExecutor = load())
+            on("unload", commandExecutor = unload())
+            on("list") { then { message(executeListPlugins()) } }
+
+            missing {
+                val subs = subCommands.keys.joinToString(separator = "|") { it.first() }
+                message("Usage: $label <$subs>")
+            }
+        }
     }
 
-    private fun load(command: PluginCommand) {
-        command.withMap(pluginController.loadablePlugins) { "Plugin $it not found or is already loaded" }
-        command.then(this::executeLoad)
-        command.otherwise("Usage: /plugin load <name>")
+    private fun load() = commandExecutor {
+        val path by mapArg<Path> {
+            parser {
+                map(pluginController.loadablePlugins)
+            }
+            invalid { message("Plugin $it not found or it is already loaded") }
+        }
+        then { executeLoad(path) }
     }
 
-    private fun unload(command: PluginCommand) {
-        val plugins = pluginController.plugins.associateBy({ it.name }, { it })
-        command.withMap(plugins) { "Plugin $it is not loaded" }
-        command.then(this::executeDisable)
-        command.otherwise("Usage: /plugin unload <name>")
+    private fun unload() = commandExecutor {
+        val plugin by mapArg<Plugin> {
+            parser {
+                map(pluginController.plugins.associateBy({ it.name }, { it }))
+            }
+            invalid { message("Plugin $it is not loaded") }
+            missing { message("Usage: $label ${args[0]} <name>") }
+        }
+        then { message(executeDisable(plugin)) }
     }
 
     private fun executeListPlugins(): String {

@@ -7,9 +7,8 @@ repositories {
 }
 
 dependencies {
-    compile(project(":mcspring-api:mcspring-base"))
-    compileOnly("org.spigotmc:spigot-api")
-    compileOnly("com.github.MilkBowl:VaultAPI:1.7") {
+    api(project(":mcspring-api:mcspring-base"))
+    api("com.github.MilkBowl:VaultAPI:1.7") {
         exclude(group = "org.bukkit", module = "bukkit")
     }
 }

@@ -1,5 +1,4 @@
 dependencies {
-    compile(project(":mcspring-api:mcspring-subcommands"))
-    testCompile(project(":mcspring-api:mcspring-test"))
-    testCompile("org.springframework.boot:spring-boot-starter-test")
+    api(project(":mcspring-api:mcspring-commands-dsl"))
+    testImplementation(project(":mcspring-api:mcspring-test"))
 }

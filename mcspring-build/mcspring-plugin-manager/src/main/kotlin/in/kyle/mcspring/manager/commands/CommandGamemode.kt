@@ -1,11 +1,13 @@
 package `in`.kyle.mcspring.manager.commands
 
 import `in`.kyle.mcspring.command.Command
-import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
+import `in`.kyle.mcspring.commands.dsl.commandExecutor
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.springframework.stereotype.Component
+import kotlin.contracts.ExperimentalContracts
 
+@ExperimentalContracts
 @Component
 internal class CommandGamemode {
 
@@ -15,29 +17,29 @@ internal class CommandGamemode {
             description = "Set your game mode",
             usage = "/gamemode <creative|survival...>"
     )
-    fun gamemode(command: PluginCommand) {
-        command.requiresPlayerSender { "Only players can run this command." }
+    fun gamemode() = commandExecutor {
+        requirePlayer { message("Only players can run this command.") }
 
-        val gamemodes = mutableMapOf<String, GameMode>()
-        GameMode.values().forEach {
-            @Suppress("DEPRECATION")
-            gamemodes[it.value.toString()] = it
-            gamemodes[it.name.toLowerCase()] = it
+        val gameMode by mapArg<GameMode> {
+            parser {
+                map(GameMode.values().associateBy { it.name.toLowerCase() })
+                map(GameMode.values().associateBy { it.value.toString() })
+            }
+            missing { message("Usage: /$label <game mode>") }
+            invalid { message("Invalid game mode $it") }
         }
 
-        command.withMap(gamemodes) { "$it is not a valid game mode" }
-        command.then(this::gamemodeExecutor)
-        command.otherwise("Usage: /gamemode <game mode>")
+        then { message(gamemodeExecutor(sender as Player, gameMode)) }
+    }
+
+    private fun gamemodeExecutor(target: Player, gameMode: GameMode): String {
+        target.gameMode = gameMode
+        return "Game mode set to ${gameMode.name.toLowerCase()}"
     }
 
     @Command(value = "gmc", description = "Set your game mode to creative")
-    fun gmc(sender: Player): String = gamemodeExecutor(sender, GameMode.CREATIVE)
+    fun gmc() = commandExecutor { then { message(gamemodeExecutor(sender as Player, GameMode.CREATIVE)) } }
 
     @Command(value = "gms", description = "Set your game mode to survival")
-    fun gms(sender: Player): String = gamemodeExecutor(sender, GameMode.SURVIVAL)
-
-    private fun gamemodeExecutor(sender: Player, gameMode: GameMode): String {
-        sender.gameMode = gameMode
-        return "Game mode set to ${gameMode.name.toLowerCase()}"
-    }
+    fun gms() = commandExecutor { then { message(gamemodeExecutor(sender as Player, GameMode.SURVIVAL)) } }
 }

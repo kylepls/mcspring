@@ -1,7 +1,8 @@
 package `in`.kyle.mcspring.manager.commands
 
 import `in`.kyle.mcspring.command.Command
-import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
+import `in`.kyle.mcspring.commands.dsl.commandExecutor
+import `in`.kyle.mcspring.commands.dsl.otherwise
 import org.bukkit.entity.Player
 import org.springframework.stereotype.Component
 
@@ -13,11 +14,20 @@ internal class CommandSpeed {
             description = "Set your movement and fly speed",
             usage = "/speed <player> <speed>"
     )
-    fun speed(command: PluginCommand) {
-        command.requiresPlayerSender { "Sender must be a player" }
-        command.withDouble("Speed value must be an integer")
-        command.then(this::speedExecutor)
-        command.otherwise("Usage: /speed <value>")
+    fun speed() = commandExecutor {
+        requirePlayer { message("Sender must be a player") }
+        val player = sender as Player
+        val speed by doubleArg {
+            parser {
+                between(0.0, 10.0) otherwise { message("Speed must be between 0 and 10") }
+            }
+            invalid { message("Speed $it is not a valid speed") }
+            missing {
+                message("Fly Speed = ${player.flySpeed * 10}")
+                message("Walk Speed = ${player.walkSpeed * 10}")
+            }
+        }
+        then { message(speedExecutor(player, speed / 10)) }
     }
 
     private fun speedExecutor(sender: Player, speed: Double): String {

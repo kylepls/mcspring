@@ -1,8 +1,9 @@
 package `in`.kyle.mcspring.manager.commands
 
 import `in`.kyle.mcspring.command.Command
-import `in`.kyle.mcspring.subcommands.plugincommand.api.PluginCommand
+import `in`.kyle.mcspring.commands.dsl.commandExecutor
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import org.springframework.stereotype.Component
 
 @Component
@@ -13,10 +14,12 @@ internal class CommandOp {
             description = "Toggle yourself or another players OP status",
             usage = "/op <player>?"
     )
-    fun op(command: PluginCommand) {
-        command.withPlayer { "Player $it not found" }
-        command.then(this::toggleOp)
-        command.otherwise(this::toggleOp)
+    fun op() = commandExecutor {
+        val target by playerArg {
+            default { sender as? Player }
+            invalid { message("Player $it not found") }
+        }
+        then { message(toggleOp(target)) }
     }
 
     private fun toggleOp(target: CommandSender): String {

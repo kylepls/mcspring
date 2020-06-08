@@ -1,6 +1,5 @@
-- [Installation](installation.md)
-- [Basic Configuration](configuration.md)
-- [Features](features.md)
-  - [Feature One](features/one.md)
-  - [Feature Two](features/two.md)
-- [Extending](extending.md)  
+- [Setup](setup.md)
+- [The plugin.yml and the main class](intro.md)
+- Commands
+  - [Basic Commands API](commands-api.md)
+  - [Sub-commands API](subcommands-api.md)

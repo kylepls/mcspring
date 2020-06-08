@@ -8,7 +8,6 @@ import org.springframework.boot.Banner
 import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.core.io.DefaultResourceLoader
-import java.util.*
 
 internal class SpringPlugin(
         private val plugin: Plugin

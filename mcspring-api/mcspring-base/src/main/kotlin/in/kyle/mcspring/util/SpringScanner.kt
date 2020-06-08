@@ -6,16 +6,16 @@ import org.springframework.stereotype.Component
 import java.lang.reflect.Method
 
 @Component
-internal class SpringScanner(
+class SpringScanner(
         private val context: ApplicationContext
 ) {
-    fun scanMethods(annotation: Class<out Annotation>): Map<Method, Any> {
-        val methods = mutableMapOf<Method, Any>()
 
+    fun scanMethods(vararg annotations: Class<out Annotation>): Map<Method, Any> {
+        val methods = mutableMapOf<Method, Any>()
         for (beanName in context.beanDefinitionNames) {
             val obj = context.getBean(beanName)
             for (method in getRealClass(obj).declaredMethods) {
-                if (method.isAnnotationPresent(annotation)) {
+                if (annotations.any { method.isAnnotationPresent(it) }) {
                     methods[method] = obj
                 }
             }
