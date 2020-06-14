@@ -6,9 +6,7 @@ import org.springframework.stereotype.Component
 import java.lang.reflect.Method
 
 @Component
-class SpringScanner(
-        private val context: ApplicationContext
-) {
+class SpringScanner(private val context: ApplicationContext) {
 
     fun scanMethods(vararg annotations: Class<out Annotation>): Map<Method, Any> {
         val methods = mutableMapOf<Method, Any>()

@@ -1,8 +1,8 @@
 package `in`.kyle.mcspring.manager.commands
 
-import `in`.kyle.mcspring.command.Command
 import `in`.kyle.mcspring.manager.controller.PluginController
 import `in`.kyle.mcspring.commands.dsl.commandExecutor
+import `in`.kyle.mcspring.commands.dsl.mcspring.Command
 import org.bukkit.plugin.Plugin
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.stereotype.Component

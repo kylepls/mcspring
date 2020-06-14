@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.springframework.stereotype.Component
+import java.lang.reflect.Method
 
 @Component
 @ConditionalOnBean(Plugin::class)
@@ -21,10 +22,14 @@ internal class EventHandlerSupport(
 
     override fun setApplicationContext(ctx: ApplicationContext) {
         scanner.scanMethods(EventHandler::class.java).forEach {
-            val executor = EventExecutor { _: Listener, event: Event ->
-                AopUtils.invokeJoinpointUsingReflection(it.value, it.key, arrayOf(event))
-            }
+            val executor = makeExecutor(it.key, it.value)
             eventService.registerEvent(it.key, executor)
+        }
+    }
+
+    private fun makeExecutor(method: Method, obj: Any): EventExecutor {
+        return EventExecutor { _: Listener, event: Event ->
+            AopUtils.invokeJoinpointUsingReflection(obj, method, arrayOf(event))
         }
     }
 }

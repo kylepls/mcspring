@@ -1,7 +1,7 @@
 package `in`.kyle.mcspring.manager.commands
 
-import `in`.kyle.mcspring.command.Command
 import `in`.kyle.mcspring.commands.dsl.commandExecutor
+import `in`.kyle.mcspring.commands.dsl.mcspring.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.springframework.stereotype.Component

@@ -19,6 +19,7 @@ internal class EventService(
         private val plugin: Plugin
 ) {
     fun registerEvent(method: Method, executor: EventExecutor) {
+        require(method.parameters.size == 1) {"Listener can only have 1 parameter: $method"}
         val handler = method.getAnnotation(EventHandler::class.java)
 
         @Suppress("UNCHECKED_CAST")

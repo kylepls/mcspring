@@ -1,8 +1,7 @@
 package `in`.kyle.mcspring.manager.commands
 
-import `in`.kyle.mcspring.command.Command
 import `in`.kyle.mcspring.commands.dsl.commandExecutor
-import `in`.kyle.mcspring.commands.dsl.otherwise
+import `in`.kyle.mcspring.commands.dsl.mcspring.Command
 import org.bukkit.entity.Player
 import org.springframework.stereotype.Component
 
@@ -25,7 +24,7 @@ internal class CommandHeal {
         val health by doubleArg {
             default { 20.0 }
             parser {
-                between(0.0, 20.0) otherwise { message("Heal value must be between 0 and 20") }
+                between(0.0, 20.0) { message("Heal value must be between 0 and 20") }
             }
             invalid { message("Invalid health amount $it") }
         }

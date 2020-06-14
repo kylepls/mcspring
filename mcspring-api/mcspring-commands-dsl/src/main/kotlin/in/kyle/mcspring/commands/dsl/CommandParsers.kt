@@ -25,16 +25,18 @@ abstract class BaseParser<R>(
     protected fun require(
             hints: List<String> = emptyList(),
             predicate: (R) -> Boolean,
-            error: Error
+            error: Error = {}
     ) {
         context.tabCompletions.addAll(hints)
-        if (returnValue != null && !predicate(returnValue!!)) {
+        val condition = predicate(returnValue!!)
+        if (returnValue != null && !condition) {
+            if (error == {}) {
             returnValue = null
             throw RunInvalidBlock()
-        }
-        if (stringArg != null && returnValue == null && context.runExecutors) {
-            error(stringArg)
-            complete()
+            } else if (context.runExecutors){
+                error(stringArg!!)
+                complete()
+            }
         }
     }
 }

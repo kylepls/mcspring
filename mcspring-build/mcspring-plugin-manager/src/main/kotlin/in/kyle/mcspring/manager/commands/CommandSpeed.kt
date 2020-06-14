@@ -1,8 +1,7 @@
 package `in`.kyle.mcspring.manager.commands
 
-import `in`.kyle.mcspring.command.Command
 import `in`.kyle.mcspring.commands.dsl.commandExecutor
-import `in`.kyle.mcspring.commands.dsl.otherwise
+import `in`.kyle.mcspring.commands.dsl.mcspring.Command
 import org.bukkit.entity.Player
 import org.springframework.stereotype.Component
 
@@ -19,7 +18,7 @@ internal class CommandSpeed {
         val player = sender as Player
         val speed by doubleArg {
             parser {
-                between(0.0, 10.0) otherwise { message("Speed must be between 0 and 10") }
+                between(0.0, 10.0) { message("Speed must be between 0 and 10") }
             }
             invalid { message("Speed $it is not a valid speed") }
             missing {

@@ -20,7 +20,7 @@ import java.util.logging.Logger
 @Configuration
 @ComponentScan(basePackageClasses = [SpringSpigotSupport::class])
 @EnableScheduling
-internal open class SpringSpigotSupport {
+open class SpringSpigotSupport {
 
     @Bean
     open fun plugin(@Value("\${spigot.plugin}") pluginName: String): Plugin {

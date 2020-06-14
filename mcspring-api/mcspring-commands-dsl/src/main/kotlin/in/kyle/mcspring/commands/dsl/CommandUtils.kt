@@ -1,6 +1,6 @@
 package `in`.kyle.mcspring.commands.dsl
 
-import `in`.kyle.mcspring.common.commands.CommandMapWrapper
+import `in`.kyle.mcspring.commands.dsl.util.CommandMapWrapper
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.plugin.Plugin
@@ -9,17 +9,25 @@ object CommandUtils {
 
     fun register(plugin: Plugin, meta: CommandMeta) {
         meta.preRegister()
-        CommandMapWrapper.registerCommand(plugin, object : Command(meta.name, meta.description, meta.usageMessage, meta.aliases) {
-            override fun execute(
-                    sender: CommandSender,
-                    commandLabel: String,
-                    args: Array<out String>
-            ): Boolean {
-                val provider = meta.executor.provider
-                val context = CommandContext(sender, label, args.toList())
-                provider(context)
-                return true
-            }
+        CommandMapWrapper.registerCommand(plugin, makeBukkitCommand(meta).apply {
+            aliases = meta.aliases
+            description = meta.description
+            usage = meta.usageMessage
+            permission = meta.usageMessage.takeIf { it.isNotBlank() }
+            permissionMessage = meta.permissionMessage.takeIf { it.isNotBlank() }
         })
+    }
+
+    private fun makeBukkitCommand(meta: CommandMeta) = object : Command(meta.name) {
+        override fun execute(
+                sender: CommandSender,
+                commandLabel: String,
+                args: Array<out String>
+        ): Boolean {
+            val provider = meta.executor.provider
+            val context = CommandContext(sender, label, args.toList())
+            provider(context)
+            return true
+        }
     }
 }

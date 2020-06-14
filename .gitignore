@@ -2,7 +2,7 @@
 *.iml
 dependency-reduced-pom.xml
 **/target/**
-**/build/**
+#**/build/**
 .gradle
 pom.xml.versionsBackup
 **/spigot/**

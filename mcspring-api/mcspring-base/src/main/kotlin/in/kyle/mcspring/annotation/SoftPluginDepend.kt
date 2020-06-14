@@ -5,4 +5,4 @@ package `in`.kyle.mcspring.annotation
  */
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.ANNOTATION_CLASS, AnnotationTarget.CLASS)
-annotation class PluginDepend(vararg val plugins: String)
+annotation class SoftPluginDepend(vararg val plugins: String)

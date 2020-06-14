@@ -8,14 +8,15 @@ import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.HoverEvent
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.ChatColor
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-object PlayerSupport {
-    fun Player.sendMessage(vararg components: TextComponent) {
+object CommandSenderSupport {
+    fun CommandSender.sendMessage(vararg components: TextComponent) {
         spigot().sendMessage(*components)
     }
 
-    fun Player.sendMessage(lambda: () -> TextComponent) {
+    fun CommandSender.sendMessage(lambda: () -> TextComponent) {
         spigot().sendMessage(lambda())
     }
 }
@@ -23,7 +24,6 @@ object PlayerSupport {
 object StringSupport {
 
     fun String.toTextComponent(): TextComponent {
-        val player: Player
         return TextComponent(translateColorCodes())
     }
 
