@@ -21,24 +21,19 @@ dependencies {
     testImplementation(gradleTestKit())
 }
 
+pluginBundle {
+    website = "https://github.com/kylepls/mcspring"
+    vcsUrl = "https://github.com/kylepls/mcspring.git"
+    tags = listOf("bukkit", "spring")
+}
+
 gradlePlugin {
     plugins {
         register("mcspring-gradle-plugin") {
             id = "in.kyle.mcspring"
             implementationClass = "$id.BuildPlugin"
-        }
-    }
-}
-
-pluginBundle {
-    website = "https://github.com/kylepls/mcspring"
-    vcsUrl = "https://github.com/kylepls/mcspring.git"
-    description = "Add Spring to Bukkit plugins"
-    tags = listOf("bukkit", "spring")
-
-    plugins {
-        getByName("mcspring-gradle-plugin") {
             displayName = "mcspring gradle plugin"
+            description = "Handles the generation of plugin.yml files and applies Spring package formatting"
         }
     }
 }

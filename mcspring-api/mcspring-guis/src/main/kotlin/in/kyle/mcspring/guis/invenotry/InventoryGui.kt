@@ -7,7 +7,6 @@ import `in`.kyle.mcspring.guis.item.ItemBuilder
 import `in`.kyle.mcspring.rx.observeEvent
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
-import jdk.jshell.JShell
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType.*
