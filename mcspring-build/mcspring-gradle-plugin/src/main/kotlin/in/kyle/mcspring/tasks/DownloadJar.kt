@@ -21,8 +21,6 @@ open class DownloadJar : DefaultTask() {
             return
         }
 
-        target.delete()
-
         target.outputStream().use { os ->
             URI(props.spigotDownloadUrl).toURL().openStream().use {
                 it.copyTo(os)

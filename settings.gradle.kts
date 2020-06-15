@@ -1,4 +1,4 @@
-rootProject.name = "mcspring-parent"
+rootProject.name = "mcspring"
 
 include(":mcspring-api")
 include(":mcspring-api:mcspring-commands-dsl")
@@ -11,3 +11,5 @@ include(":mcspring-api:mcspring-logging")
 
 include(":mcspring-build")
 include(":mcspring-build:mcspring-plugin-manager")
+
+includeBuild("./mcspring-build/mcspring-gradle-plugin")
