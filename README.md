@@ -1,4 +1,4 @@
-# mcspring [![Build Status](https://travis-ci.org/kylepls/mcspring.svg?branch=master)](https://travis-ci.org/kylepls/mcspring) ![Maven Central](https://img.shields.io/maven-central/v/in.kyle.mcspring/mcspring)
+# mcspring [![Build Status](https://travis-ci.org/kylepls/mcspring.svg?branch=master)](https://travis-ci.org/kylepls/mcspring) ![Bintray](https://img.shields.io/bintray/v/mcspring/maven/mcspring)
 
 Writing Bukkit plugins is a nightmare. I often lay awake in my bed late at night unable to sleep
  because Bukkit made events an annotation but commands are created by implementing a class. 

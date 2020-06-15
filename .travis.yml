@@ -13,10 +13,9 @@ cache:
 
 deploy:
   provider: script
-  skip_cleanup: true
-  ## Build and release to maven central on tagged version
+  cleanup: false
   script:
-    - ./gradlew bintrayPublish -Dorg.gradle.project.bintray.user=$BINTRAY_USER -Dorg.gradle.project.bintray.key=$BINTRAY_KEY
+    - gradle bintrayPublish -Dorg.gradle.project.bintray.user=$BINTRAY_USER -Dorg.gradle.project.bintray.key=$BINTRAY_KEY
 # TODO add in publishing for plugin
 #    - ./ -Dorg.gradle.project.gradle.publish.key=$PLUGIN_PORTAL_API_KEY -Dorg.gradle.project.gradle.publish.secret=$PLUGIN_PORTAL_API_SECRET
   on:
@@ -25,4 +24,4 @@ deploy:
   name: $project_version
 
 script:
-  - ./gradlew build --scan -s
+  - gradle build --scan -s
