@@ -27,7 +27,7 @@ dependencyManagement {
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api")
-    testCompileOnly("org.spigotmc:spigot-api")
+    testImplementation("org.spigotmc:spigot-api")
 
     implementation(kotlin("stdlib"))
 
