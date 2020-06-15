@@ -15,13 +15,13 @@ deploy:
   provider: script
   cleanup: false
   script:
-    - gradle bintrayPublish -Dorg.gradle.project.bintray.user=$BINTRAY_USER -Dorg.gradle.project.bintray.key=$BINTRAY_KEY
-# TODO add in publishing for plugin
-#    - ./ -Dorg.gradle.project.gradle.publish.key=$PLUGIN_PORTAL_API_KEY -Dorg.gradle.project.gradle.publish.secret=$PLUGIN_PORTAL_API_SECRET
+    - ./gradlew bintrayPublish -Dorg.gradle.project.bintray.user=$BINTRAY_USER -Dorg.gradle.project.bintray.key=$BINTRAY_KEY
+  # TODO add in publishing for plugin
+  #    - ./ -Dorg.gradle.project.gradle.publish.key=$PLUGIN_PORTAL_API_KEY -Dorg.gradle.project.gradle.publish.secret=$PLUGIN_PORTAL_API_SECRET
   on:
     tags: true
     branch: master
   name: $project_version
 
 script:
-  - gradle build --scan -s
+  - ./gradlew build --scan -s

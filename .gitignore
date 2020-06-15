@@ -1,8 +1,7 @@
 .idea
 *.iml
-dependency-reduced-pom.xml
-**/target/**
-#**/build/**
+**/out/**
+**/build/**
 .gradle
 pom.xml.versionsBackup
 **/spigot/**
