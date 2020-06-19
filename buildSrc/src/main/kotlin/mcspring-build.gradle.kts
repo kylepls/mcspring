@@ -32,9 +32,16 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     testImplementation("org.assertj:assertj-core:3.11.1")
-    testImplementation("org.amshove.kluent:kluent:1.61")
     testImplementation("org.mockito:mockito-core:2.+")
+    testImplementation("io.mockk:mockk:1.10.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.6.2")
+
+    val kotestVersion = "4.1.0.RC2"
+    testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
+    testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
+    testImplementation("io.kotest:kotest-property-jvm:$kotestVersion")
+    testImplementation("io.kotest:kotest-runner-console-jvm:$kotestVersion")
+    testImplementation("io.kotest:kotest-extensions-spring:$kotestVersion")
 }
 
 tasks.test {

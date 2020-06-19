@@ -1,5 +1,8 @@
 package `in`.kyle.mcspring.commands.dsl
 
+import `in`.kyle.mcspring.commands.dsl.parsers.*
+import `in`.kyle.mcspring.commands.dsl.parsers.numbers.DoubleParser
+import `in`.kyle.mcspring.commands.dsl.parsers.numbers.IntParser
 import org.bukkit.command.CommandSender
 import org.bukkit.command.ConsoleCommandSender
 import org.bukkit.entity.Player
@@ -17,17 +20,10 @@ class CommandMeta {
     lateinit var executor: CommandExecutor
 
     fun preRegister() {
-        require(this::name.isInitialized) {"Command name not set"}
-        require(this::executor.isInitialized) {"Command executor not set for command $name"}
+        require(this::name.isInitialized) { "Command name not set" }
+        require(this::executor.isInitialized) { "Command executor not set for command $name" }
     }
 }
-
-infix fun CommandMeta.executor(lambda: CommandBuilder.() -> Unit): CommandMeta {
-    executor = commandExecutor(lambda)
-    return this
-}
-
-fun command(lambda: CommandMeta.() -> Unit) = CommandMeta().apply { lambda(this) }
 
 data class CommandContext(
         val sender: CommandSender,
@@ -37,21 +33,14 @@ data class CommandContext(
         internal var argIndex: Int = 0,
         internal val runExecutors: Boolean = true
 ) {
+    val nextArg: String
+        get() {
+            return args.getOrNull( argIndex ) ?: error("Argument index out of bounds")
+        }
     fun nextArg() = args[argIndex]
 }
 
 data class CommandExecutor(val provider: (CommandContext) -> ParsedCommand)
-
-fun commandExecutor(lambda: CommandBuilder.() -> Unit) =
-        CommandExecutor { context: CommandContext ->
-            CommandBuilder(context).let {
-                try {
-                    it.lambda()
-                } catch (e: ContextReciever.BreakParseException) {
-                }
-                it.build()
-            }
-        }
 
 @CommandParserBuilder
 class CommandBuilder(context: CommandContext) : ContextReciever(context) {
@@ -88,12 +77,12 @@ class CommandBuilder(context: CommandContext) : ContextReciever(context) {
             parserSupplier: (String) -> P
     ) = arg(ValueBuilder(context, parserSupplier), lambda)
 
-    private fun <R, T : ArgBuilder<R>> arg(builder: T, lambda: T.() -> Unit): Lazy<R> {
+    private fun <R, T : ArgBuilder<R>> arg(builder: T, lambda: T.() -> Unit): R {
         context.tabCompletions.clear()
         val arg = builder.apply(lambda).build()
         parsedArgs.add(arg)
         context.argIndex++
-        return lazyOf(arg.returnValue)
+        return arg.returnValue ?: complete()
     }
 
     fun then(lambda: ContextReciever.() -> Unit) {
@@ -115,7 +104,7 @@ abstract class ArgBuilder<R>(
 
     open fun invalid(lambda: ContextReciever.(arg: String) -> Unit) {
         if (returnValue == null && context.runExecutors) {
-            lambda(context.nextArg())
+            lambda(context.nextArg)
             complete()
         }
     }
@@ -168,7 +157,8 @@ class ValueBuilder<R, out T : BaseParser<R>>(
         if (returnValue != null) {
             return ValueArg(returnValue!!)
         } else {
-            error("error parsing $context")
+            error("Error parsing $context, make sure to implement an `invalid` block in your " +
+                    "command to catch failed argument parses.")
         }
     }
 }

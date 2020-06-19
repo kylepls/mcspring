@@ -1,6 +1,7 @@
-package `in`.kyle.mcspring.commands.dsl
+package `in`.kyle.mcspring.commands.dsl.util
 
-import `in`.kyle.mcspring.commands.dsl.util.CommandMapWrapper
+import `in`.kyle.mcspring.commands.dsl.CommandContext
+import `in`.kyle.mcspring.commands.dsl.CommandMeta
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.plugin.Plugin

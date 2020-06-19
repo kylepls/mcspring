@@ -2,11 +2,10 @@ package `in`.kyle.mcspring.commands.dsl.mcspring
 
 import `in`.kyle.mcspring.commands.dsl.CommandExecutor
 import `in`.kyle.mcspring.commands.dsl.CommandMeta
-import `in`.kyle.mcspring.commands.dsl.CommandUtils
+import `in`.kyle.mcspring.commands.dsl.util.CommandUtils
 import `in`.kyle.mcspring.commands.dsl.util.CommandMapWrapper
 import `in`.kyle.mcspring.util.SpringScanner
 import org.bukkit.plugin.Plugin
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.springframework.context.annotation.Bean

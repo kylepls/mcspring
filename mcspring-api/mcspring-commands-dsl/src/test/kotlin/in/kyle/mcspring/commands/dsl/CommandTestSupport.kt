@@ -13,10 +13,18 @@ object CommandTestSupport {
         return messages.joinToString("\n")
     }
 
-    fun makeContext(command: String): Pair<CommandContext, MutableList<String>> {
+    fun makeContext(
+            command: String,
+            runExecutors: Boolean = true
+    ): Pair<CommandContext, MutableList<String>> {
         val (player, messages) = makeTestPlayer()
         val args = command.split(" ").filter { it.isNotBlank() }
-        val context = CommandContext(player, args.getOrElse(0) { "" }, args.toMutableList())
+        val context = CommandContext(
+                player,
+                args.getOrElse(0) { "" },
+                args.toMutableList(),
+                runExecutors = runExecutors
+        )
         return Pair(context, messages)
     }
 
@@ -28,4 +36,6 @@ object CommandTestSupport {
                 .sendMessage(ArgumentMatchers.anyString())
         return Pair(sender, messages)
     }
+
+    fun makeBuilder(command: String) = CommandBuilder(makeContext(command).first)
 }
