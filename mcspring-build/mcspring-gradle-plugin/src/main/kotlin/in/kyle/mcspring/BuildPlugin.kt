@@ -48,7 +48,6 @@ class BuildPlugin : Plugin<Project> {
     private fun registerCopyToJarToSpigot(project: Project) {
         val props = project.extensions.findByType<McSpringExtension>()!!
         project.tasks.create<Copy>("copyJarToSpigot") {
-//            group = "mcspring"
             description = "Copy the built plugin jar to the Spigot directory"
 
             from(project.buildDir.resolve("libs"))
@@ -61,20 +60,22 @@ class BuildPlugin : Plugin<Project> {
 
     private fun registerSetupSpigot(project: Project) {
         project.tasks.register<SetupSpigot>("setupSpigot") {
-//            group = "mcspring"
             description = "Adds default Spigot configuration settings"
         }
     }
 
     private fun registerDownloadJar(project: Project) {
         project.tasks.register<DownloadJar>("downloadJar") {
-//            group = "mcspring"
             description = "Download the Bukkit jar"
         }
     }
 
     private fun registerBuildPluginJar(project: Project) {
-        val convention = project.convention.getPlugin(JavaPluginConvention::class.java)
+        val convention = try {
+            project.convention.getPlugin(JavaPluginConvention::class.java)
+        } catch (e: IllegalStateException) {
+            error("Kotlin/Java/Other plugin not found. Make sure to add one of these.")
+        }
         val mainSourceSet: SourceSet = convention.sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME)
 
         SpringBootExtension(project).buildInfo()
@@ -133,7 +134,6 @@ class BuildPlugin : Plugin<Project> {
     private fun registerBuildPluginYml(project: Project) {
         project.tasks.register<BuildPluginYml>("buildPluginYml") {
             description = "Generates a and plugin.yml"
-//            group = "mcspring"
         }
     }
 }

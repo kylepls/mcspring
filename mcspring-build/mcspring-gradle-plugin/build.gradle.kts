@@ -12,13 +12,19 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation("io.github.classgraph:classgraph:4.8.83")
-    implementation("org.yaml:snakeyaml:1.26")
-    implementation("com.github.jengelman.gradle.plugins:shadow:5.2.0")
-    implementation("org.springframework.boot:spring-boot-gradle-plugin:2.3.1.RELEASE")
+val createClasspathManifest = tasks.create("createClasspathManifest") {
+    val outputDir = buildDir.resolve(name)
 
-    testImplementation(gradleTestKit())
+    inputs.files(sourceSets.main.get().runtimeClasspath)
+    outputs.dir(outputDir)
+    logger.info("Dir to $outputDir")
+
+    doLast {
+        outputDir.mkdirs()
+        val target = outputDir.resolve("plugin-classpath.txt")
+        target.writeText(sourceSets.main.get().runtimeClasspath.joinToString("\n"))
+        logger.info("Wrote to $target")
+    }
 }
 
 pluginBundle {
@@ -36,4 +42,22 @@ gradlePlugin {
             description = "Handles the generation of plugin.yml files and applies Spring package formatting"
         }
     }
+}
+
+dependencies {
+    implementation("io.github.classgraph:classgraph:4.8.83")
+    implementation("org.yaml:snakeyaml:1.26")
+    implementation("com.github.jengelman.gradle.plugins:shadow:5.2.0")
+    implementation("org.springframework.boot:spring-boot-gradle-plugin:2.3.1.RELEASE")
+
+    testImplementation(gradleTestKit())
+    testImplementation("org.junit.jupiter:junit-jupiter:5.6.2")
+
+    val kotestVersion = "4.1.0.RC2"
+    testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
+    testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
+    testImplementation("io.kotest:kotest-property-jvm:$kotestVersion")
+    testImplementation("io.kotest:kotest-runner-console-jvm:$kotestVersion")
+
+    testRuntimeOnly(files(createClasspathManifest))
 }

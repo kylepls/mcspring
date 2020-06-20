@@ -1,6 +1,5 @@
 package `in`.kyle.mcspring
 
-import `in`.kyle.mcspring.tasks.BuildPluginYml
 import org.gradle.api.Project
 
 open class McSpringExtension(project: Project) {
@@ -10,10 +9,10 @@ open class McSpringExtension(project: Project) {
     var spigotDirectory: String = project.projectDir.resolve("spigot").absolutePath
 
     var pluginMainPackage: String = "${project.group}.${project.name}"
-    var pluginName: String = project.name
-    var pluginVersion: String = project.version.toString().takeIf { it != "unspecified" } ?: "0.0.1"
+    var pluginName: String? = null
+    var pluginVersion: String? = null
     var pluginDescription: String? = project.description
-    var pluginLoad: BuildPluginYml.Load? = null
+    var pluginLoad: Any? = null
     var pluginAuthor: String? = null
     var pluginAuthors: List<String>? = null
     var pluginWebsite: String? = null
@@ -23,4 +22,8 @@ open class McSpringExtension(project: Project) {
 
     val pluginMainClassName: String
         get() = "$pluginMainPackage.SpringPlugin"
+
+    enum class Load {
+        STARTUP, POSTWORLD
+    }
 }

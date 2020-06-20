@@ -19,15 +19,22 @@ open class BuildPluginYml : DefaultTask() {
     @TaskAction
     fun buildYml() {
         val props = project.extensions.findByType<McSpringExtension>()
-        requireNotNull(props) {"mcspring not defined in build.gradle"}
+        requireNotNull(props) { "mcspring not defined in build.gradle" }
 
         with(props) {
-            attributes["name"] = pluginName
-            attributes["version"] = pluginVersion
+            attributes["name"] = pluginName ?: project.name
+            attributes["version"] = pluginVersion ?: project.version
             attributes["main"] = "$pluginMainPackage.SpringJavaPlugin"
 
             pluginDescription?.apply { attributes["description"] = this }
-            pluginLoad?.apply { attributes["load"] = this }
+            pluginLoad?.apply {
+                val value = when (this) {
+                    is McSpringExtension.Load -> this.name.toLowerCase()
+                    is String -> this
+                    else -> error("Invalid pluginLoad value $this")
+                }
+                attributes["load"] = value
+            }
             pluginAuthor?.apply { attributes["author"] = this }
             pluginAuthors?.apply { attributes["authors"] = this }
             pluginWebsite?.apply { attributes["website"] = this }
@@ -36,7 +43,6 @@ open class BuildPluginYml : DefaultTask() {
             pluginLoadBefore?.apply { attributes["loadbefore"] = this }
 
             // TODO commands
-            // TODO permissions
             addDependencies(project.configurations["runtime"].files)
 
             val outputFile = project.buildDir.resolve("resources").resolve("main")
@@ -55,12 +61,15 @@ open class BuildPluginYml : DefaultTask() {
                 scan.allClasses.filter { it.isStandardClass && it.hasAnnotation(annotation) }
                         .map { it.getAnnotationInfo(annotation).parameterValues }
                         .flatMap { (it["plugins"].value as Array<String>).toList() }
-
-        attributes["softdepend"] = getPluginDependencies("in.kyle.mcspring.annotation.SoftPluginDepend")
-        attributes["depend"] = getPluginDependencies("in.kyle.mcspring.annotation.PluginDepend")
-    }
-
-    enum class Load {
-        STARTUP, POSTWORLD
+        getPluginDependencies("in.kyle.mcspring.annotation.SoftPluginDepend").apply {
+            if (this.isNotEmpty()) {
+                attributes["softdepend"] = this
+            }
+        }
+        getPluginDependencies("in.kyle.mcspring.annotation.PluginDepend").apply {
+            if (this.isNotEmpty()) {
+                attributes["depend"] = this
+            }
+        }
     }
 }

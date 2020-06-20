@@ -28,6 +28,7 @@ open class SetupSpigot : DefaultTask() {
         target.parentFile.mkdirs()
         target.outputStream().use { os ->
             javaClass.getResourceAsStream(path).use {
+                requireNotNull(it) {"Could not find $path"}
                 it.copyTo(os)
             }
         }

@@ -14,3 +14,4 @@ mcspring {
 tasks.build {
     dependsOn(tasks.named("buildServer"))
 }
+

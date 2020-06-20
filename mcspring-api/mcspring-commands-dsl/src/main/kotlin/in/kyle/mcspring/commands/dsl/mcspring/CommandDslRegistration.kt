@@ -26,7 +26,8 @@ class CommandDslRegistration(
     }
 
     private fun registerAnnotatedCommands() {
-        scanner.scanMethods(Command::class.java).filterKeys { it !in registeredCommands }
+        scanner.scanMethods(Command::class.java)
+                .filterKeys { it !in registeredCommands }
                 .filterKeys { it.returnType == CommandExecutor::class.java }
                 .forEach { (key, value) ->
                     val command = key.getAnnotation(Command::class.java)

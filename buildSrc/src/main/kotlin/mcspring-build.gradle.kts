@@ -31,7 +31,6 @@ dependencies {
 
     implementation(kotlin("stdlib"))
 
-    testImplementation("org.assertj:assertj-core:3.11.1")
     testImplementation("org.mockito:mockito-core:2.+")
     testImplementation("io.mockk:mockk:1.10.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.6.2")
