@@ -36,7 +36,13 @@ fun writeBaseGradleConfig(file: File) {
 fun runGradle(folder: File, vararg args: String): BuildResult {
     return GradleRunner.create()
             .withProjectDir(folder)
-            .withArguments(*args, "--stacktrace", "--info", "--scan", "-s")
+            .withArguments(
+                    *args,
+                    "--stacktrace",
+                    "--info",
+                    "--scan",
+                    "-s"
+            )
             .withPluginClasspath(getPluginClasspath())
             .withDebug(true)
             .build()
