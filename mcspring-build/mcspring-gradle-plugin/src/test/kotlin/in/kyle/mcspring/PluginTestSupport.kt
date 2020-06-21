@@ -27,6 +27,10 @@ fun writeBaseGradleConfig(file: File) {
         |    }
         |}
     """.trimMargin()
+    val gradleProperties = file.parentFile / "gradle.properties"
+    gradleProperties += """
+        org.gradle.jvmargs=-Xmx1024m
+    """.trimIndent()
 }
 
 fun runGradle(folder: File, vararg args: String): BuildResult {
