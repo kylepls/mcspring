@@ -18,6 +18,10 @@ class SpringLoader(
     private var context: ConfigurableApplicationContext? = null
     private var logger = javaPlugin.logger
 
+    private val scanThreads by lazy {
+        Runtime.getRuntime().availableProcessors()
+    }
+
     fun onEnable() {
         try {
             initSpring()
@@ -28,12 +32,15 @@ class SpringLoader(
     }
 
     private fun initSpring() {
-        val mains = ClassGraph()
+        val scanResult = ClassGraph()
                 .enableAnnotationInfo()
-                .scan(4)
-                .allStandardClasses
-                .filter { it.hasAnnotation("in.kyle.mcspring.annotation.SpringPlugin") }
-                .map { it.name }
+                .scan(scanThreads)
+        val mains = scanResult.use {
+            scanResult
+                    .allStandardClasses
+                    .filter { it.hasAnnotation("in.kyle.mcspring.annotation.SpringPlugin") }
+                    .map { it.name }
+        }
         require(mains.size == 1) { "There should only be 1 main class on the classpath: $mains" }
         logger.info("Using main class: $mains")
         val config = Class.forName(mains[0])

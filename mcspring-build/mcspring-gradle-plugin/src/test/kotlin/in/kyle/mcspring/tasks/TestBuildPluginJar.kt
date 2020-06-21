@@ -48,26 +48,27 @@ class TestBuildPluginJar : FreeSpec({
                 .enableClassInfo()
                 .overrideClassLoaders(classLoader)
                 .scan()
-
-        "should have plugin.yml" - {
-            scan.getResourcesWithPath("plugin.yml") shouldHaveSize 1
-        }
-
-        "all jar files should be in lib directory" - {
-            scan.getResourcesWithExtension("jar").map { it.path }.forAll {
-                it.startsWith("BOOT-INF/lib/")
+        scan.use {
+            "should have plugin.yml" - {
+                scan.getResourcesWithPath("plugin.yml") shouldHaveSize 1
             }
-        }
 
-        "plugin main should be relocated" - {
-            assertSoftly {
-                scan.allClasses.filter { it.packageName == "main" }
-                        .map { it.name } shouldBe listOf("main.SpringJavaPlugin")
+            "all jar files should be in lib directory" - {
+                scan.getResourcesWithExtension("jar").map { it.path }.forAll {
+                    it.startsWith("BOOT-INF/lib/")
+                }
             }
-        }
 
-        "should have source files" - {
-            scan.allClasses.filter { it.name == "BaseKt" } shouldHaveSize 1
+            "plugin main should be relocated" - {
+                assertSoftly {
+                    scan.allClasses.filter { it.packageName == "main" }
+                            .map { it.name } shouldBe listOf("main.SpringJavaPlugin")
+                }
+            }
+
+            "should have source files" - {
+                scan.allClasses.filter { it.name == "BaseKt" } shouldHaveSize 1
+            }
         }
     }
 })

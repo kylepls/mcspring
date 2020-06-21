@@ -69,39 +69,45 @@ open class BuildPluginYml : DefaultTask() {
 
     private fun addDependencies(files: Set<File>) {
         val classLoader = URLClassLoader(files.map { it.toURI().toURL() }.toTypedArray())
-        val scan = ClassGraph().verbose().overrideClassLoaders(classLoader).enableAnnotationInfo().scan()
+        val scanResult = ClassGraph()
+                .overrideClassLoaders(classLoader)
+                .enableAnnotationInfo()
+                .scan()
+        scanResult.use {
+            fun getPluginDependencies(annotation: String) =
+                    scanResult.allClasses.filter { it.isStandardClass && it.hasAnnotation(annotation) }
+                            .map { it.getAnnotationInfo(annotation).parameterValues }
+                            .flatMap { (it["plugins"].value as Array<String>).toList() }
 
-        fun getPluginDependencies(annotation: String) =
-                scan.allClasses.filter { it.isStandardClass && it.hasAnnotation(annotation) }
-                        .map { it.getAnnotationInfo(annotation).parameterValues }
-                        .flatMap { (it["plugins"].value as Array<String>).toList() }
+            fun addAnnotationAttributeList(string: String, clazz: KClass<*>) =
+                    getPluginDependencies(clazz.qualifiedName!!)
+                            .takeIf { it.isNotEmpty() }
+                            ?.apply { attributes[string] = this }
 
-        fun addAnnotationAttributeList(string: String, clazz: KClass<*>) =
-                getPluginDependencies(clazz.qualifiedName!!)
-                        .takeIf { it.isNotEmpty() }
-                        ?.apply { attributes[string] = this }
-
-        addAnnotationAttributeList("softdepend", SoftPluginDepend::class)
-        addAnnotationAttributeList("depend", PluginDepend::class)
+            addAnnotationAttributeList("softdepend", SoftPluginDepend::class)
+            addAnnotationAttributeList("depend", PluginDepend::class)
+        }
     }
 
     private fun addCommands(files: Set<File>) {
         val classLoader = URLClassLoader(files.map { it.toURI().toURL() }.toTypedArray())
-        val scan = ClassGraph()
-                .verbose()
+        val scanResult = ClassGraph()
                 .overrideClassLoaders(classLoader)
                 .enableAnnotationInfo()
                 .enableMethodInfo()
                 .enableClassInfo()
                 .scan()
 
-        fun getAnnotations(annotation: KClass<*>) =
-                scan.getClassesWithMethodAnnotation(annotation.qualifiedName!!)
-                        .flatMap { it.methodInfo.filter { it.hasAnnotation(annotation.qualifiedName!!) } }
-                        .map { it.getAnnotationInfo(annotation.qualifiedName!!) }
-                        .map { it.parameterValues }
+        val annotations = scanResult.use {
+            fun getAnnotations(annotation: KClass<*>) =
+                    scanResult.getClassesWithMethodAnnotation(annotation.qualifiedName!!)
+                            .flatMap { it.methodInfo.filter { it.hasAnnotation(annotation.qualifiedName!!) } }
+                            .map { it.getAnnotationInfo(annotation.qualifiedName!!) }
+                            .map { it.parameterValues }
 
-        val annotations = getAnnotations(Command::class)
+            getAnnotations(Command::class)
+        }
+
         val commands = annotations.map {
             val meta = mutableMapOf<String, Any>()
 
