@@ -6,4 +6,3 @@
 pom.xml.versionsBackup
 **/spigot/**
 !**/archetype-resources/spigot/**
-gradle.properties
