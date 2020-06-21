@@ -20,7 +20,7 @@ internal class CommandGamemode {
     fun gamemode() = commandExecutor {
         requirePlayer { message("Only players can run this command.") }
 
-        val gameMode by mapArg<GameMode> {
+        val gameMode = mapArg<GameMode> {
             parser {
                 map(GameMode.values().associateBy { it.name.toLowerCase() })
                 map(GameMode.values().associateBy { it.value.toString() })

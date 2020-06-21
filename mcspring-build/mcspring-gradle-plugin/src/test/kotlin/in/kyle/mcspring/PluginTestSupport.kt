@@ -20,7 +20,7 @@ fun writeBaseGradleConfig(file: File) {
 fun runGradle(folder: File, vararg args: String): BuildResult {
     return GradleRunner.create()
             .withProjectDir(folder)
-            .withArguments(*args, "--stacktrace")
+            .withArguments(*args, "--stacktrace", "--info")
             .withPluginClasspath(getPluginClasspath())
             .withDebug(true)
             .build()
@@ -32,7 +32,10 @@ private fun getPluginClasspath(): List<File> {
     return pluginClasspathResource.readText().lines().map { File(it) }
 }
 
-operator fun File.plusAssign(string: String) = appendText("\n$string")
+operator fun File.plusAssign(string: String) {
+    parentFile.mkdirs()
+    appendText("\n$string")
+}
 
 operator fun File.div(string: String) = resolve(string)
 

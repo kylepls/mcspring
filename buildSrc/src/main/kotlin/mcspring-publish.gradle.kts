@@ -79,3 +79,6 @@ bintray {
         vcsUrl = "https://github.com/kylepls/mcspring"
     })
 }
+
+tasks.findByName("build")!!.dependsOn(tasks.findByName("publishToMavenLocal"))
+

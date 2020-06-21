@@ -16,7 +16,7 @@ internal class CommandSpeed {
     fun speed() = commandExecutor {
         requirePlayer { message("Sender must be a player") }
         val player = sender as Player
-        val speed by doubleArg {
+        val speed = doubleArg {
             parser {
                 between(0.0, 10.0) { message("Speed must be between 0 and 10") }
             }

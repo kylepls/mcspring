@@ -32,7 +32,7 @@ internal class CommandPlugin(private val pluginController: PluginController) {
     }
 
     private fun load() = commandExecutor {
-        val path by mapArg<Path> {
+        val path = mapArg<Path> {
             parser {
                 map(pluginController.loadablePlugins)
             }
@@ -42,7 +42,7 @@ internal class CommandPlugin(private val pluginController: PluginController) {
     }
 
     private fun unload() = commandExecutor {
-        val plugin by mapArg<Plugin> {
+        val plugin = mapArg<Plugin> {
             parser {
                 map(pluginController.plugins.associateBy({ it.name }, { it }))
             }

@@ -49,9 +49,14 @@ dependencies {
     implementation("org.yaml:snakeyaml:1.26")
     implementation("com.github.jengelman.gradle.plugins:shadow:5.2.0")
     implementation("org.springframework.boot:spring-boot-gradle-plugin:2.3.1.RELEASE")
+    implementation(project(":mcspring-api:mcspring-base"))
+    implementation(project(":mcspring-api:mcspring-commands-dsl"))
 
     testImplementation(gradleTestKit())
     testImplementation("org.junit.jupiter:junit-jupiter:5.6.2")
+    implementation("io.github.classgraph:classgraph:4.8.83")
+    testImplementation(project(":mcspring-api:mcspring-base"))
+    testImplementation(project(":mcspring-api:mcspring-commands-dsl"))
 
     val kotestVersion = "4.1.0.RC2"
     testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")

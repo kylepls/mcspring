@@ -14,7 +14,7 @@ internal class CommandClassLoader {
             usage = "/classloader <class>"
     )
     fun classLoader() = commandExecutor {
-        val className by stringArg {
+        val className = stringArg {
             missing {
                 message("Usage: /$label <class>")
             }

@@ -15,7 +15,7 @@ internal class CommandOp {
             usage = "/op <player>?"
     )
     fun op() = commandExecutor {
-        val target by playerArg {
+        val target = playerArg {
             default { sender as? Player }
             invalid { message("Player $it not found") }
         }

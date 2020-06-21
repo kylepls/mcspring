@@ -16,12 +16,12 @@ internal class CommandHeal {
     fun heal() = commandExecutor {
         requirePlayer { message("Sender must be a player") }
 
-        val target by playerArg {
+        val target = playerArg {
             default { sender as Player }
             invalid { message("Target player $it not found") }
         }
 
-        val health by doubleArg {
+        val health = doubleArg {
             default { 20.0 }
             parser {
                 between(0.0, 20.0) { message("Heal value must be between 0 and 20") }

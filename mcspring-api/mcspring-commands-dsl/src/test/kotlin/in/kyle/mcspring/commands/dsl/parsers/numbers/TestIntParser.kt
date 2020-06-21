@@ -1,10 +1,10 @@
 package `in`.kyle.mcspring.commands.dsl.parsers.numbers
 
 import `in`.kyle.mcspring.commands.dsl.CommandTestSupport.runCommand
+import io.kotest.assertions.fail
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.checkAll
-import org.assertj.core.api.Assertions.fail
 
 class TestIntParser : FreeSpec({
 

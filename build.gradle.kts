@@ -11,3 +11,5 @@ subprojects {
     apply(plugin = "mcspring-build")
     apply(plugin = "mcspring-publish")
 }
+
+defaultTasks("build")

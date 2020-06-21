@@ -1,7 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("io.spring.dependency-management")
     kotlin("jvm")
 }
 
@@ -9,25 +8,14 @@ repositories {
     jcenter()
     mavenCentral()
     mavenLocal()
-}
-
-dependencyManagement {
-    dependencies {
-        dependency("org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT") {
-            repositories {
-                maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-                maven("https://oss.sonatype.org/content/repositories/snapshots")
-            }
-        }
-    }
-    imports {
-        mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
-    }
+    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+    maven("https://oss.sonatype.org/content/repositories/snapshots")
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api")
-    testImplementation("org.spigotmc:spigot-api")
+    val spigotVersion = "1.15.2-R0.1-SNAPSHOT"
+    compileOnly("org.spigotmc:spigot-api:$spigotVersion")
+    testImplementation("org.spigotmc:spigot-api:$spigotVersion")
 
     implementation(kotlin("stdlib"))
 

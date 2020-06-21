@@ -1,4 +1,5 @@
-package in.kyle.mcspring.javaplugin;
+// Package name for hiding the class in the final jar
+package org.springframework.boot.loader.in.kyle.mcspring.javaplugin;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.springframework.boot.loader.JarLauncher;

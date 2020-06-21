@@ -46,7 +46,7 @@ class TestStringParser : FreeSpec({
     }
 
     "test all strings parse correctly" - {
-        Arb.stringPattern("[^ ]{1,256}").checkAll {
+        Arb.stringPattern("[a-zA-Z0-9]{1,256}").checkAll {
             runCommand(it) {
                 val arg1 = stringArg {
                     missing { fail("should not run") }

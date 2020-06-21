@@ -6,6 +6,7 @@ import `in`.kyle.mcspring.chat.StringSupport.hover
 import `in`.kyle.mcspring.chat.StringSupport.suggest
 import `in`.kyle.mcspring.chat.StringSupport.toTextComponent
 import `in`.kyle.mcspring.chat.TextComponentSupport.plus
+import io.kotest.matchers.shouldBe
 import net.md_5.bungee.api.ChatColor
 import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.ClickEvent.Action.*
@@ -13,7 +14,6 @@ import net.md_5.bungee.api.chat.ComponentBuilder
 import net.md_5.bungee.api.chat.HoverEvent
 import net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT
 import net.md_5.bungee.api.chat.TextComponent
-import org.amshove.kluent.shouldBeEqualTo
 import org.bukkit.ChatColor.RED
 import org.junit.jupiter.api.Test
 
@@ -21,7 +21,7 @@ class TestMessage {
 
     @Test
     fun testHover() {
-        "test" hover "hover" shouldBeEqualTo
+        "test" hover "hover" shouldBe
                 TextComponent("test").apply {
                     hoverEvent = HoverEvent(SHOW_TEXT, arrayOf(TextComponent("hover")))
                 }
@@ -29,7 +29,7 @@ class TestMessage {
 
     @Test
     fun testColor() {
-        "test" color RED shouldBeEqualTo
+        "test" color RED shouldBe
                 ComponentBuilder("test").color(ChatColor.RED).create()[0]
     }
 
@@ -37,13 +37,13 @@ class TestMessage {
     fun testPlus() {
         val component = "hello ".toTextComponent() + "world"
         // ofc the equality checking doesn't work...
-        component.toString() shouldBeEqualTo
+        component.toString() shouldBe
                 TextComponent(TextComponent("hello "), TextComponent("world")).toString()
     }
 
     @Test
     fun testCommand() {
-        "test" command "/test" shouldBeEqualTo
+        "test" command "/test" shouldBe
                 TextComponent("test").apply {
                     clickEvent = ClickEvent(RUN_COMMAND, "/test")
                 }
@@ -51,7 +51,7 @@ class TestMessage {
 
     @Test
     fun testSuggest() {
-        "test" suggest "/test" shouldBeEqualTo
+        "test" suggest "/test" shouldBe
                 TextComponent("test").apply {
                     clickEvent = ClickEvent(SUGGEST_COMMAND, "/test")
                 }
