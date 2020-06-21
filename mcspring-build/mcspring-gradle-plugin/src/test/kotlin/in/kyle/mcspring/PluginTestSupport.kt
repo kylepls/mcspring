@@ -15,6 +15,18 @@ fun writeBaseGradleConfig(file: File) {
         |   jcenter()
         |}
     """.trimMargin()
+    val settings = file.parentFile / "settings.gradle.kts"
+    settings += """
+        |plugins {
+        |   id("com.gradle.enterprise").version("3.3.4")
+        |}
+        |gradleEnterprise {
+        |    buildScan {
+        |        termsOfServiceUrl = "https://gradle.com/terms-of-service"
+        |        termsOfServiceAgree = "yes"
+        |    }
+        |}
+    """.trimMargin()
 }
 
 fun runGradle(folder: File, vararg args: String): BuildResult {
