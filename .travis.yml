@@ -14,9 +14,9 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
-env:
-  global:
-    - GRADLE_OPTS="-Xms128m -Xmx2g"
+#env:
+#  global:
+#    - GRADLE_OPTS="-Xms128m -Xmx2g"
 
 script:
   - ./gradlew build --scan -s
