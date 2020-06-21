@@ -66,7 +66,3 @@ dependencies {
 
     testRuntimeOnly(files(createClasspathManifest))
 }
-
-tasks.withType<Test>() {
-    maxHeapSize = "2g"
-}
