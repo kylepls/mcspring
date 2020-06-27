@@ -19,7 +19,7 @@ class CommandMeta {
     var aliases: List<String> = listOf()
     lateinit var executor: CommandExecutor
 
-    fun preRegister() {
+    fun validate() {
         require(this::name.isInitialized) { "Command name not set" }
         require(this::executor.isInitialized) { "Command executor not set for command $name" }
     }
@@ -33,11 +33,8 @@ data class CommandContext(
         internal var argIndex: Int = 0,
         internal val runExecutors: Boolean = true
 ) {
-    val nextArg: String
-        get() {
-            return args.getOrNull( argIndex ) ?: error("Argument index out of bounds")
-        }
-    fun nextArg() = args[argIndex]
+    val nextArg: String?
+        get() = args.getOrNull(argIndex)
 }
 
 data class CommandExecutor(val provider: (CommandContext) -> ParsedCommand)
@@ -64,7 +61,7 @@ class CommandBuilder(context: CommandContext) : ContextReciever(context) {
     fun require(value: Boolean, lambda: ContextReciever.() -> Unit) {
         if (!value) {
             lambda(this)
-            complete()
+            commandMissing()
         }
     }
 
@@ -74,7 +71,7 @@ class CommandBuilder(context: CommandContext) : ContextReciever(context) {
 
     private fun <R, P : BaseParser<R>> valueArg(
             lambda: ValueBuilder<R, P>.() -> Unit,
-            parserSupplier: (String) -> P
+            parserSupplier: (String?) -> P
     ) = arg(ValueBuilder(context, parserSupplier), lambda)
 
     private fun <R, T : ArgBuilder<R>> arg(builder: T, lambda: T.() -> Unit): R {
@@ -82,14 +79,17 @@ class CommandBuilder(context: CommandContext) : ContextReciever(context) {
         val arg = builder.apply(lambda).build()
         parsedArgs.add(arg)
         context.argIndex++
-        return arg.returnValue ?: complete()
+        if (arg.returnValue == null) {
+            commandMissing()
+        }
+        return arg.returnValue
     }
 
     fun then(lambda: ContextReciever.() -> Unit) {
         if (context.runExecutors) {
             lambda(this)
-            complete()
         }
+        commandComplete()
     }
 
     fun build(): ParsedCommand = ParsedCommand(parsedArgs)
@@ -103,9 +103,12 @@ abstract class ArgBuilder<R>(
     internal open var returnValue: R? = null
 
     open fun invalid(lambda: ContextReciever.(arg: String) -> Unit) {
-        if (returnValue == null && context.runExecutors) {
-            lambda(context.nextArg)
-            complete()
+        val nextArg = context.nextArg
+        if (returnValue == null && nextArg != null) {
+            if (context.runExecutors) {
+                lambda(nextArg)
+            }
+            commandInvalid()
         }
     }
 
@@ -114,7 +117,7 @@ abstract class ArgBuilder<R>(
 
 class ValueBuilder<R, out T : BaseParser<R>>(
         context: CommandContext,
-        private val parserSupplier: (String) -> T
+        private val parserSupplier: (String?) -> T
 ) : ArgBuilder<R>(context) {
 
     private var hasRunParser = false
@@ -128,16 +131,18 @@ class ValueBuilder<R, out T : BaseParser<R>>(
     fun parser(lambda: T.() -> Unit) {
         hasRunParser = true
         if (returnValue == null) {
-            val parser = parserSupplier(context.nextArg())
+            val parser = parserSupplier(context.nextArg)
             parser.lambda()
             returnValue = parser.returnValue
         }
     }
 
     fun missing(lambda: ContextReciever.() -> Unit) {
-        if (!hasNextArg() && context.runExecutors) {
-            lambda()
-            complete()
+        if (!hasNextArg()) {
+            if (context.runExecutors) {
+                lambda()
+            }
+            commandMissing()
         }
     }
 
@@ -154,11 +159,15 @@ class ValueBuilder<R, out T : BaseParser<R>>(
 
     override fun build(): ValueArg<R> {
         runBaseParse()
-        if (returnValue != null) {
-            return ValueArg(returnValue!!)
+        val temp = returnValue
+        if (temp != null) {
+            return ValueArg(temp)
         } else {
-            error("Error parsing $context, make sure to implement an `invalid` block in your " +
-                    "command to catch failed argument parses.")
+            error("""
+                Error parsing $context, make sure to implement the following in your DSL:
+                missing - run when the argument is missing. E.g.: Missing the <player> argument in /tp <player>
+                invalid - run when the argument is invalid. E.g.: "askdf" being passed for an int arg.
+            """.trimIndent())
         }
     }
 }
@@ -169,7 +178,7 @@ class SubcommandBuilder(context: CommandContext) : ArgBuilder<String>(context) {
 
     fun on(vararg values: String, commandExecutor: CommandExecutor) = on({ it in values }, values.toList(), commandExecutor)
     fun on(vararg values: String, command: CommandBuilder.() -> Unit) {
-        on({ it in values }, values.toList(), commandExecutor(command))
+        on({ it in values }, values.toList(), command(command))
     }
 
     fun on(
@@ -178,12 +187,13 @@ class SubcommandBuilder(context: CommandContext) : ArgBuilder<String>(context) {
             commandExecutor: CommandExecutor
     ) {
         context.tabCompletions.addAll(tabCompletions)
-        val argString = context.nextArg()
+        val argString = context.nextArg ?: return
+
         if (predicate(argString)) {
             returnValue = argString
             context.argIndex++
             subCommands[tabCompletions.toList()] = commandExecutor.provider(context)
-            complete()
+            commandComplete()
         } else {
             val fakeContext = context.copy(runExecutors = false)
             val parsed = commandExecutor.provider(fakeContext)
@@ -192,9 +202,11 @@ class SubcommandBuilder(context: CommandContext) : ArgBuilder<String>(context) {
     }
 
     fun missing(lambda: SubcommandMissingBuilder.() -> Unit) {
-        if (!hasNextArg() && context.runExecutors) {
-            lambda(SubcommandMissingBuilder(subCommands, context))
-            complete()
+        if (!hasNextArg()) {
+            if (context.runExecutors) {
+                lambda(SubcommandMissingBuilder(subCommands, context))
+            }
+            commandComplete()
         }
     }
 

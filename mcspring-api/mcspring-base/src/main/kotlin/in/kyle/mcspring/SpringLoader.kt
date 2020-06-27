@@ -1,12 +1,12 @@
 package `in`.kyle.mcspring
 
-import io.github.classgraph.ClassGraph
 import org.bukkit.plugin.java.JavaPlugin
 import org.springframework.boot.Banner
 import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.boot.loader.JarLauncher
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.core.io.DefaultResourceLoader
+import org.yaml.snakeyaml.Yaml
 import java.net.URL
 import java.net.URLClassLoader
 
@@ -16,7 +16,7 @@ class SpringLoader(
 ) {
 
     private var context: ConfigurableApplicationContext? = null
-    private var logger = javaPlugin.logger
+    private val logger by lazy { javaPlugin.logger }
 
     private val scanThreads by lazy {
         Runtime.getRuntime().availableProcessors()
@@ -32,18 +32,13 @@ class SpringLoader(
     }
 
     private fun initSpring() {
-        val scanResult = ClassGraph()
-                .enableAnnotationInfo()
-                .scan(scanThreads)
-        val mains = scanResult.use {
-            scanResult
-                    .allStandardClasses
-                    .filter { it.hasAnnotation("in.kyle.mcspring.annotation.SpringPlugin") }
-                    .map { it.name }
-        }
-        require(mains.size == 1) { "There should only be 1 main class on the classpath: $mains" }
-        logger.info("Using main class: $mains")
-        val config = Class.forName(mains[0])
+        val pluginYmlResource = javaPlugin.getResource("plugin.yml") ?: error("plugin.yml not found???")
+        @Suppress("UNCHECKED_CAST")
+        val yaml = Yaml().loadAs(pluginYmlResource, Map::class.java) as Map<String, Any>
+        val main = yaml["spring-boot-main"] as? String
+                ?: error("Spring boot main not found in plugin.yml")
+
+        val config = Class.forName(main)
         val builder = SpringApplicationBuilder()
         var sources = arrayOf(config, SpringSpigotSupport::class.java)
 

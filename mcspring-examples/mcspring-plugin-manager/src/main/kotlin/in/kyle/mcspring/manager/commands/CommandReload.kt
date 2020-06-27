@@ -1,5 +1,6 @@
 package `in`.kyle.mcspring.manager.commands
 
+import `in`.kyle.mcspring.commands.dsl.command
 import `in`.kyle.mcspring.commands.dsl.commandExecutor
 import `in`.kyle.mcspring.commands.dsl.mcspring.Command
 import org.bukkit.Bukkit
@@ -16,7 +17,7 @@ class CommandReload {
             aliases = ["rl"],
             description = "Reload the server"
     )
-    fun reload() = commandExecutor {
+    fun reload() = command {
         then {
             sender.sendMessage("Reloading the server...")
             Bukkit.getServer().reload()

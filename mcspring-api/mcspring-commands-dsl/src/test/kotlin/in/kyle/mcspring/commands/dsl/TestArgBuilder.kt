@@ -18,7 +18,6 @@ class TestArgBuilder : FreeSpec({
             val test = Test(makeContext("test").first)
             test.returnValue = null
 
-            class TestException : RuntimeException()
             shouldThrow<TestException> {
                 test.invalid {
                     throw TestException()
@@ -27,8 +26,8 @@ class TestArgBuilder : FreeSpec({
         }
 
         "invalid block does not run when valid" - {
-            val test = Test(makeContext("test", runExecutors = false).first)
-            test.returnValue = null
+            val test = Test(makeContext("test").first)
+            test.returnValue = ""
             test.invalid {
                 fail("should not run")
             }

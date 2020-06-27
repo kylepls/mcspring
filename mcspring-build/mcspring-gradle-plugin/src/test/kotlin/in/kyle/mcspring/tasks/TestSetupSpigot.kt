@@ -1,9 +1,7 @@
 package `in`.kyle.mcspring.tasks
 
+import `in`.kyle.mcspring.GradleContext
 import `in`.kyle.mcspring.div
-import `in`.kyle.mcspring.plusAssign
-import `in`.kyle.mcspring.runGradle
-import `in`.kyle.mcspring.writeBaseGradleConfig
 import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.file.shouldNotBeEmpty
@@ -13,18 +11,15 @@ import org.gradle.testkit.runner.TaskOutcome
 class TestSetupSpigot : FreeSpec({
 
     "setup spigot should make required files" - {
-        val folder = createTempDir()
-        val buildFile = folder / "build.gradle.kts"
-        writeBaseGradleConfig(buildFile)
-        val spigotJar = folder / "spigot" / "spigot.jar"
+        val gradle = GradleContext.setup()
+        val spigotJar = gradle.spigotFolder / "spigot.jar"
         spigotJar.parentFile.mkdirs()
         spigotJar.createNewFile()
 
-        val result = runGradle(folder, "setupSpigot")
-        val task = result.task(":setupSpigot")!!
+        val task = gradle.runTask("setupSpigot")
         task.outcome shouldBe TaskOutcome.SUCCESS
 
-        val spigot = folder/"spigot"
+        val spigot = gradle.spigotFolder
         assertSoftly {
             (spigot / "bukkit.yml").shouldNotBeEmpty()
             (spigot / "eula.txt").shouldNotBeEmpty()

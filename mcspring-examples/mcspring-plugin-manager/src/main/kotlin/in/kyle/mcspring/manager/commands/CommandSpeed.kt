@@ -1,5 +1,6 @@
 package `in`.kyle.mcspring.manager.commands
 
+import `in`.kyle.mcspring.commands.dsl.command
 import `in`.kyle.mcspring.commands.dsl.commandExecutor
 import `in`.kyle.mcspring.commands.dsl.mcspring.Command
 import org.bukkit.entity.Player
@@ -13,7 +14,7 @@ internal class CommandSpeed {
             description = "Set your movement and fly speed",
             usage = "/speed <player> <speed>"
     )
-    fun speed() = commandExecutor {
+    fun speed() = command {
         requirePlayer { message("Sender must be a player") }
         val player = sender as Player
         val speed = doubleArg {

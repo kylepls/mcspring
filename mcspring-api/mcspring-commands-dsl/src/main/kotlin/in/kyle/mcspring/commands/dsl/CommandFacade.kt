@@ -1,19 +1,17 @@
 package `in`.kyle.mcspring.commands.dsl
 
-fun command(lambda: CommandMeta.() -> Unit) = CommandMeta().apply { lambda(this) }
+fun commandMeta(lambda: CommandMeta.() -> Unit) = CommandMeta().apply { lambda(this) }
 
-infix fun CommandMeta.executor(lambda: CommandBuilder.() -> Unit): CommandMeta {
-    executor = commandExecutor(lambda)
+
+infix fun CommandMeta.commandExecutor(lambda: CommandBuilder.() -> Unit): CommandMeta {
+    executor = command(lambda)
     return this
 }
 
-fun commandExecutor(lambda: CommandBuilder.() -> Unit) =
+fun command(lambda: CommandBuilder.() -> Unit) =
         CommandExecutor { context: CommandContext ->
             CommandBuilder(context).let {
-                try {
-                    it.lambda()
-                } catch (e: ContextReciever.BreakParseException) {
-                }
+                it.lambda()
                 it.build()
             }
         }

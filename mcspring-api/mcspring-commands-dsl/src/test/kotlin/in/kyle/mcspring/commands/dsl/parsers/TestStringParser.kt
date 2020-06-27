@@ -1,6 +1,8 @@
 package `in`.kyle.mcspring.commands.dsl.parsers
 
 import `in`.kyle.mcspring.commands.dsl.CommandTestSupport.runCommand
+import `in`.kyle.mcspring.commands.dsl.TestException
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
@@ -14,17 +16,20 @@ class TestStringParser : FreeSpec({
         runCommand("test") {
             val arg0 = stringArg {  }
             arg0 shouldBe "test"
+            commandComplete()
         }
     }
 
     "missing called on empty string" - {
-        runCommand("") {
-            val arg0 = stringArg {
-                missing { message("missing arg") }
-                invalid { fail("should not run") }
+        shouldThrow<TestException> {
+            runCommand("") {
+                stringArg {
+                    invalid { fail("should not run") }
+                    missing { throw TestException() }
+                }
+                fail("should not run")
             }
-            fail("should not run")
-        } shouldBe "missing arg"
+        }
     }
 
     "multiple strings are parses correctly" - {
@@ -42,6 +47,8 @@ class TestStringParser : FreeSpec({
                 invalid { fail("should not run") }
             }
             arg1 shouldBe "arg2"
+
+            commandComplete()
         }
     }
 
@@ -53,6 +60,7 @@ class TestStringParser : FreeSpec({
                     invalid { fail("should not run") }
                 }
                 arg1 shouldBe it
+                commandComplete()
             }
         }
     }

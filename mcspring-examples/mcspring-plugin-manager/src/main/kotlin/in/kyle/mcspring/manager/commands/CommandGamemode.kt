@@ -1,5 +1,6 @@
 package `in`.kyle.mcspring.manager.commands
 
+import `in`.kyle.mcspring.commands.dsl.command
 import `in`.kyle.mcspring.commands.dsl.commandExecutor
 import `in`.kyle.mcspring.commands.dsl.mcspring.Command
 import org.bukkit.GameMode
@@ -17,7 +18,7 @@ internal class CommandGamemode {
             description = "Set your game mode",
             usage = "/gamemode <creative|survival...>"
     )
-    fun gamemode() = commandExecutor {
+    fun gamemode() = command {
         requirePlayer { message("Only players can run this command.") }
 
         val gameMode = mapArg<GameMode> {
@@ -32,14 +33,14 @@ internal class CommandGamemode {
         then { message(gamemodeExecutor(sender as Player, gameMode)) }
     }
 
+    @Command(value = "gmc", description = "Set your game mode to creative")
+    fun gmc() = command { then { message(gamemodeExecutor(sender as Player, GameMode.CREATIVE)) } }
+
+    @Command(value = "gms", description = "Set your game mode to survival")
+    fun gms() = command { then { message(gamemodeExecutor(sender as Player, GameMode.SURVIVAL)) } }
+
     private fun gamemodeExecutor(target: Player, gameMode: GameMode): String {
         target.gameMode = gameMode
         return "Game mode set to ${gameMode.name.toLowerCase()}"
     }
-
-    @Command(value = "gmc", description = "Set your game mode to creative")
-    fun gmc() = commandExecutor { then { message(gamemodeExecutor(sender as Player, GameMode.CREATIVE)) } }
-
-    @Command(value = "gms", description = "Set your game mode to survival")
-    fun gms() = commandExecutor { then { message(gamemodeExecutor(sender as Player, GameMode.SURVIVAL)) } }
 }

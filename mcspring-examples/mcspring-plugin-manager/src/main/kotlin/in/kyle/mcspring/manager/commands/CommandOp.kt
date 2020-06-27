@@ -1,5 +1,6 @@
 package `in`.kyle.mcspring.manager.commands
 
+import `in`.kyle.mcspring.commands.dsl.command
 import `in`.kyle.mcspring.commands.dsl.commandExecutor
 import `in`.kyle.mcspring.commands.dsl.mcspring.Command
 import org.bukkit.command.CommandSender
@@ -14,7 +15,7 @@ internal class CommandOp {
             description = "Toggle yourself or another players OP status",
             usage = "/op <player>?"
     )
-    fun op() = commandExecutor {
+    fun op() = command {
         val target = playerArg {
             default { sender as? Player }
             invalid { message("Player $it not found") }

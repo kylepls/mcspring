@@ -36,7 +36,7 @@ abstract class BaseParser<R>(
                 throw RunInvalidBlock()
             } else if (context.runExecutors) {
                 conditionFail(stringArg!!)
-                complete()
+                commandInvalid()
             }
         }
     }

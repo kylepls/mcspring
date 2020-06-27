@@ -1,9 +1,6 @@
 package `in`.kyle.mcspring.tasks
 
-import `in`.kyle.mcspring.div
-import `in`.kyle.mcspring.plusAssign
-import `in`.kyle.mcspring.runGradle
-import `in`.kyle.mcspring.writeBaseGradleConfig
+import `in`.kyle.mcspring.*
 import io.github.classgraph.ClassGraph
 import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.FreeSpec
@@ -16,31 +13,14 @@ import java.net.URLClassLoader
 class TestBuildPluginJar : FreeSpec({
 
     "should create proper plugin jar" - {
-        val folder = createTempDir()
-        val buildFile = folder / "build.gradle"
-        writeBaseGradleConfig(buildFile)
-        buildFile += """
-            |repositories {
-            |   mavenCentral()
-            |   mavenLocal()
-            |}
-            |dependencies {
-            |   implementation "org.jetbrains.kotlin:kotlin-stdlib"
-            |   implementation "in.kyle.mcspring:mcspring-base:+" 
-            |}
-            |mcspring {
-            |   pluginMainPackage = "main"
-            |}
-        """.trimMargin()
+        val gradle = GradleContext.setup()
 
-        val srcFile = folder / "src" / "main" / "kotlin" / "Base.kt"
-        srcFile += "fun test() { }"
+        (gradle.kotlinSourceFolder / "Base.kt") += "fun test() { }"
 
-        val result = runGradle(folder, "buildPluginJar")
-        val task = result.task(":buildPluginJar")!!
+        val task = gradle.runTask("buildPluginJar")
         task.outcome shouldBe TaskOutcome.SUCCESS
 
-        val pluginJar = (folder / "build" / "libs").listFiles()?.firstOrNull()
+        val pluginJar = gradle.libsFolder.listFiles()?.firstOrNull()
                 ?: error("Plugin jar not generated")
 
         val classLoader = URLClassLoader(arrayOf(pluginJar.toURI().toURL()))
@@ -61,8 +41,8 @@ class TestBuildPluginJar : FreeSpec({
 
             "plugin main should be relocated" - {
                 assertSoftly {
-                    scan.allClasses.filter { it.packageName == "main" }
-                            .map { it.name } shouldBe listOf("main.SpringJavaPlugin")
+                    scan.allClasses.filter { it.packageName == "test.plugin" }
+                            .map { it.name } shouldBe listOf("test.plugin.SpringJavaPlugin")
                 }
             }
 

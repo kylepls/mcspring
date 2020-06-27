@@ -16,6 +16,7 @@ class TestIntParser : FreeSpec({
                     missing { fail("should not run") }
                 }
                 arg0 shouldBe 123
+                commandComplete()
             }
         }
 
@@ -27,6 +28,7 @@ class TestIntParser : FreeSpec({
                         missing { fail("should not run") }
                     }
                     testArg shouldBe it
+                    commandComplete()
                 }
             }
         }

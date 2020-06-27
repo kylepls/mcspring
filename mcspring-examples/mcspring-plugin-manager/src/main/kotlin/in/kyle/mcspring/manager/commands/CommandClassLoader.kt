@@ -1,5 +1,6 @@
 package `in`.kyle.mcspring.manager.commands
 
+import `in`.kyle.mcspring.commands.dsl.command
 import `in`.kyle.mcspring.commands.dsl.commandExecutor
 import `in`.kyle.mcspring.commands.dsl.mcspring.Command
 import org.springframework.stereotype.Component
@@ -13,7 +14,7 @@ internal class CommandClassLoader {
             description = "Show ClassLoader information for a specific class",
             usage = "/classloader <class>"
     )
-    fun classLoader() = commandExecutor {
+    fun classLoader() = command {
         val className = stringArg {
             missing {
                 message("Usage: /$label <class>")

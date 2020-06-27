@@ -1,5 +1,6 @@
 package `in`.kyle.mcspring.manager.commands
 
+import `in`.kyle.mcspring.commands.dsl.command
 import `in`.kyle.mcspring.commands.dsl.commandExecutor
 import `in`.kyle.mcspring.commands.dsl.mcspring.Command
 import org.bukkit.Server
@@ -15,7 +16,7 @@ internal class CommandAbout(
 
     @Command(value = "about",
             description = "Provides information about current library versions in use")
-    fun about() = commandExecutor {
+    fun about() = command {
         then {
             val aboutString = """
             Plugin Name: ${properties.name}

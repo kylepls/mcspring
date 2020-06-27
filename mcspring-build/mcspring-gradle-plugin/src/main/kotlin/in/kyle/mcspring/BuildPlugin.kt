@@ -41,7 +41,6 @@ class BuildPlugin : Plugin<Project> {
             doFirst {
                 pluginsDir.mkdirs()
             }
-            mustRunAfter("buildServer")
             into(pluginsDir)
         }
 

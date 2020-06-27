@@ -4,12 +4,12 @@ import `in`.kyle.mcspring.commands.dsl.parsers.BaseParser
 import `in`.kyle.mcspring.commands.dsl.CommandContext
 import `in`.kyle.mcspring.commands.dsl.parsers.ConditionFail
 
-abstract class NumberParser<T>(context: CommandContext, stringArg: String) : BaseParser<T>(context, stringArg)
+abstract class NumberParser<T>(context: CommandContext, stringArg: String?) : BaseParser<T>(context, stringArg)
         where T : Number,
               T : Comparable<T> {
 
     init {
-        returnValue = parse(stringArg)
+        returnValue = if (stringArg != null) this.parse(stringArg) else null
     }
 
     internal abstract fun toNumber(s: String): T?

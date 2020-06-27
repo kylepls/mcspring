@@ -1,5 +1,6 @@
 package `in`.kyle.mcspring.manager.commands
 
+import `in`.kyle.mcspring.commands.dsl.command
 import `in`.kyle.mcspring.manager.controller.PluginController
 import `in`.kyle.mcspring.commands.dsl.commandExecutor
 import `in`.kyle.mcspring.commands.dsl.mcspring.Command
@@ -18,7 +19,7 @@ internal class CommandPlugin(private val pluginController: PluginController) {
             description = "Load/unload/reload a specific plugin",
             usage = "/plugin <load|unload|list>"
     )
-    fun plugin() = commandExecutor {
+    fun plugin() = command {
         subcommand {
             on("load", commandExecutor = load())
             on("unload", commandExecutor = unload())
@@ -31,7 +32,7 @@ internal class CommandPlugin(private val pluginController: PluginController) {
         }
     }
 
-    private fun load() = commandExecutor {
+    private fun load() = command {
         val path = mapArg<Path> {
             parser {
                 map(pluginController.loadablePlugins)
@@ -41,7 +42,7 @@ internal class CommandPlugin(private val pluginController: PluginController) {
         then { executeLoad(path) }
     }
 
-    private fun unload() = commandExecutor {
+    private fun unload() = command {
         val plugin = mapArg<Plugin> {
             parser {
                 map(pluginController.plugins.associateBy({ it.name }, { it }))

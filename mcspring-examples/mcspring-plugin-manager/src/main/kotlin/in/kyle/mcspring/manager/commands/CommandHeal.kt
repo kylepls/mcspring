@@ -1,5 +1,6 @@
 package `in`.kyle.mcspring.manager.commands
 
+import `in`.kyle.mcspring.commands.dsl.command
 import `in`.kyle.mcspring.commands.dsl.commandExecutor
 import `in`.kyle.mcspring.commands.dsl.mcspring.Command
 import org.bukkit.entity.Player
@@ -13,7 +14,7 @@ internal class CommandHeal {
             description = "Heal yourself or another player",
             usage = "/heal <player>?"
     )
-    fun heal() = commandExecutor {
+    fun heal() = command {
         requirePlayer { message("Sender must be a player") }
 
         val target = playerArg {

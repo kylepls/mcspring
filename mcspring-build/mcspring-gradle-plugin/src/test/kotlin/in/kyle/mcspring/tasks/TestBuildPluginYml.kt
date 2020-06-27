@@ -1,47 +1,35 @@
 package `in`.kyle.mcspring.tasks
 
+import `in`.kyle.mcspring.GradleContext
 import `in`.kyle.mcspring.div
 import `in`.kyle.mcspring.plusAssign
-import `in`.kyle.mcspring.runGradle
-import `in`.kyle.mcspring.writeBaseGradleConfig
 import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldEndWith
 import org.gradle.testkit.runner.TaskOutcome
-import org.yaml.snakeyaml.Yaml
 
 class TestBuildPluginYml : FreeSpec({
 
     "should write minimum required info" - {
-        val folder = createTempDir()
-        val buildFile = folder / "build.gradle.kts"
-        writeBaseGradleConfig(buildFile)
-        buildFile += """
-            version = "29"
-        """.trimIndent()
+        val gradle = GradleContext.setup()
+        gradle.buildFile += """version = "29" """
 
-        val result = runGradle(folder, "buildPluginYml")
-        val task = result.task(":buildPluginYml")!!
+        val task = gradle.runTask("buildPluginYml")
         task.outcome shouldBe TaskOutcome.SUCCESS
 
-        val pluginYml = folder / "build" / "resources" / "main" / "plugin.yml"
-        val yml = Yaml().load<Map<String, Any>>(pluginYml.inputStream())
-
-        assertSoftly {
-            yml.size shouldBe 3
-            yml["name"].toString() shouldEndWith ".tmp"
-            yml["version"] shouldBe "29"
-            yml["main"].toString() shouldEndWith ".SpringJavaPlugin"
+        gradle.pluginYmlContents.assertSoftly {
+            it.size shouldBe 4
+            it["name"] shouldBe "test"
+            it["version"] shouldBe "29"
+            it["main"].toString() shouldEndWith ".SpringJavaPlugin"
+            it["spring-boot-main"] shouldBe "ExampleMain"
         }
     }
 
     "should write all user-specified info properly" - {
-        val folder = createTempDir()
-        val buildFile = folder / "build.gradle"
-        writeBaseGradleConfig(buildFile)
-        // For some reason this doesn't work with the Kotlin dsl???
-        buildFile += """
+        val gradle = GradleContext.setup()
+        gradle.buildFile += """
             |mcspring {
             |   pluginDescription = "test description"
             |   pluginLoad = "startup"
@@ -54,78 +42,44 @@ class TestBuildPluginYml : FreeSpec({
             |}
         """.trimMargin()
 
-        val result = runGradle(folder, "buildPluginYml")
-        val task = result.task(":buildPluginYml")!!
+        val task = gradle.runTask("buildPluginYml")
         task.outcome shouldBe TaskOutcome.SUCCESS
 
-        val pluginYml = folder / "build" / "resources" / "main" / "plugin.yml"
-        val yml = Yaml().load<Map<String, Any>>(pluginYml.inputStream())
-
-        assertSoftly {
-            yml["description"] shouldBe "test description"
-            yml["load"] shouldBe "startup"
-            yml["author"] shouldBe "kyle"
-            yml["authors"] shouldBe listOf("kyle1", "kyle2")
-            yml["website"] shouldBe "github"
-            yml["database"] shouldBe true
-            yml["prefix"] shouldBe "prefix"
-            yml["loadbefore"] shouldBe listOf("other")
+        gradle.pluginYmlContents.assertSoftly {
+            it["description"] shouldBe "test description"
+            it["load"] shouldBe "startup"
+            it["author"] shouldBe "kyle"
+            it["authors"] shouldBe listOf("kyle1", "kyle2")
+            it["website"] shouldBe "github"
+            it["database"] shouldBe true
+            it["prefix"] shouldBe "prefix"
+            it["loadbefore"] shouldBe listOf("other")
         }
     }
 
     "should write dependency tags" - {
-        val folder = createTempDir()
-        val buildFile = folder / "build.gradle.kts"
-        writeBaseGradleConfig(buildFile)
-        buildFile += """
-            |repositories {
-            |   mavenCentral()
-            |   mavenLocal()
-            |}
-            |dependencies {
-            |    implementation("in.kyle.mcspring:mcspring-base:+")
-            |}
-        """.trimMargin()
+        val gradle = GradleContext.setup()
 
-        val srcFile = folder / "src" / "main" / "kotlin" / "Example.kt"
-        srcFile += """
+        (gradle.kotlinSourceFolder / "Example.kt") += """
             |import `in`.kyle.mcspring.annotation.*
             |@PluginDepend("plugin")
             |@SoftPluginDepend("plugin2")
             |class Example
         """.trimMargin()
 
-        val result = runGradle(folder, "buildPluginYml")
-        val task = result.task(":buildPluginYml")!!
+        val task = gradle.runTask("buildPluginYml")
         task.outcome shouldBe TaskOutcome.SUCCESS
 
-        val pluginYml = folder / "build" / "resources" / "main" / "plugin.yml"
-        val yml = Yaml().load<Map<String, Any>>(pluginYml.inputStream())
-
-        assertSoftly {
-            yml["depend"] shouldBe listOf("plugin")
-            yml["softdepend"] shouldBe listOf("plugin2")
+        gradle.pluginYmlContents.assertSoftly {
+            it["depend"] shouldBe listOf("plugin")
+            it["softdepend"] shouldBe listOf("plugin2")
         }
     }
 
     "should write commands" - {
-        val folder = createTempDir()
-        val buildFile = folder / "build.gradle.kts"
-        writeBaseGradleConfig(buildFile)
-        buildFile += """
-            |repositories {
-            |   mavenCentral()
-            |   mavenLocal()
-            |}
-            |dependencies {
-            |    implementation(kotlin("stdlib"))
-            |    implementation("in.kyle.mcspring:mcspring-base:+")
-            |    implementation("in.kyle.mcspring:mcspring-commands-dsl:+")
-            |}
-        """.trimMargin()
+        val gradle = GradleContext.setup()
 
-        val srcFile = folder / "src" / "main" / "kotlin" / "Command.kt"
-        srcFile += """
+        (gradle.kotlinSourceFolder / "Command.kt") += """
             |import `in`.kyle.mcspring.commands.dsl.mcspring.Command
             |@Command(
             |        value = "test",
@@ -138,14 +92,10 @@ class TestBuildPluginYml : FreeSpec({
             |fun test() { }
         """.trimMargin()
 
-        val result = runGradle(folder, "buildPluginYml")
-        val task = result.task(":buildPluginYml")!!
+        val task = gradle.runTask("buildPluginYml")
         task.outcome shouldBe TaskOutcome.SUCCESS
 
-        val pluginYml = folder / "build" / "resources" / "main" / "plugin.yml"
-        val yml = Yaml().load<Map<String, Any>>(pluginYml.inputStream())
-
-        yml["commands"] shouldBe mapOf(
+        gradle.pluginYmlContents["commands"] shouldBe mapOf(
                 "test" to mapOf(
                         "description" to "a test command",
                         "aliases" to listOf("t"),
@@ -157,35 +107,17 @@ class TestBuildPluginYml : FreeSpec({
     }
 
     "should add minimal info to commands" - {
-        val folder = createTempDir()
-        val buildFile = folder / "build.gradle.kts"
-        writeBaseGradleConfig(buildFile)
-        buildFile += """
-            |repositories {
-            |   mavenCentral()
-            |   mavenLocal()
-            |}
-            |dependencies {
-            |    implementation(kotlin("stdlib"))
-            |    implementation("in.kyle.mcspring:mcspring-base:+")
-            |    implementation("in.kyle.mcspring:mcspring-commands-dsl:+")
-            |}
-        """.trimMargin()
+        val gradle = GradleContext.setup()
 
-        val srcFile = folder / "src" / "main" / "kotlin" / "Command.kt"
-        srcFile += """
+        (gradle.kotlinSourceFolder / "Command.kt") += """
             |import `in`.kyle.mcspring.commands.dsl.mcspring.Command
             |@Command("test")
             |fun test() { }
         """.trimMargin()
 
-        val result = runGradle(folder, "buildPluginYml")
-        val task = result.task(":buildPluginYml")!!
+        val task = gradle.runTask("buildPluginYml")
         task.outcome shouldBe TaskOutcome.SUCCESS
 
-        val pluginYml = folder / "build" / "resources" / "main" / "plugin.yml"
-        val yml = Yaml().load<Map<String, Any>>(pluginYml.inputStream())
-
-        yml["commands"] shouldBe mapOf("test" to emptyMap<Any, Any>())
+        gradle.pluginYmlContents["commands"] shouldBe mapOf("test" to emptyMap<Any, Any>())
     }
 })

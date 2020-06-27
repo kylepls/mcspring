@@ -13,11 +13,28 @@ open class ContextReciever(val context: CommandContext) {
         }
     }
 
+    fun tabCompletions(vararg strings: String) = context.tabCompletions.addAll(strings)
+    fun tabCompletions(strings: List<String>) = context.tabCompletions.addAll(strings)
+
     fun hasNextArg() = context.argIndex < context.args.size
 
-    fun complete(): Nothing = throw BreakParseException()
+    fun commandMissing() {
+        throw BreakParseException.ParseMissingException()
+    }
 
-    class BreakParseException : RuntimeException()
+    fun commandInvalid() {
+        throw BreakParseException.ParseInvalidException()
+    }
+
+    fun commandComplete() {
+        throw BreakParseException.ParseCompletedException()
+    }
+
+    sealed class BreakParseException : RuntimeException() {
+        class ParseCompletedException : BreakParseException()
+        class ParseMissingException : BreakParseException()
+        class ParseInvalidException : BreakParseException()
+    }
 }
 
 data class ParsedCommand(

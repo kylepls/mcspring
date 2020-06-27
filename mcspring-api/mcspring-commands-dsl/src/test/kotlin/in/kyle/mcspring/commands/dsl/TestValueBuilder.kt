@@ -2,9 +2,7 @@ package `in`.kyle.mcspring.commands.dsl
 
 import `in`.kyle.mcspring.commands.dsl.CommandTestSupport.makeContext
 import `in`.kyle.mcspring.commands.dsl.parsers.numbers.IntParser
-import io.kotest.assertions.failure
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.assertions.throwables.shouldThrowMessage
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 
@@ -22,7 +20,7 @@ class TestValueBuilder : FreeSpec({
         builder.returnValue shouldBe 1
     }
 
-    "default should not overwrite" - {
+    "default should not overwrite existing" - {
         val context = makeContext("one").first
         val builder = ValueBuilder(context) { IntParser(context, it) }
         builder.returnValue = 99
@@ -39,11 +37,10 @@ class TestValueBuilder : FreeSpec({
         val context = makeContext("").first
         val builder = ValueBuilder(context) { IntParser(context, it) }
 
-        builder.apply {
-            class Test : RuntimeException()
-            shouldThrow<Test> {
+        shouldThrow<TestException> {
+            builder.apply {
                 missing {
-                    throw Test()
+                    throw TestException()
                 }
             }
         }

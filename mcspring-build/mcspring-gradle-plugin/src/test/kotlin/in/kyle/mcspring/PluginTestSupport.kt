@@ -4,35 +4,6 @@ import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import java.io.File
 
-fun writeBaseGradleConfig(file: File) {
-    file += """
-        |plugins {
-        |   id("org.jetbrains.kotlin.jvm") version "1.3.72"
-        |   id("in.kyle.mcspring")
-        |}
-        |
-        |repositories {
-        |   jcenter()
-        |}
-    """.trimMargin()
-    val settings = file.parentFile / "settings.gradle.kts"
-    settings += """
-        |plugins {
-        |   id("com.gradle.enterprise").version("3.3.4")
-        |}
-        |gradleEnterprise {
-        |    buildScan {
-        |        termsOfServiceUrl = "https://gradle.com/terms-of-service"
-        |        termsOfServiceAgree = "yes"
-        |    }
-        |}
-    """.trimMargin()
-    val gradleProperties = file.parentFile / "gradle.properties"
-    gradleProperties += """
-        org.gradle.jvmargs=-Xmx1024m
-    """.trimIndent()
-}
-
 fun runGradle(folder: File, vararg args: String): BuildResult {
     return GradleRunner.create()
             .withProjectDir(folder)

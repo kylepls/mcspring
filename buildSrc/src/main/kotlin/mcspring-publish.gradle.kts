@@ -1,5 +1,4 @@
 import com.jfrog.bintray.gradle.BintrayExtension
-import java.sql.Date
 
 plugins {
     kotlin("jvm")
@@ -7,7 +6,7 @@ plugins {
     id("com.jfrog.bintray")
 }
 
-tasks.create<Jar>("sourcesJar") {
+val sourcesJar by tasks.creating(Jar::class) {
     archiveClassifier.set("sources")
     from(sourceSets.getByName("main").allSource)
     dependsOn(tasks.classes)
@@ -39,7 +38,9 @@ publishing {
             artifactId = artifactName
             version = artifactVersion
             from(components["java"])
-            artifact(tasks.findByName("sourcesJar"))
+            artifact(sourcesJar) {
+                classifier = "sources"
+            }
 
             pom.withXml {
                 asNode().apply {

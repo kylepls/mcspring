@@ -6,11 +6,13 @@ import org.bukkit.entity.Player
 
 class PlayerParser(
         context: CommandContext,
-        stringArg: String
+        stringArg: String?
 ) : BaseParser<Player>(context, stringArg) {
     init {
         val players = Bukkit.getOnlinePlayers()
         context.tabCompletions.addAll(players.map { it.name })
-        returnValue = Bukkit.getPlayer(stringArg)
+        if (stringArg != null) {
+            returnValue = Bukkit.getPlayer(stringArg)
+        }
     }
 }

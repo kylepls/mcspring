@@ -11,9 +11,12 @@ class TestSubcommandBuilder : FreeSpec({
         val context = makeContext("").first
         val builder = SubcommandBuilder(context)
 
-        builder.apply {
-            shouldThrow<ContextReciever.BreakParseException> {
-                missing {}
+        shouldThrow<TestException> {
+            builder.apply {
+                on("test") {}
+                missing {
+                    throw TestException()
+                }
             }
         }
     }
@@ -22,9 +25,11 @@ class TestSubcommandBuilder : FreeSpec({
         val context = makeContext("arg1").first
         val builder = SubcommandBuilder(context)
 
-        builder.apply {
-            shouldThrow<ContextReciever.BreakParseException> {
-                invalid {}
+        shouldThrow<TestException> {
+            builder.apply {
+                invalid {
+                    throw TestException()
+                }
             }
         }
     }
@@ -33,10 +38,11 @@ class TestSubcommandBuilder : FreeSpec({
         val context = makeContext("sub1").first
         val builder = SubcommandBuilder(context)
 
-        builder.apply {
-            shouldThrow<ContextReciever.BreakParseException> {
+        shouldThrow<TestException> {
+            builder.apply {
                 on("sub1") {
                     context.argIndex shouldBe 1
+                    throw TestException()
                 }
             }
         }

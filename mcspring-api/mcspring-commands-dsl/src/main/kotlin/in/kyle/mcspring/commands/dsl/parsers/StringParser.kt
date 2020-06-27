@@ -2,7 +2,7 @@ package `in`.kyle.mcspring.commands.dsl.parsers
 
 import `in`.kyle.mcspring.commands.dsl.CommandContext
 
-class StringParser(context: CommandContext, stringArg: String) : BaseParser<String>(context, stringArg) {
+class StringParser(context: CommandContext, stringArg: String?) : BaseParser<String>(context, stringArg) {
     init {
         returnValue = stringArg
     }

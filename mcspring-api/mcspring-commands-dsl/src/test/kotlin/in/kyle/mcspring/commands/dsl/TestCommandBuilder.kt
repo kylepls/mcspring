@@ -6,7 +6,6 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
-import java.lang.RuntimeException
 
 class TestCommandBuilder : FreeSpec({
 
@@ -14,6 +13,7 @@ class TestCommandBuilder : FreeSpec({
         "require(true) should not fail" - {
             runCommand("test") {
                 require({ true }) { fail("should not run") }
+                commandComplete()
             }
         }
 
@@ -24,18 +24,31 @@ class TestCommandBuilder : FreeSpec({
         }
     }
 
+    "missing arg should work" - {
+        shouldThrow<TestException> {
+            runCommand("") {
+                stringArg {
+                    missing {
+                        throw TestException()
+                    }
+                }
+            }
+        }
+    }
+
     "then should only run while executors are enabled" - {
         "test disabled" - {
-            CommandBuilder(CommandContext(mockk(), "test", listOf(), mutableListOf(), runExecutors = false)).apply {
-                then {
-                    fail("should not run")
+            shouldThrow<ContextReciever.BreakParseException> {
+                CommandBuilder(CommandContext(mockk(), "test", listOf(), mutableListOf(), runExecutors = false)).apply {
+                    then {
+                        fail("should not run")
+                    }
                 }
             }
         }
         "test enabled" - {
-            runCommand("test") {
-                class TestException : RuntimeException()
-                shouldThrow<TestException> {
+            shouldThrow<TestException> {
+                runCommand("test") {
                     then {
                         throw TestException()
                     }
