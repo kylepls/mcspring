@@ -41,7 +41,7 @@ class TestTabCompletions : FreeSpec({
             }
 
             commandComplete()
-        } shouldBe listOf("two")
+        } shouldBe emptyList()
     }
 
     "invalid arg values should stop parsing" - {
