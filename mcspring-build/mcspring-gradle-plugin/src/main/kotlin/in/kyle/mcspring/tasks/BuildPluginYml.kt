@@ -194,7 +194,7 @@ open class BuildPluginYml : DefaultTask() {
         require(mains.size == 1) {
             """
                 There should be 1 main class on the classpath: $mains
-                Make sure to annotate a class with @SpringPlugin
+                Make sure to annotate a class with @SpringBootApplication
                 This serves as an entry point for mcspring.
             """.trimIndent()
         }
