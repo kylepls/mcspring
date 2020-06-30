@@ -19,6 +19,11 @@ open class McSpringExtension(project: Project) {
     var pluginDatabase: Boolean? = null
     var pluginPrefix: String? = null
     var pluginLoadBefore: List<String>? = null
+    var pluginApiVersion: String? = null
+
+    fun latestApiVersion() {
+        pluginApiVersion = "1.13"
+    }
 
     enum class Load {
         STARTUP, POSTWORLD

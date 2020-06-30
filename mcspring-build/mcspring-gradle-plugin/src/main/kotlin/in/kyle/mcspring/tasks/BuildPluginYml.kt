@@ -35,6 +35,7 @@ open class BuildPluginYml : DefaultTask() {
 
             fun writeNonNull(key: String, value: Any?) = value?.apply { attributes[key] = this }
 
+            writeNonNull("api-version", pluginApiVersion)
             writeNonNull("description", pluginDescription)
             writeNonNull("load", pluginLoad?.toString()?.toLowerCase())
             writeNonNull("author", pluginAuthor)
@@ -220,6 +221,7 @@ open class BuildPluginYml : DefaultTask() {
             logger.info("Plugin Database: $pluginDatabase")
             logger.info("Plugin Prefix: $pluginPrefix")
             logger.info("Plugin Load Before: $pluginLoadBefore")
+            logger.info("Plugin API Version: $pluginApiVersion")
         }
     }
 }

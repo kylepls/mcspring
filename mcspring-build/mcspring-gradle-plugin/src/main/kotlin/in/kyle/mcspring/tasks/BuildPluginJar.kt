@@ -49,6 +49,8 @@ open class BuildPluginJar : ShadowJar() {
     private fun setup() {
         entryCompression = ZipEntryCompression.STORED
         includeEmptyDirs = false
+        val name = project.extensions.mcspring.pluginName ?: project.name
+        archiveBaseName.set(name)
         archiveClassifier.set("")
 
         val springJar = project.buildDir / "libs" / "spring.jar"
