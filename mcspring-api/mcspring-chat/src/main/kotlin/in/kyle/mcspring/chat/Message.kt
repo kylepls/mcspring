@@ -42,10 +42,6 @@ object StringSupport {
     infix fun String.suggest(command: String): TextComponent {
         return toTextComponent() suggest command
     }
-
-    operator fun String.plus(textComponent: TextComponent): TextComponent {
-        return TextComponent(toTextComponent(), textComponent)
-    }
 }
 
 object TextComponentSupport {

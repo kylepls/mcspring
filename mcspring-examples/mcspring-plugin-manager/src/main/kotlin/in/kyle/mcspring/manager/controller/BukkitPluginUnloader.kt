@@ -4,34 +4,39 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandMap
 import org.bukkit.command.PluginCommand
 import org.bukkit.command.SimpleCommandMap
+import org.bukkit.event.Event
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.PluginManager
+import org.bukkit.plugin.RegisteredListener
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component
 import java.net.URLClassLoader
+import java.util.*
 import javax.annotation.PostConstruct
 
 @Lazy
 @Component
-@ConditionalOnBean(Plugin::class)
 class BukkitPluginUnloader(
         private val pluginManager: PluginManager,
         private val commandMap: CommandMap
 ) {
 
-    private val commands = mutableMapOf<String, Command>()
-    private val plugins = mutableListOf<Plugin>()
-    private val names = mutableMapOf<String, Plugin>()
+    private lateinit var commands: MutableMap<String, Command>
+    private lateinit var plugins: MutableList<Plugin>
+    private lateinit var names: MutableMap<String, Plugin>
+    private lateinit var listeners: MutableMap<Event, SortedSet<RegisteredListener>>
 
     @PostConstruct
     fun setup() {
-        plugins.addAll(getDeclaredField(pluginManager, "plugins"))
-        names.putAll(getDeclaredField(pluginManager, "lookupNames"))
-        val knownCommands = SimpleCommandMap::class.java.getDeclaredField("knownCommands")
-        knownCommands.isAccessible = true
+        plugins = getDeclaredField(pluginManager, "plugins")
+        names = getDeclaredField(pluginManager, "lookupNames")
+        listeners = getDeclaredField(pluginManager, "listeners")
+        val knownCommands = SimpleCommandMap::class.java.getDeclaredField("knownCommands").apply {
+            isAccessible = true
+        }
         @Suppress("UNCHECKED_CAST")
-        commands.putAll(knownCommands.get(commandMap) as Map<String, Command>)
+        commands = knownCommands.get(commandMap) as MutableMap<String, Command>
     }
 
     fun unload(plugin: Plugin): Boolean {
@@ -39,6 +44,7 @@ class BukkitPluginUnloader(
         synchronized(pluginManager) {
             plugins.remove(plugin)
             names.remove(plugin.name)
+            unregisterListeners(plugin)
             unregisterCommands(plugin)
             closeClassLoader(plugin.javaClass.classLoader)
         }
@@ -50,7 +56,12 @@ class BukkitPluginUnloader(
         val unregister = commands.entries
                 .filter { (it.value as? PluginCommand)?.plugin === plugin }
                 .toSet()
-        unregister.forEach { it.value.unregister(commandMap); commands.remove(it.key) }
+        unregister.forEach { it.value.unregister(commandMap) }
+        unregister.forEach { commands.remove(it.key) }
+    }
+
+    private fun unregisterListeners(plugin: Plugin) {
+        listeners.entries.removeIf { entry -> entry.value.all { it.plugin == plugin } }
     }
 
     private fun closeClassLoader(classLoader: ClassLoader) {

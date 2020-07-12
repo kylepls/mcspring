@@ -1,6 +1,13 @@
 plugins {
     kotlin("jvm") version "1.3.72"
-    id("in.kyle.mcspring") version "0.0.2" apply false
+    id("in.kyle.mcspring") version "0.1.0" apply false
+}
+
+allprojects {
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+        kotlinOptions.suppressWarnings = true
+        kotlinOptions.jvmTarget = "1.8"
+    }
 }
 
 subprojects {
@@ -18,5 +25,12 @@ subprojects {
         val spigotVersion = "1.15.2-R0.1-SNAPSHOT"
         compileOnly("org.spigotmc:spigot-api:$spigotVersion")
         implementation(kotlin("stdlib"))
+
+        testImplementation("org.spigotmc:spigot-api:$spigotVersion")
+        testImplementation("org.junit.jupiter:junit-jupiter:5.6.2")
+    }
+
+    tasks.test {
+        useJUnitPlatform()
     }
 }

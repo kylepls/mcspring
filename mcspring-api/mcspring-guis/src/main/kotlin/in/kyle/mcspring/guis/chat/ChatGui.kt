@@ -47,6 +47,12 @@ open class ChatGuiDrawer(val chat: ChatGui) : ClickContext(chat) {
         chat.actions.add(lambda)
     }
 
+    fun clear() {
+        repeat(101) {
+            chat.player.sendMessage(" ")
+        }
+    }
+
     fun redraw() = chat.redraw()
     fun close() = chat.close()
     fun enable() = chat.enable()

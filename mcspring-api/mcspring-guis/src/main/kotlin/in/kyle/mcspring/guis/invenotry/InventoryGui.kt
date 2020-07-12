@@ -5,17 +5,20 @@ import `in`.kyle.mcspring.guis.ClickContext
 import `in`.kyle.mcspring.guis.ClickableGui
 import `in`.kyle.mcspring.guis.item.ItemBuilder
 import `in`.kyle.mcspring.rx.observeEvent
+import `in`.kyle.mcspring.rx.syncScheduler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType.*
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.event.inventory.InventoryEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
+import java.util.concurrent.TimeUnit
 
 class InventorySetup(gui: InventoryGui) : InventoryDrawer(gui) {
     val listenerSubscription: CompositeDisposable = gui.listenerSubscription
@@ -108,6 +111,13 @@ class InventoryGui constructor(
         }
     }
 
+    override fun enable() {
+        if (player.openInventory.topInventory != bukkitInventory) {
+            player.openInventory(bukkitInventory)
+        }
+        super.enable()
+    }
+
     override fun registerListeners(): CompositeDisposable {
         val listeners = CompositeDisposable()
         listeners.add(plugin.observeEvent(InventoryClickEvent::class)
@@ -120,8 +130,16 @@ class InventoryGui constructor(
             })
 
         listeners.add(plugin.observeEvent(InventoryDragEvent::class)
-            .filter { event -> event.inventory == bukkitInventory }
+            .filter { it.inventory == bukkitInventory }
             .subscribe { it.isCancelled = true })
+
+        listeners.add(plugin.observeEvent(InventoryCloseEvent::class)
+                .filter { it.player == player }
+                .subscribe {
+                    listeners.add(plugin.syncScheduler().scheduleDirect({
+                        it.player.openInventory(bukkitInventory)
+                    }, 100, TimeUnit.MILLISECONDS))
+                })
         return listeners
     }
 
@@ -160,6 +178,10 @@ class InventoryItemBuilder {
 
     fun itemStack(lambda: ItemBuilder.() -> Unit) {
         this.itemStack = ItemBuilder.create(lambda)
+    }
+
+    fun itemStack(itemStack: ItemStack) {
+        this.itemStack = itemStack
     }
 
     fun onClick(lambda: ClickContext.() -> Unit) {

@@ -1,9 +1,12 @@
+import `in`.kyle.mcspring.mcspring
+
 dependencies {
-    implementation("in.kyle.mcspring:mcspring-base:+")
-    implementation("in.kyle.mcspring:mcspring-commands-dsl:+")
+    implementation(mcspring("base"))
+    implementation(mcspring("commands-dsl"))
+    testImplementation(mcspring("e2e"))
 }
 
 mcspring {
     pluginAuthor = "kylepls"
-    pluginMainPackage = "test"
+    pluginMainPackage = "in.kyle.mcspring.pluginmanager"
 }

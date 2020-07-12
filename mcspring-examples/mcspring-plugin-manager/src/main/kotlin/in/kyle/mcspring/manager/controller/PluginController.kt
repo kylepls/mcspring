@@ -14,7 +14,6 @@ import java.util.logging.Logger
 import java.util.stream.Collectors
 
 @Controller
-@ConditionalOnBean(Plugin::class)
 class PluginController(
         private val pluginManager: PluginManager,
         private val pluginLoader: PluginLoader,
@@ -22,9 +21,10 @@ class PluginController(
         private val logger: Logger
 ) {
 
+    val pluginsFolder = Paths.get("plugins")
+
     val loadablePlugins: Map<String, Path>
         get() {
-            val pluginsFolder = Paths.get("plugins")
             return Files.list(pluginsFolder)
                     .filter { it.toString().endsWith(".jar") }
                     .filter { getPluginName(it) != null }
@@ -64,6 +64,24 @@ class PluginController(
             }
         }
         return false
+    }
+
+    fun isPluginJar(jar: Path): Boolean {
+        return try {
+            pluginLoader.getPluginDescription(jar.toFile())
+            true
+        } catch (_: InvalidDescriptionException) {
+            false
+        }
+    }
+
+    fun reload(jar: Path) {
+        val description = pluginLoader.getPluginDescription(jar.toFile())
+        val name = description.name
+        val plugin = getPlugin(name)
+        requireNotNull(plugin) {"Plugin $name is not loaded and therefore cannot be reloaded."}
+        unload(plugin)
+        load(jar)
     }
 
     fun getPlugin(name: String): Plugin? {

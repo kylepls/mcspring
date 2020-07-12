@@ -11,9 +11,9 @@ include(":mcspring-api:mcspring-vault")
 include(":mcspring-api:mcspring-rx")
 include(":mcspring-api:mcspring-guis")
 include(":mcspring-api:mcspring-chat")
-
-include(":mcspring-build")
-include(":mcspring-build:mcspring-gradle-plugin")
+include(":mcspring-api:mcspring-chat-actions")
+include(":mcspring-api:mcspring-gradle-plugin")
+include(":mcspring-api:mcspring-e2e")
 
 gradleEnterprise {
     buildScan {

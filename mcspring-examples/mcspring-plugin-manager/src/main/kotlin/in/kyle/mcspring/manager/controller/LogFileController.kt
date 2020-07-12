@@ -8,7 +8,6 @@ import java.nio.file.Paths
 import javax.annotation.PostConstruct
 
 @Controller
-@ConditionalOnBean(Plugin::class)
 internal class LogFileController {
 
     private val logsFolder = Paths.get("logs")

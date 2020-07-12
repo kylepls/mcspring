@@ -28,31 +28,56 @@ object Gui {
             player: Player,
             title: String,
             size: InventorySize = InventorySize.ONE_LINE,
+            parent: ClickableGui<out Any, out Any>? = null,
             lambda: GuiBuilder<InventorySetup, InventoryDrawer>.() -> Unit
     ): Disposable {
+        require(parent?.isDisabled() ?: true) { "Cannot open GUIs over each other." }
         val gui = InventoryGui(
                 size.slots,
                 title,
                 plugin,
                 player,
-                currentGuis[player]
+                parent
         )
         return setup(gui, lambda)
     }
 
-    fun hotbar(player: Player, lambda: GuiBuilder<HotbarSetup, HotbarDrawer>.() -> Unit): Disposable {
-        val gui = HotbarGui(
-                plugin,
-                player,
-                currentGuis[player]
-        )
+    fun inventoryWithParent(
+            player: Player,
+            title: String,
+            size: InventorySize = InventorySize.ONE_LINE,
+            lambda: GuiBuilder<InventorySetup, InventoryDrawer>.() -> Unit
+    ) = inventory(player, title, size, currentGuis[player], lambda)
+
+    fun hotbar(
+            player: Player,
+            parent: ClickableGui<out Any, out Any>? = null,
+            lambda: GuiBuilder<HotbarSetup, HotbarDrawer>.() -> Unit
+    ): Disposable {
+        require(parent?.isDisabled() ?: true) { "Cannot open GUIs over each other." }
+        val gui = HotbarGui(plugin, player, parent)
         return setup(gui, lambda)
     }
 
-    fun chat(player: Player, lambda: GuiBuilder<ChatGuiSetup, ChatGuiDrawer>.() -> Unit): Disposable {
-        val gui = ChatGui(plugin, player, currentGuis[player])
+    fun hotbarWithParent(
+            player: Player,
+            lambda: GuiBuilder<HotbarSetup, HotbarDrawer>.() -> Unit
+    ) = hotbar(player, currentGuis[player], lambda)
+
+    fun chat(
+            player: Player,
+            parent: ClickableGui<out Any, out Any>? = null,
+            lambda: GuiBuilder<ChatGuiSetup, ChatGuiDrawer>.() -> Unit
+    ): Disposable {
+        require(parent?.isDisabled() ?: true) { "Cannot open GUIs over each other." }
+        val gui = ChatGui(plugin, player, parent)
         return setup(gui, lambda)
     }
+
+    fun chatWithParent(
+            player: Player,
+            lambda: GuiBuilder<ChatGuiSetup, ChatGuiDrawer>.() -> Unit
+    ) = chat(player, currentGuis[player], lambda)
 
     @Suppress("UNCHECKED_CAST")
     private fun <Drawer, Setup> setup(

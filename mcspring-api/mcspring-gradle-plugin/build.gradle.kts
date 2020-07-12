@@ -4,14 +4,6 @@ plugins {
     id("java-gradle-plugin")
 }
 
-group = "in.kyle.mcspring"
-version = "0.0.2"
-
-repositories {
-    jcenter()
-    mavenCentral()
-}
-
 val createClasspathManifest = tasks.create("createClasspathManifest") {
     val outputDir = buildDir.resolve(name)
 
@@ -65,4 +57,10 @@ dependencies {
     testImplementation("io.kotest:kotest-runner-console-jvm:$kotestVersion")
 
     testRuntimeOnly(files(createClasspathManifest))
+}
+
+tasks.withType<Jar>() {
+    manifest {
+        attributes("Implementation-Version" to archiveVersion.get())
+    }
 }

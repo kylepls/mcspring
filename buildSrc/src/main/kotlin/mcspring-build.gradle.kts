@@ -15,13 +15,13 @@ repositories {
 dependencies {
     val spigotVersion = "1.15.2-R0.1-SNAPSHOT"
     compileOnly("org.spigotmc:spigot-api:$spigotVersion")
-    testImplementation("org.spigotmc:spigot-api:$spigotVersion")
 
     implementation(kotlin("stdlib"))
 
     testImplementation("org.mockito:mockito-core:2.+")
     testImplementation("io.mockk:mockk:1.10.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.6.2")
+    testImplementation("org.spigotmc:spigot-api:$spigotVersion")
 
     val kotestVersion = "4.1.0.RC2"
     testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
