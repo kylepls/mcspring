@@ -13,7 +13,6 @@ import java.lang.reflect.Method
 
 @Lazy
 @Service
-@ConditionalOnBean(Plugin::class)
 internal class EventService(
         private val server: Server,
         private val plugin: Plugin

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service
  */
 @Lazy
 @Service
-@ConditionalOnBean(Plugin::class)
 class SchedulerService(
         private val scheduler: BukkitScheduler,
         private val plugin: Plugin

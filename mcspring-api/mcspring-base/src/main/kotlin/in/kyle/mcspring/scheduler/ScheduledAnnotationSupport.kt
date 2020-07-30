@@ -14,7 +14,6 @@ import java.util.concurrent.ScheduledFuture
 
 @Lazy
 @Component
-@ConditionalOnBean(Plugin::class)
 internal class ScheduledAnnotationSupport(
         private val scheduler: SchedulerService
 ) : ThreadPoolTaskScheduler() {

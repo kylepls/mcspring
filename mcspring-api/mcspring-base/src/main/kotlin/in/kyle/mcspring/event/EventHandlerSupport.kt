@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component
 import java.lang.reflect.Method
 
 @Component
-@ConditionalOnBean(Plugin::class)
 internal class EventHandlerSupport(
         private val eventService: EventService,
         private val scanner: SpringScanner
