@@ -54,4 +54,12 @@ class TestMapParser : FreeSpec({
             }
         } shouldBe listOf("one", "two", "three")
     }
+
+    "test map function" - {
+        makeBuilder("1").mapArg<Int> {
+            parser {
+                map { it.toIntOrNull() }
+            }
+        } shouldBe 1
+    }
 })
