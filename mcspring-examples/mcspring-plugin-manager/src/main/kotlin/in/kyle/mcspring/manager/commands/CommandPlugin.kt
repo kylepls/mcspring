@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component
 import java.nio.file.Path
 
 @Component
-@ConditionalOnBean(Plugin::class)
 internal class CommandPlugin(private val pluginController: PluginController) {
 
     @Command(
