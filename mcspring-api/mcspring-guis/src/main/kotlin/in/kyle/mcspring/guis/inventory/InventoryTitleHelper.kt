@@ -1,6 +1,6 @@
 @file:Suppress("LocalVariableName")
 
-package `in`.kyle.mcspring.guis.invenotry
+package `in`.kyle.mcspring.guis.inventory
 
 import com.google.common.base.Preconditions
 import org.bukkit.Bukkit

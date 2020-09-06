@@ -24,6 +24,8 @@ open class BuildPluginJar : ShadowJar() {
             mainClassName = "ignored"
             classpath(Callable { project.getMainSourceSet().runtimeClasspath })
 
+            isExcludeDevtools = false
+
             archiveFileName.set("spring.jar")
             dependsOn(project.tasks.named("classes"))
         }
