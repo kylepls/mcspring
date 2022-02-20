@@ -1,6 +1,6 @@
-mcspring-chat
+mcspring-chat-actions
 ---
-Provides some basic wrappers around the TextComponent API
+Simplifies the process of adding interactable elements to chat messages.
 
 ### Examples
 

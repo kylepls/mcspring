@@ -14,6 +14,7 @@ include(":mcspring-api:mcspring-chat")
 include(":mcspring-api:mcspring-chat-actions")
 include(":mcspring-api:mcspring-gradle-plugin")
 include(":mcspring-api:mcspring-e2e")
+include(":mcspring-api:mcspring-nms")
 
 gradleEnterprise {
     buildScan {

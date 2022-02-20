@@ -74,7 +74,7 @@ class SpigotServerTest : BeforeAllCallback, AfterAllCallback, InvocationIntercep
         System.setProperty("com.mojang.eula.agree", "true")
 
         val args = arrayOf("-nogui", "-o=false")
-        Thread(Runnable {
+        Thread({
             try {
                 Paperclip.main(args)
             } catch (e: Exception) {

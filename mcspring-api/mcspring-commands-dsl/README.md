@@ -1,6 +1,6 @@
 mcspring-commands-dsl
 ---
-_A sane way to write commands_
+_My hot take on command parsing, completely optional._
 
 ### Project Goals
 One of the worst parts of writing plugins is writing command parsers.

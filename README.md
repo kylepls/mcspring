@@ -9,7 +9,7 @@ Writing Bukkit plugins is a nightmare. I often lay awake in my bed late at night
 These are solved problems. Spring Boot took care of this issue ages ago. 
 So how about we ditch this ridiculous programming model and hop on the Spring train.
 
-```java
+```kotlin
 @Component
 class Test { // We don't have to extend JavaPlugin. The plugin.yml is also generated for us.
     
@@ -69,15 +69,13 @@ class Test { // We don't have to extend JavaPlugin. The plugin.yml is also gener
 * Schedulers are defined with `@Scheduler`. Another thing to schlep away somewhere.
 * `@EventHandler` now registers itself. About damn time.
 * Like money? Vault support is in the box `in.kyle.mcspring.economy.EconomyService`
-* Want my hot take on sub-command handing? We've got you covered (see the wiki)
+* Want my hot take on sub-command handling? We've got you covered (see the wiki)
+* I've also added some other optionionated libraries to the project with some pretty neat functionality. Check out mcspring-chat-actions, mcspring-chat, mcspring-guis, mcspring-nms.
 
 ## Getting Started
-I went ahead and wrote a full tutorial series for you newcomers. Get started [here](https://github.com/kylepls/mcspring/wiki/Getting-Setup)
+Please use the simple-factions project as a reference. This can be found in the `/mcspring-examples` folder.
 
-If you think you're too smart for the beginner tutorial; go to the 
-[wiki](https://github.com/kylepls/mcspring/wiki) and piece it together.
-
-If you're really really smart; check out the example plugins in the `mcspring-example` folder.
+Each subproject has attached documentation.
 
 ---
 

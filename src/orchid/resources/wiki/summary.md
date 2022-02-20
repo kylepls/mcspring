@@ -1,5 +1,0 @@
-- [Setup](setup.md)
-- [The plugin.yml and the main class](intro.md)
-- Commands
-  - [Basic Commands API](commands-api.md)
-  - [Sub-commands API](subcommands-api.md)

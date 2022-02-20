@@ -37,7 +37,7 @@ abstract class InventoryGui(
 
     val lastItemIndex: Int by lazy { bukkitInventory.size - 1 }
 
-    abstract fun onClick(slot: Int)
+    open fun onClick(slot: Int) {}
 
     override fun close() {
         require(player.openInventory.topInventory == bukkitInventory) { "Inventory already closed" }
